@@ -4,6 +4,7 @@
     "main": "src/server.ts",
     "author": "Soe Tun",
     "license": "MIT",
+    "type": "module",
     "private": true,
     "scripts": {
         "build": "npm run build-ts",
