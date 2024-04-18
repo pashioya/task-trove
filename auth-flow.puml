@@ -1,0 +1,39 @@
+@startuml
+
+participant ReactApp
+participant MondayOAuth
+participant ExpressApp
+
+ReactApp->> MondayOAuth : Request Monday OAuth URL
+activate MondayOAuth
+MondayOAuth->>ReactApp : Send Monday OAuth URL
+deactivate MondayOAuth
+
+activate ReactApp
+ReactApp->>ExpressApp : Send Authorization Token
+deactivate ReactApp
+
+activate ExpressApp
+ExpressApp->>Monday.com : Request Access Token (using Authorization Token)
+alt Success
+  Monday.com->>ExpressApp : Send Access Token
+  ExpressApp->>ReactApp : Send Temporary Code
+else Failure
+  Monday.com->>ExpressApp : Send Error Message
+  ExpressApp->>ReactApp : Send Error Message (Optional)
+end
+
+activate ReactApp
+ReactApp->>ExpressApp : Send Temporary Code
+deactivate ReactApp
+
+activate ExpressApp
+ExpressApp->>Monday.com : Verify Temporary Code (Optional - Security Check)
+alt Valid Code
+  ExpressApp->>ReactApp : Send Access Token as API Param
+else Invalid Code
+  ExpressApp->>ReactApp : Send Error Message
+end
+
+deactivate ExpressApp
+@enduml

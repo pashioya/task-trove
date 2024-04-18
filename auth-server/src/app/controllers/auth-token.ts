@@ -1,11 +1,11 @@
+import { jwt } from "jsonwebtoken";
 import { AppErrorCodes } from "@/lib/monday/enums";
 import { Response } from "express";
 import { Storage } from "@mondaycom/apps-sdk";
+import axios from "axios";
 
 const AuthTokenController = async (req: Request, res: Response) => {
     req.logger.info("Auth token request received");
-
-    var request = require("request");
 
     // Extract authorization token from request
     const authorizationToken = req.headers.authorization?.split(" ")[1];
@@ -28,14 +28,15 @@ const AuthTokenController = async (req: Request, res: Response) => {
             authorizationCode: authorizationToken,
         };
 
-        request(
-            "http://www.google.com",
-            function (error: Error, response: Response, body: String) {
-                if (!error && response.statusCode == 200) {
-                    console.log(body); // Print the google web page.
-                }
-            }
-        );
+        axios({
+            method: "post",
+            url: "https://auth.monday.com/oauth2/token",
+            data: {
+                client_id: clientId,
+                client_secret: clientSecret,
+                code: authorizationToken,
+            },
+        });
 
         // Access token is available in response.accessToken
         const accessToken = response.accessToken;
