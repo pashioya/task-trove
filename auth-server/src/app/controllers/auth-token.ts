@@ -1,14 +1,15 @@
-import { jwt } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { AppErrorCodes } from "@/lib/monday/enums";
 import { Response } from "express";
 import { Storage } from "@mondaycom/apps-sdk";
 import axios from "axios";
 
 const AuthTokenController = async (req: Request, res: Response) => {
-    req.logger.info("Auth token request received");
+    // TODO:Add more logging
+    // req.logger.info("Auth token request received");
 
     // Extract authorization token from request
-    const authorizationToken = req.headers.authorization?.split(" ")[1];
+    const authorizationToken = req.url.split(" ")[1];
 
     // Check if authorization token exists
     if (!authorizationToken) {
@@ -19,16 +20,20 @@ const AuthTokenController = async (req: Request, res: Response) => {
 
     const clientId = "55b279c1eb45e23ce60d4cc032d63ab6";
     const clientSecret = "37a31f8e96a7129e9fb0ff22a2e8117a";
-    const storage = new Storage(authorizationToken);
+
+    // get the main access token from env variables
+    const accessToken = process.env.ACCESS_TOKEN;
+
+    if (!accessToken) {
+        return res
+            .status(AppErrorCodes.INTERNAL_SERVER_ERROR)
+            .json({ message: "Failed to obtain env access token" });
+    }
+
+    const storage = new Storage(accessToken);
 
     try {
-        const response = await {
-            clientId,
-            clientSecret,
-            authorizationCode: authorizationToken,
-        };
-
-        axios({
+        const response = await axios({
             method: "post",
             url: "https://auth.monday.com/oauth2/token",
             data: {
@@ -38,10 +43,9 @@ const AuthTokenController = async (req: Request, res: Response) => {
             },
         });
 
-        // Access token is available in response.accessToken
-        const accessToken = response.accessToken;
+        const accessToken = response.data;
 
-        const generated_token = jwt.sign({ accessToken }, "jwt_secret", {
+        const generated_token = jwt.sign({ accessToken }, "secret", {
             expiresIn: "1h",
         });
 
@@ -52,7 +56,6 @@ const AuthTokenController = async (req: Request, res: Response) => {
                 .status(AppErrorCodes.INTERNAL_SERVER_ERROR)
                 .json({ message: "Failed to obtain access token" });
         }
-
         return res.status(200).redirect("http://localhost:3000");
     } catch (error) {
         console.error("Error exchanging authorization token:", error);

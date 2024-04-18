@@ -5,4 +5,5 @@ import { Route } from "@/lib/app/enums";
 export default function (app: Application) {
     app.get(Route.HEALTH_CHECK, healthCheck);
     app.post(Route.HELLO_MONDAY, helloMonday);
+    app.get(Route.AUTH_TOKEN, helloMonday);
 }

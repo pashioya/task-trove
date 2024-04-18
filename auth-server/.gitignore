@@ -21,6 +21,8 @@ dist-ssr
 
 .npmrc
 
+**/code.tar.gz
+
 
 # environment files
 *.env
