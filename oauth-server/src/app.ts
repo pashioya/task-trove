@@ -9,28 +9,28 @@ import { env } from "./env";
 const app = express();
 
 app.use(
-  /** Express middleware */
-  cors({
-    origin: "*",
-  })
+    /** Express middleware */
+    cors({
+        origin: "*",
+    })
 );
+// Middlewares
+app.use(helmet()); // security-related HTTP headers
 
 app.get("/", (_req: Request, res: Response) =>
-  res.send("Hello World from app.ts!")
+    res.send("OAuth Server is running!")
 );
 app.get("/auth-token", (req: Request, res: Response) =>
-  AuthTokenController(req, res)
+    AuthTokenController(req, res)
 );
 app.get("/health-check", (req: Request, res: Response) =>
-  healthCheck(req, res)
+    healthCheck(req, res)
 );
-
-app.use(helmet()); // security-related HTTP headers
 
 app.disable("x-powered-by");
 
 app.listen(env.PORT, () =>
-  console.log("Starting ExpressJS server on Port " + env.PORT)
+    console.log("Starting ExpressJS server on Port " + env.PORT)
 );
 
 export default app;
