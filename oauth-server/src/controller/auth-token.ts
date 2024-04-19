@@ -4,7 +4,7 @@ import { Storage } from "@mondaycom/apps-sdk";
 import axios from "axios";
 import { ResponseStatus } from "@/enums/api";
 import { Request } from "express";
-import { env } from "../env";
+import { env } from "@/env";
 
 const AuthTokenController = (req: Request, res: Response) => {
     // TODO:Add more logging
@@ -53,7 +53,12 @@ const AuthTokenController = (req: Request, res: Response) => {
                 message: "Failed to obtain access token",
             });
         }
-        res.status(ResponseStatus.OK).redirect("exp://192.168.0.17:8081");
+
+        res.status(ResponseStatus.OK).json({
+            message: "Access token obtained successfully",
+            temporaryCode: generated_token, // Add temporary code to response
+        }).redirect("exp://192.168.0.17:8081");
+
     } catch (error) {
         console.error("Error exchanging authorization token:", error);
         res.status(ResponseStatus.INTERNAL_SERVER_ERROR).json({

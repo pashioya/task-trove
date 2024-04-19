@@ -5,6 +5,7 @@ import express, { Request, Response } from "express";
 import healthCheck from "./controller/health-check";
 import helmet from "helmet";
 import AuthTokenController from "./controller/auth-token";
+import AccessTokenController from "./controller/access-token";
 import { env } from "./env";
 const app = express();
 
@@ -22,6 +23,9 @@ app.get("/", (_req: Request, res: Response) =>
 );
 app.get("/auth-token", (req: Request, res: Response) =>
     AuthTokenController(req, res)
+);
+app.get("/temp-token", (req: Request, res: Response) =>
+    AccessTokenController(req, res)
 );
 app.get("/health-check", (req: Request, res: Response) =>
     healthCheck(req, res)
