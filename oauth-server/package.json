@@ -10,14 +10,14 @@
         "build": "npm run build-ts",
         "build-ts": "tsc",
         "clean": "rm -rf ./dist",
-        "serve": "node dist/server.js",
+        "serve": "node dist/app.js",
         "start": "npm run serve",
         "test": "jest",
         "watch-ts": "tsc --watch"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/soelinn/express-ts-starter.git"
+        "url": "git+https://github.com/Tryve-Apps/task-trove.git"
     },
     "dependencies": {
         "@mondaycom/apps-sdk": "^3.0.2",

@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { Response } from "express";
 import { Storage } from "@mondaycom/apps-sdk";
 import axios from "axios";
-import { AppErrorCodes } from "@/enums/monday";
+import { ResponseStatus } from "@/enums/api";
 import { Request } from "express";
 
 const AuthTokenController = (req: Request, res: Response) => {
@@ -14,7 +14,7 @@ const AuthTokenController = (req: Request, res: Response) => {
 
     // Check if authorization token exists
     if (!authorizationToken) {
-        res.status(AppErrorCodes.UNAUTHORIZED).json({
+        res.status(ResponseStatus.UNAUTHORIZED).json({
             message: "Missing authorization token",
         });
     }
@@ -27,7 +27,7 @@ const AuthTokenController = (req: Request, res: Response) => {
     const accessToken = process.env.ACCESS_TOKEN;
 
     if (!accessToken) {
-        res.status(AppErrorCodes.INTERNAL_SERVER_ERROR).json({
+        res.status(ResponseStatus.INTERNAL_SERVER_ERROR).json({
             message: "Failed to obtain env access token",
         });
         return;
@@ -55,7 +55,7 @@ const AuthTokenController = (req: Request, res: Response) => {
     storage.set(generated_token, retrievedAccessToken);
 
     if (!retrievedAccessToken) {
-        res.status(AppErrorCodes.INTERNAL_SERVER_ERROR).json({
+        res.status(ResponseStatus.INTERNAL_SERVER_ERROR).json({
             message: "Failed to obtain access token",
         });
     }
