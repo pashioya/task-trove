@@ -1,14 +1,16 @@
+import jwt from "jsonwebtoken";
 import {Request, Response} from "express";
 import {ResponseStatus} from "@/enums/api";
 import {env} from "@/env";
 import {Storage} from "@mondaycom/apps-sdk";
-import jwt from "jsonwebtoken";
+
 
 const AccessTokenController = async (req: Request, res: Response) => {
-    const temporaryCode = req.body;
-    console.log("Temporary code:", temporaryCode);
+    // Get the authorization header
+    const temporaryCode = req.body.temporary_code;
+    const storageKey = req.body.storage_key;
 
-    if (!temporaryCode) {
+    if (!temporaryCode || !storageKey) {
         return res.status(ResponseStatus.UNAUTHORIZED).json({
             message: "Missing temporary code",
         });
@@ -32,13 +34,14 @@ const AccessTokenController = async (req: Request, res: Response) => {
 
     try {
         // retrieve the access token from storage using the temporary code
-        const retrievedAccessToken = storage.get(temporaryCode);
+        const retrievedAccessToken = await storage.get(storageKey);
+        console.log("Access token:", retrievedAccessToken);
         res.status(ResponseStatus.OK).json({
             message: "Access token obtained successfully",
             accessToken: retrievedAccessToken,
         });
 
-        await storage.delete(temporaryCode);
+        //await storage.delete(temporaryCode);
         return res
     } catch (error) {
         console.error("Error exchanging authorization token:", error);

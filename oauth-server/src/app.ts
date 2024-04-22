@@ -10,6 +10,7 @@ import { env } from "./env";
 const app = express();
 
 app.use(
+    express.json(),
     /** Express middleware */
     cors({
         origin: "*",
@@ -22,7 +23,7 @@ app.get("/", (_req: Request, res: Response) =>
     res.send("OAuth Server is running!")
 );
 app.get("/auth-token", AuthTokenController);
-app.get("/temp-token", AccessTokenController);
+app.post("/access-token", AccessTokenController);
 app.get("/health-check", (req: Request, res: Response) =>
     healthCheck(req, res)
 );
