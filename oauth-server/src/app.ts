@@ -20,12 +20,8 @@ app.use(helmet()); // security-related HTTP headers
 app.get("/", (_req: Request, res: Response) =>
     res.send("OAuth Server is running!")
 );
-app.get("/auth-token", (req: Request, res: Response) =>
-    AuthTokenController(req, res)
-);
-app.get("/health-check", (req: Request, res: Response) =>
-    healthCheck(req, res)
-);
+app.get("/auth-token", AuthTokenController);
+app.get("/health-check", healthCheck);
 
 app.disable("x-powered-by");
 

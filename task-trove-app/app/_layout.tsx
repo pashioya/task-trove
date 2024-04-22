@@ -1,7 +1,12 @@
-import '../global.css';
-
-import { Stack } from 'expo-router';
+import { useFonts } from 'expo-font';
+import { Stack, SplashScreen } from 'expo-router';
+import React, { useEffect } from 'react';
+import { TamaguiProvider } from 'tamagui';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
+import config from '../tamagui.config';
+
+SplashScreen.preventAutoHideAsync();
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
@@ -9,12 +14,27 @@ export const unstable_settings = {
 };
 
 export default function RootLayout() {
+  const [loaded] = useFonts({
+    Inter: require('@tamagui/font-inter/otf/Inter-Medium.otf'),
+    InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
+  });
+
+  useEffect(() => {
+    if (loaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded]);
+
+  if (!loaded) return null;
+
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <Stack>
-        <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ title: 'Modal', presentation: 'modal' }} />
-      </Stack>
-    </GestureHandlerRootView>
+    <TamaguiProvider config={config}>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <Stack>
+          <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
+          <Stack.Screen name="modal" options={{ title: 'Modal', presentation: 'modal' }} />
+        </Stack>
+      </GestureHandlerRootView>
+    </TamaguiProvider>
   );
 }
