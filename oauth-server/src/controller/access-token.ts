@@ -2,14 +2,26 @@ import {Request, Response} from "express";
 import {ResponseStatus} from "@/enums/api";
 import {env} from "@/env";
 import {Storage} from "@mondaycom/apps-sdk";
+import jwt from "jsonwebtoken";
 
-const AccessTokenController = (req: Request, res: Response) => {
+const AccessTokenController = async (req: Request, res: Response) => {
     const temporaryCode = req.body;
     console.log("Temporary code:", temporaryCode);
 
     if (!temporaryCode) {
-        res.status(ResponseStatus.UNAUTHORIZED).json({
+        return res.status(ResponseStatus.UNAUTHORIZED).json({
             message: "Missing temporary code",
+        });
+    }
+
+    const jwtSecret = env.JWT_SECRET;
+
+    try {
+        jwt.verify(temporaryCode, jwtSecret);
+    } catch (error) {
+        console.error("Error verifying temporary code:", error);
+        return res.status(ResponseStatus.UNAUTHORIZED).json({
+            message: "Invalid temporary code",
         });
     }
 
@@ -24,10 +36,13 @@ const AccessTokenController = (req: Request, res: Response) => {
         res.status(ResponseStatus.OK).json({
             message: "Access token obtained successfully",
             accessToken: retrievedAccessToken,
-        }).redirect("exp://192.168.0.17:8081");
+        });
+
+        await storage.delete(temporaryCode);
+        return res
     } catch (error) {
         console.error("Error exchanging authorization token:", error);
-        res.status(ResponseStatus.UNAUTHORIZED).json({
+        return res.status(ResponseStatus.UNAUTHORIZED).json({
             message: "Invalid temporary code",
         });
     }

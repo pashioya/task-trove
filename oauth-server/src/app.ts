@@ -21,12 +21,8 @@ app.use(helmet()); // security-related HTTP headers
 app.get("/", (_req: Request, res: Response) =>
     res.send("OAuth Server is running!")
 );
-app.get("/auth-token", (req: Request, res: Response) =>
-    AuthTokenController(req, res)
-);
-app.get("/temp-token", (req: Request, res: Response) =>
-    AccessTokenController(req, res)
-);
+app.get("/auth-token", AuthTokenController);
+app.get("/temp-token", AccessTokenController);
 app.get("/health-check", (req: Request, res: Response) =>
     healthCheck(req, res)
 );

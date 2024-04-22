@@ -41,7 +41,9 @@ const AuthTokenController = async (req: Request, res: Response) => {
 
     const retrievedAccessToken = response.data.access_token;
 
-    const generated_token = jwt.sign({ retrievedAccessToken }, "secret", {
+    const jwtSecret = env.JWT_SECRET;
+
+    const generated_token = jwt.sign({ retrievedAccessToken }, jwtSecret, {
       expiresIn: "1h",
     });
 

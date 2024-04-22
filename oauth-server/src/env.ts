@@ -22,14 +22,17 @@ export const env = createEnv({
         MONDAY_CLIENT_ID: z.string().min(1),
         MONDAY_CLIENT_SECRET: z.string().min(1),
         ACCESS_TOKEN: z.string().min(1),
+        JWT_SECRET: z.string().min(1),
     },
 
     isServer: true,
 
     runtimeEnvStrict: {
+
         PORT: process.env.PORT,
         MONDAY_CLIENT_ID: process.env.MONDAY_CLIENT_ID,
         MONDAY_CLIENT_SECRET: process.env.MONDAY_CLIENT_SECRET,
         ACCESS_TOKEN: process.env.ACCESS_TOKEN,
+        JWT_SECRET: process.env.JWT_SECRET,
     },
 });
