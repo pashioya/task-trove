@@ -32,22 +32,30 @@ const AccessTokenController = async (req: Request, res: Response) => {
 
     const storage = new Storage(accessToken);
 
-    try {
-        // retrieve the access token from storage using the temporary code
-        const retrievedAccessToken = await storage.get(storageKey);
-        console.log("Access token:", retrievedAccessToken);
-        res.status(ResponseStatus.OK).json({
-            message: "Access token obtained successfully",
-            accessToken: retrievedAccessToken,
-        });
+    const {success, error, value} = await storage.get(storageKey);
 
-        //await storage.delete(temporaryCode);
-        return res
-    } catch (error) {
-        console.error("Error exchanging authorization token:", error);
+    if (!success) {
+        console.error("Error retrieving temporary code:", error);
         return res.status(ResponseStatus.UNAUTHORIZED).json({
             message: "Invalid temporary code",
         });
+
+    } else {
+        console.log("Retrieved access token:", value);
+
+        const {success, error} = await storage.delete(storageKey);
+
+        if (!success) {
+            console.error("Error deleting temporary code:", error);
+            return res.status(ResponseStatus.INTERNAL_SERVER_ERROR).json({
+                message: "Failed to delete temporary code",
+            });
+
+        } else {
+            return res.status(ResponseStatus.OK).json({
+                access_token: value,
+            });
+        }
     }
 }
 

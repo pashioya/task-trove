@@ -21,18 +21,18 @@ const AuthTokenController = async (req: Request, res: Response) => {
         });
     }
 
+    // Get the client ID and client secret from env variables
     const clientId = env.MONDAY_CLIENT_ID;
     const clientSecret = env.MONDAY_CLIENT_SECRET;
-    console.log("Client ID:", clientId)
-    console.log("Client Secret:", clientSecret)
-    console.log("Authorization token:", authorizationToken)
 
     // get the main access token from env variables
     const accessToken = env.ACCESS_TOKEN;
 
+    // Create a new storage object
     const storage = new Storage(accessToken);
 
     try {
+        // post request to monday to receive the access token using the authorization token
         const response = await axios({
             method: "post",
             url: "https://auth.monday.com/oauth2/token",
@@ -44,22 +44,36 @@ const AuthTokenController = async (req: Request, res: Response) => {
             },
         });
 
+        console.log("Monday response status:", response.status);
+
+        if (response.status === 401 || response.status === 403) {
+            return res.status(ResponseStatus.UNAUTHORIZED).json({
+                message: "Invalid authorization token",
+            });
+
+        } else if (response.status !== 200) {
+            return res.status(ResponseStatus.INTERNAL_SERVER_ERROR).json({
+                message: "Failed to obtain access token",
+            });
+        }
+
         const retrievedAccessToken = response.data.access_token;
 
-        const generatedKey = (Math.random() + 1).toString(36).substring(7);
+        // generate a small key to store the access token in storage
+        const generatedKey = (Math.random() + 1).toString(36).substring(8);
 
         const jwtSecret = env.JWT_SECRET;
 
+        // generate a temporary code that expires in 1 hour
         const generatedToken = jwt.sign({retrievedAccessToken}, jwtSecret, {
             expiresIn: "1h",
         });
 
-        const storageResult = await storage.set(generatedKey, retrievedAccessToken);
-        console.log("Storage result:", storageResult);
-
-        if (!retrievedAccessToken) {
+        const {success, error} = await storage.set(generatedKey, retrievedAccessToken);
+        if (!success) {
+            console.error("Failed to store access token:", error);
             return res.status(ResponseStatus.INTERNAL_SERVER_ERROR).json({
-                message: "Failed to obtain access token",
+                message: "Failed to store access token",
             });
         }
 
