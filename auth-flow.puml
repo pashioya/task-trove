@@ -17,22 +17,27 @@ activate ExpressApp
 ExpressApp->>Monday.com : Request Access Token (using Authorization Token)
 alt Success
   Monday.com->>ExpressApp : Send Access Token
-  ExpressApp->>Monday.com : Send Temporary Code to storage
-  ExpressApp->>ReactApp : Send Temporary Code
+  ExpressApp->>ExpressApp : Generate a key for the storage
+  ExpressApp->>Monday.com : Send Access Token to storage with the generated key
+  ExpressApp->>ReactApp : Send Temporary Code and generated key in the redirect URI
 else Failure
   Monday.com->>ExpressApp : Send Error Message
   ExpressApp->>ReactApp : Send Error Message (Optional)
+  deactivate ExpressApp
 end
 
 activate ReactApp
-ReactApp->>ExpressApp : Send Temporary Code
+ReactApp->>ExpressApp : Send Temporary Code and generated key in POST Request
 deactivate ReactApp
 
 activate ExpressApp
-ExpressApp->>Monday.com : Verify Temporary Code
-alt Valid Code
+ExpressApp->>ExpressApp : Verify Temporary Code
+ExpressApp->>Monday.com : Request Access Token (using generated key)
+Monday.com->>ExpressApp : Send Access Token
+
+alt success
   ExpressApp->>ReactApp : Send Access Token as API Param
-else Invalid Code
+else Error
   ExpressApp->>ReactApp : Send Error Message
 end
 
