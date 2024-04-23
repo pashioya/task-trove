@@ -1,5 +1,5 @@
 import { useFonts } from 'expo-font';
-import { Stack, SplashScreen } from 'expo-router';
+import { Stack, SplashScreen, Slot } from 'expo-router';
 import React, { useEffect } from 'react';
 import { TamaguiProvider } from 'tamagui';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -31,8 +31,8 @@ export default function RootLayout() {
     <TamaguiProvider config={config}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <Stack>
+          <Stack.Screen name="(authentication)" options={{ headerShown: true }} />
           <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ title: 'Modal', presentation: 'modal' }} />
         </Stack>
       </GestureHandlerRootView>
     </TamaguiProvider>
