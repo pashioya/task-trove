@@ -6,3 +6,5 @@
 .expo/**
 
 **/.env
+
+**/code.tar.gz
