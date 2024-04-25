@@ -1,12 +1,17 @@
 import { useFonts } from 'expo-font';
-import { Stack, SplashScreen } from 'expo-router';
+import { Stack, SplashScreen, Slot } from 'expo-router';
 import React, { useEffect } from 'react';
-import { TamaguiProvider } from 'tamagui';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { TamaguiProvider } from 'tamagui';
+import axios from 'axios';
 
 import config from '../tamagui.config';
 
 SplashScreen.preventAutoHideAsync();
+
+axios.defaults.withCredentials = true;
+
+const oAuthServerUrl = 'https://fd20a-service-5671083-df6cea70.us.monday.app';
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
@@ -31,8 +36,8 @@ export default function RootLayout() {
     <TamaguiProvider config={config}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <Stack>
+          <Stack.Screen name="(authentication)" options={{ headerShown: true }} />
           <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ title: 'Modal', presentation: 'modal' }} />
         </Stack>
       </GestureHandlerRootView>
     </TamaguiProvider>

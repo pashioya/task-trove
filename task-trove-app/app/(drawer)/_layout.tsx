@@ -1,13 +1,17 @@
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import { Link } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { colorTokens } from '@tamagui/themes';
 import { Drawer } from 'expo-router/drawer';
 
-import { HeaderButton } from '../../components/HeaderButton';
-
 const DrawerLayout = () => (
-  <Drawer>
+  <Drawer
+    screenOptions={{
+      headerShown: true,
+      drawerHideStatusBarOnOpen: true,
+      drawerActiveBackgroundColor: colorTokens.light.blue.blue4,
+      headerTitleAlign: 'center',
+    }}>
     <Drawer.Screen
-      name="index"
+      name="(home)"
       options={{
         headerTitle: 'Home',
         drawerLabel: 'Home',
@@ -15,18 +19,19 @@ const DrawerLayout = () => (
       }}
     />
     <Drawer.Screen
-      name="(tabs)"
+      name="Boards"
       options={{
-        headerTitle: 'Tabs',
-        drawerLabel: 'Tabs',
-        drawerIcon: ({ size, color }) => (
-          <MaterialIcons name="border-bottom" size={size} color={color} />
-        ),
-        headerRight: () => (
-          <Link href="/modal" asChild>
-            <HeaderButton />
-          </Link>
-        ),
+        headerTitle: 'Boards',
+        drawerLabel: 'Boards',
+        drawerIcon: ({ size, color }) => <Ionicons name="list-outline" size={size} color={color} />,
+      }}
+    />
+    <Drawer.Screen
+      name="(settings)"
+      options={{
+        headerTitle: 'Settings',
+        drawerLabel: 'Settings',
+        drawerIcon: ({ size, color }) => <Ionicons name="settings" size={size} color={color} />,
       }}
     />
   </Drawer>
