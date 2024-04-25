@@ -9,7 +9,7 @@ export default function Login() {
       <Stack.Screen options={{ title: 'login' }} />
       <Container>
         <Link href="/">Home</Link>
-        <Link href="/Onboarding1">Onboarding 1</Link>
+        <Link href="/One">Onboarding 1</Link>
         <Button>Click me</Button>
       </Container>
     </>
