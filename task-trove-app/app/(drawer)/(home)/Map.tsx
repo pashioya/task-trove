@@ -2,12 +2,12 @@ import { Link, Stack } from 'expo-router';
 
 import { Container } from '~/components/Container';
 
-export default function Home() {
+export default function Map() {
   return (
     <>
-      <Stack.Screen options={{ title: 'Home' }} />
+      <Stack.Screen options={{ title: 'Map' }} />
       <Container>
-        <Link href="/login">Login</Link>
+        <Link href="/">Home</Link>
       </Container>
     </>
   );
