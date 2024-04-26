@@ -3,13 +3,12 @@ import { Button, Text } from 'tamagui';
 
 import { Container } from '~/components/Container';
 
-export default function Login() {
+export default function Two() {
   return (
     <>
-      <Stack.Screen options={{ title: 'Login Success' }} />
+      <Stack.Screen options={{ title: 'Onboarding Two' }} />
       <Container>
-        <Text>Login Success Onboarding began</Text>
-        <Button href="/">Home</Button>
+        <Text>Hello!</Text>
       </Container>
     </>
   );
