@@ -1,5 +1,13 @@
 import { Slot } from 'expo-router';
 
+import AuthenticationContextProvider from '~/contexts/AuthenticationContextProvider';
+
 export default function RootLayout() {
-  return <Slot />;
+  return (
+    <>
+      <AuthenticationContextProvider>
+        <Slot />
+      </AuthenticationContextProvider>
+    </>
+  );
 }
