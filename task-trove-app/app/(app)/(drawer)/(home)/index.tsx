@@ -1,4 +1,6 @@
+import * as Linking from 'expo-linking';
 import {Link, Stack} from 'expo-router';
+import { Text } from 'tamagui';
 import {Container} from '~/components/Container';
 import React, {useEffect, useState} from "react";
 import {styled, Image, View, Text} from "tamagui";
@@ -9,6 +11,8 @@ import * as TaskManager from 'expo-task-manager';
 const LOCATION_TASK_NAME = 'background-location-task';
 
 export default function Home() {
+    const url = Linking.useURL();
+
     const [isTracking, setIsTracking] = useState(false);
     const [region, setRegion] = useState({lat: 0, long: 0, speed: 0});
     const [error, setError] = useState<string | null>(null);
@@ -80,7 +84,7 @@ export default function Home() {
         <>
             <Stack.Screen options={{title: 'Home'}}/>
             <Container>
-                <Link href="/login">Login</Link>
+                <Link href="/Login">Login</Link>
                 <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
                     <TouchableOpacity onPress={toggleShareLocation}>
                         {isTracking ? (
