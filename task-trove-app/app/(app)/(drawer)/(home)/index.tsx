@@ -1,6 +1,5 @@
 import * as Linking from 'expo-linking';
 import {Link, Stack} from 'expo-router';
-import { Text } from 'tamagui';
 import {Container} from '~/components/Container';
 import React, {useEffect, useState} from "react";
 import {styled, Image, View, Text} from "tamagui";
@@ -30,20 +29,37 @@ export default function Home() {
         await ExpoLocation.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
             accuracy: ExpoLocation.Accuracy.Balanced,
             timeInterval: 1000,
+            distanceInterval: 1,
+            // foregroundService is how you get the task to be updated as often as would be if the app was open
+            showsBackgroundLocationIndicator: true,
+            foregroundService: {
+                notificationTitle: 'Using your location',
+                notificationBody: 'To turn off, go back to the app and switch something off.',
+            },
         });
-        console.log('ExpoLocation updates started')
-    };
+
+        const hasStarted = await ExpoLocation.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME);
+        console.log('Tracking started', hasStarted);
+    }
 
     const stopLocationUpdates = async () => {
-        await ExpoLocation.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
-        console.log('ExpoLocation updates stopped')
+        console.log('Tracking stopped')
+
+        TaskManager.isTaskRegisteredAsync(LOCATION_TASK_NAME)
+            .then(tracking => {
+                if (tracking) {
+                    ExpoLocation.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
+                }
+            })
     };
 
     useEffect(() => {
         const requestPermissions = async () => {
             const { status: foregroundStatus } = await ExpoLocation.requestForegroundPermissionsAsync();
+            console.log('foregroundStatus', foregroundStatus)
             if (foregroundStatus === "granted") {
                 const { status: backgroundStatus } = await ExpoLocation.requestBackgroundPermissionsAsync();
+                console.log('backgroundStatus', backgroundStatus)
                 if (backgroundStatus === "granted") { await ExpoLocation.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
                     accuracy: ExpoLocation.Accuracy.Highest, distanceInterval: 1, timeInterval: 1500, });
                 }
@@ -59,24 +75,21 @@ export default function Home() {
     });
 
     TaskManager.defineTask(LOCATION_TASK_NAME, async ({data, error}) => {
-        console.log('Background location task triggered');
+        console.log('Task called')
+
         if (error) {
-            console.error('Error in background location task', error);
+            console.log('LOCATION_TRACKING task ERROR:', error);
             return;
         }
-
         if (data) {
-            const locations = (data as { locations: ExpoLocation.LocationObject[] }).locations;
-            const latestLocation = locations[0];
+            const locations = data.locations;
+            const lat = locations[0].coords.latitude;
+            const long = locations[0].coords.longitude;
+            const speed = locations[0].coords.speed;
 
-            console.log('Background location timestamp:', latestLocation.timestamp); // Log timestamp directly
-
-            setRegion({
-                lat: latestLocation.coords.latitude || 0,
-                long: latestLocation.coords.longitude || 0,
-                speed: latestLocation.coords.speed || 0,
-            });
-            console.log('Background location = ', region);
+            console.log(
+                `${new Date(Date.now()).toLocaleString()}: ${lat},${long} - Speed ${speed}`
+            );
         }
     });
 
@@ -93,7 +106,7 @@ export default function Home() {
                             <ButtonImage source={require("~/assets/play.png")}/>
                         )}
                     </TouchableOpacity>
-
+                    <Text>URL: {url}</Text>
                     <Text>
                         {isTracking ? `${region.lat}, ${region.long}, Speed: ${region.speed}` : 'You are not currently sharing your location'}
                     </Text>
