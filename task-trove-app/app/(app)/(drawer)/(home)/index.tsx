@@ -3,6 +3,7 @@ import {Link, Stack} from 'expo-router';
 import {Container} from '~/components/Container';
 import React, {useEffect, useState} from "react";
 import {styled, Image, View, Text} from "tamagui";
+import { Pause, Play } from '@tamagui/lucide-icons'
 import {TouchableOpacity} from "react-native";
 import * as ExpoLocation from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
@@ -101,9 +102,9 @@ export default function Home() {
                 <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
                     <TouchableOpacity onPress={toggleShareLocation}>
                         {isTracking ? (
-                            <ButtonImage source={require("~/assets/pause.png")}/>
+                            <Pause/>
                         ) : (
-                            <ButtonImage source={require("~/assets/play.png")}/>
+                            <Play/>
                         )}
                     </TouchableOpacity>
                     <Text>URL: {url}</Text>
