@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import axios from 'axios';
 import { useFonts } from 'expo-font';
 import { Stack, SplashScreen } from 'expo-router';
@@ -11,10 +12,11 @@ import AuthenticationContextProvider from '~/contexts/AuthenticationContextProvi
 
 SplashScreen.preventAutoHideAsync();
 
+const queryClient = new QueryClient();
+
 axios.defaults.withCredentials = true;
 
 export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
   initialRouteName: '(drawer)',
 };
 
@@ -35,17 +37,19 @@ export default function RootLayout() {
   return (
     <TamaguiProvider config={config}>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <AuthenticationContextProvider>
-          <Stack>
-            <Stack.Screen name="(authentication)" options={{ headerShown: true }} />
-            <Stack.Screen
-              name="(drawer)"
-              options={{
-                headerShown: false,
-              }}
-            />
-          </Stack>
-        </AuthenticationContextProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthenticationContextProvider>
+            <Stack>
+              <Stack.Screen name="(authentication)" options={{ headerShown: true }} />
+              <Stack.Screen
+                name="(drawer)"
+                options={{
+                  headerShown: false,
+                }}
+              />
+            </Stack>
+          </AuthenticationContextProvider>
+        </QueryClientProvider>
       </GestureHandlerRootView>
     </TamaguiProvider>
   );
