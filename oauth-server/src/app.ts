@@ -4,7 +4,7 @@ import express, { Request, Response } from "express";
 
 import healthCheck from "./controller/health-check";
 import helmet from "helmet";
-import AuthTokenController from "./controller/auth-token";
+import AuthTokenController from "./controller/auth-token-test";
 import AccessTokenController from "./controller/access-token";
 import { env } from "./env";
 const app = express();
