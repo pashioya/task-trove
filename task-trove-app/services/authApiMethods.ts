@@ -5,7 +5,7 @@ const oAuthServerUrl = 'https://fd20a-service-5671083-df6cea70.us.monday.app';
 export async function getAccessToken(temporaryCode: string, storageKey: string) {
   const url = `${oAuthServerUrl}/access-token`;
   try {
-    const response = await axios({
+    await axios({
       method: 'post',
       url: url + '/access-token',
       data: {
@@ -13,7 +13,6 @@ export async function getAccessToken(temporaryCode: string, storageKey: string) 
         storage_key: storageKey,
       },
     });
-    return response.data.access_token;
   } catch (error) {
     console.error('Error getting access token:', error);
     return null;

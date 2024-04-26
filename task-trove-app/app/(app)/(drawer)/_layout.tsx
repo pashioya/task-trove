@@ -11,8 +11,7 @@ export default function DrawerLayout() {
   const router = useRouter();
 
   useEffect(() => {
-    console.log('Checking if authenticated');
-    if (!isAuthenticated) {
+    if (!isAuthenticated.isAuthenticated) {
       console.log('Redirecting to /Login');
       router.replace('/Login');
     }

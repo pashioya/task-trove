@@ -12,7 +12,7 @@ const AuthenticationContextProvider = ({ children }: IWithChildren) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loggedInUser] = useState(undefined);
   // ! The isLoading not used but may be useful when doing the buffer authentication
-  const [[_isLoading, accessToken], setAccessToken] = useStorageState('accessToken');
+  const [[isLoading, accessToken], setAccessToken] = useStorageState('accessToken');
 
   // check if accessToken is valid and set isAuthenticated
   useEffect(() => {
@@ -30,10 +30,7 @@ const AuthenticationContextProvider = ({ children }: IWithChildren) => {
         logOut: () => setAccessToken(null),
       }}
     >
-      {
-        //TODO: If not authenticated, redirect to /Login
-        children
-      }
+      {children}
     </AuthenticationContext.Provider>
   );
 };
