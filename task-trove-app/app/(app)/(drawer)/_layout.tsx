@@ -7,15 +7,15 @@ import { useContext, useEffect } from 'react';
 import AuthContext from '~/contexts/AuthenticationContext';
 
 export default function DrawerLayout() {
-  const isAuthenticated = useContext(AuthContext);
+  const authContext = useContext(AuthContext);
   const router = useRouter();
 
   useEffect(() => {
-    if (!isAuthenticated.isAuthenticated) {
+    if (!authContext.isAuthenticated) {
       console.log('Redirecting to /Login');
       router.replace('/login');
     }
-  }, [isAuthenticated]);
+  }, [authContext]);
 
   return (
     <Drawer
