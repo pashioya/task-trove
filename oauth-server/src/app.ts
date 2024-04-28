@@ -1,37 +1,25 @@
-import "dotenv/config";
-import cors from "cors";
-import express, { Request, Response } from "express";
+import 'dotenv/config';
+import cors from 'cors';
+import express from 'express';
+import helmet from 'helmet';
 
-import healthCheck from "./controller/health-check";
-import helmet from "helmet";
-import AuthTokenController from "./controller/auth-token-test";
-import AccessTokenController from "./controller/access-token";
-import { env } from "./env";
+import { env } from './env';
+import routes from './routes/routes';
 const app = express();
 
 app.use(
-    express.json(),
-    /** Express middleware */
-    cors({
-        origin: "*",
-    })
-);
-// Middlewares
-app.use(helmet()); // security-related HTTP headers
-
-app.get("/", (_req: Request, res: Response) =>
-    res.send("OAuth Server is running!")
-);
-app.get("/auth-token", AuthTokenController);
-app.post("/access-token", AccessTokenController);
-app.get("/health-check", (req: Request, res: Response) =>
-    healthCheck(req, res)
+  express.json(),
+  /** Express middleware */
+  cors({
+    origin: '*',
+  }),
+  helmet(), // security-related HTTP headers
 );
 
-app.disable("x-powered-by");
+app.disable('x-powered-by');
 
-app.listen(env.PORT, () =>
-    console.log("Starting ExpressJS server on Port " + env.PORT)
-);
+app.listen(env.PORT, () => console.log('Starting ExpressJS server on Port ' + env.PORT));
+
+routes(app);
 
 export default app;
