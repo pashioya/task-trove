@@ -11,7 +11,7 @@ export default function Home() {
     <>
       <Stack.Screen options={{ title: 'Home' }} />
       <Container>
-        <Link href="/Login">Login</Link>
+        <Link href="/login">Login</Link>
 
         <Text>URL: {url}</Text>
       </Container>

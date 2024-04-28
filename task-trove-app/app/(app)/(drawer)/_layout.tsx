@@ -13,7 +13,7 @@ export default function DrawerLayout() {
   useEffect(() => {
     if (!isAuthenticated.isAuthenticated) {
       console.log('Redirecting to /Login');
-      router.replace('/Login');
+      router.replace('/login');
     }
   }, [isAuthenticated]);
 
@@ -22,7 +22,7 @@ export default function DrawerLayout() {
       screenOptions={{
         headerShown: true,
         headerRight: () => (
-          <Link href="/Map">
+          <Link href="/map">
             <MaterialIcons name="my-location" size={24} color="blue" />
           </Link>
         ),
@@ -45,7 +45,7 @@ export default function DrawerLayout() {
         }}
       />
       <Drawer.Screen
-        name="Boards"
+        name="boards"
         options={{
           headerTitle: 'Boards',
           drawerLabel: 'Boards',

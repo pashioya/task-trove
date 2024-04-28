@@ -9,7 +9,7 @@ export default function One() {
       <Stack.Screen options={{ title: 'Onboarding One' }} />
       <Container>
         <Text>Onboarding One</Text>
-        <Link href="/Two">Next</Link>
+        <Link href="/2">Next</Link>
       </Container>
     </>
   );
