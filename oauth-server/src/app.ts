@@ -18,8 +18,8 @@ app.use(
 
 app.disable('x-powered-by');
 
-app.listen(env.PORT, () => console.log('Starting ExpressJS server on Port ' + env.PORT));
-
 routes(app);
+
+app.listen(env.PORT, () => console.log('Starting ExpressJS server on Port ' + env.PORT));
 
 export default app;
