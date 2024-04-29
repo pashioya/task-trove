@@ -4,7 +4,7 @@ export default function MapLayout() {
   return (
     <Stack initialRouteName="index">
       <Stack.Screen name="index" options={{ title: 'Home' }} />
-      <Stack.Screen name="Map" options={{ title: 'Map' }} />
+      <Stack.Screen name="map" options={{ title: 'Map' }} />
     </Stack>
   );
 }

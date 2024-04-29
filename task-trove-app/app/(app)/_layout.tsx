@@ -8,8 +8,6 @@ import { TamaguiProvider } from 'tamagui';
 
 import config from '../../tamagui.config';
 
-import AuthenticationContextProvider from '~/contexts/AuthenticationContextProvider';
-
 SplashScreen.preventAutoHideAsync();
 
 const queryClient = new QueryClient();
@@ -38,17 +36,15 @@ export default function AppLayout() {
     <TamaguiProvider config={config}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <QueryClientProvider client={queryClient}>
-          <AuthenticationContextProvider>
-            <Stack>
-              <Stack.Screen name="(authentication)" options={{ headerShown: true }} />
-              <Stack.Screen
-                name="(drawer)"
-                options={{
-                  headerShown: false,
-                }}
-              />
-            </Stack>
-          </AuthenticationContextProvider>
+          <Stack>
+            <Stack.Screen name="(authentication)" options={{ headerShown: true }} />
+            <Stack.Screen
+              name="(drawer)"
+              options={{
+                headerShown: false,
+              }}
+            />
+          </Stack>
         </QueryClientProvider>
       </GestureHandlerRootView>
     </TamaguiProvider>

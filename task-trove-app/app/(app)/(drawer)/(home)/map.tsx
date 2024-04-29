@@ -1,11 +1,12 @@
-import { Link, Stack } from 'expo-router';
-import * as Linking from 'expo-linking';
-import { Container } from '~/components/Container';
-import React, { useEffect, useState } from 'react';
-import { View, Text } from 'tamagui';
 import { AntDesign } from '@expo/vector-icons';
-import { TouchableOpacity } from 'react-native';
+import * as Linking from 'expo-linking';
 import * as ExpoLocation from 'expo-location';
+import { Link, Stack } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { TouchableOpacity } from 'react-native';
+import { View, Text } from 'tamagui';
+
+import { Container } from '~/components/Container';
 import { toggleShareLocation } from '~/utils/LocationSync';
 
 export default function Map() {
@@ -21,9 +22,7 @@ export default function Map() {
       if (foregroundStatus === 'granted') {
         const { status: backgroundStatus } = await ExpoLocation.requestBackgroundPermissionsAsync();
         console.log('backgroundStatus', backgroundStatus);
-        if (backgroundStatus === 'granted') {
-          return;
-        } else {
+        if (backgroundStatus !== 'granted') {
           console.log('Background location permission not granted');
         }
       }
@@ -33,9 +32,9 @@ export default function Map() {
 
   return (
     <>
-      <Stack.Screen options={{ title: 'Home' }} />
+      <Stack.Screen options={{ title: 'Map' }} />
       <Container>
-        <Link href="/Login">Login</Link>
+        <Link href="/login">Login</Link>
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <TouchableOpacity
             onPress={() => {
