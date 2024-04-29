@@ -9,7 +9,6 @@ import * as console from "node:console";
 
 const AuthTokenController = async (req: Request, res: Response) => {
     // TODO:Add more logging
-
     // Extract authorization token from request
     const authorizationToken = req.query.code;
     console.log("Authorization token:", authorizationToken)
@@ -28,9 +27,6 @@ const AuthTokenController = async (req: Request, res: Response) => {
     // get the main access token from env variables
     const accessToken = env.ACCESS_TOKEN;
 
-    // Create a new storage object
-    const storage = new Storage(accessToken);
-
     try {
         // post request to monday to receive the access token using the authorization token
         const response = await axios({
@@ -40,7 +36,7 @@ const AuthTokenController = async (req: Request, res: Response) => {
                 client_id: clientId,
                 client_secret: clientSecret,
                 code: authorizationToken,
-                redirect_uri: "http://localhost:8080/auth-token",
+                redirect_uri: "https://1e4e-151-248-53-93.ngrok-free.app/auth-token",
             },
         });
 
@@ -58,6 +54,9 @@ const AuthTokenController = async (req: Request, res: Response) => {
         }
 
         const retrievedAccessToken = response.data.access_token;
+
+        // Create a new storage object
+        const storage = new Storage(accessToken);
 
         // generate a small key to store the access token in storage
         const generatedKey = (Math.random() + 1).toString(36).substring(8);
@@ -77,7 +76,7 @@ const AuthTokenController = async (req: Request, res: Response) => {
             });
         }
 
-        return res.redirect("http://localhost:8081?token=" + generatedToken + "&key=" + generatedKey);
+        return res.redirect("http://localhost:8081/buffer/?token=" + generatedToken + "&key=" + generatedKey);
     } catch (error) {
         console.error("Error exchanging authorization token:", error);
         res.redirect("http://localhost:8081?error=" + "InvalidAuthorizationToken");
