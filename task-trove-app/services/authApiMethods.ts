@@ -6,16 +6,15 @@ export async function getAccessToken(temporaryCode: string, storageKey: string) 
   const url = `${OAUTH_SERVER_URL}/access-token`;
   try {
     const config = {
-      method: 'get',
-      maxBodyLength: Infinity,
+      method: 'post',
       url: url + '/access-token',
-      headers: {
+      data: {
         temporary_code: temporaryCode,
         storage_key: storageKey,
       },
     };
-
-    axios.request(config);
+    // TODO: ADD ZOD to validate the response
+    return (await axios.request(config)).data.access_token;
   } catch (error) {
     console.error('Error getting access token:', error);
     return null;
