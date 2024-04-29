@@ -36,13 +36,8 @@ export default function Login() {
       <Container>
         <Logo />
 
-        <Link href="/">
-          <Button>Home</Button>
-        </Link>
-        <Link href="/1">
-          <Button>Onboarding 1</Button>
-        </Link>
-
+        <Link href="/">Home</Link>
+        <Link href="/1">Onboarding1</Link>
         <Button onPress={testLogin}>Test Login</Button>
         <Button onPress={testLogout}>Test Logout</Button>
 
