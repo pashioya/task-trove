@@ -5,6 +5,9 @@
 .vscode/**
 
 .expo/**
+android/**
+
+oauth-server/src/controller/auth-token-test.ts
 
 **/.env
 
