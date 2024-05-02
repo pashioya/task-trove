@@ -49,9 +49,13 @@ export const toggleShareLocation = async (
       const speed = locations[0].coords.speed;
 
       setRegion({ lat, long, speed });
-      updateLocation('1478906273', '1478906281', lat, long, 'realtime location').then(() => {
-        console.log(`${new Date(Date.now()).toLocaleString()}: ${lat},${long} - Speed ${speed}`);
-      });
+      try {
+        updateLocation('1478906273', '1478906281', lat, long, 'realtime location').then(() => {
+          console.log(`${new Date(Date.now()).toLocaleString()}: ${lat},${long} - Speed ${speed}`);
+        });
+      } catch {
+        console.error('Error updating location');
+      }
     }
   });
 

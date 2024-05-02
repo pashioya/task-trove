@@ -5,7 +5,7 @@ import { Text, View } from 'tamagui';
 import { Container } from '~/tamagui.config';
 import React, { useEffect, useState } from 'react';
 import * as ExpoLocation from 'expo-location';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, Alert } from 'react-native';
 import { toggleShareLocation } from '~/utils/LocationSync';
 import { AntDesign } from '@expo/vector-icons';
 
@@ -14,6 +14,14 @@ export default function Home() {
 
   const [isTracking, setIsTracking] = useState(false);
   const [region, setRegion] = useState({ lat: 0, long: 0, speed: 0 });
+
+  const showPermissionAlert = () => {
+    return Alert.alert(
+      'Location Permission Needed',
+      'This app requires location access to function correctly. Please consider granting permission.',
+      [{ text: 'Settings', onPress: () => Linking.openSettings() }, { text: 'Cancel' }],
+    );
+  };
 
   useEffect(() => {
     const requestPermissions = async () => {
@@ -24,7 +32,11 @@ export default function Home() {
         console.log('backgroundStatus', backgroundStatus);
         if (backgroundStatus !== 'granted') {
           console.log('Background location permission not granted');
+          showPermissionAlert();
         }
+      } else {
+        console.log('Foreground location permission not granted');
+        showPermissionAlert();
       }
     };
     requestPermissions();
