@@ -8,8 +8,7 @@ export async function updateLocation(
   long: number,
   task: string,
 ): Promise<void> {
-  const token: string | undefined =
-    'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjM1NDY1Mzk3OCwiYWFpIjoxMSwidWlkIjo1OTMyNDY0MywiaWFkIjoiMjAyNC0wNS0wMlQwOToxODoxNS4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6NTY3MTA4MywicmduIjoidXNlMSJ9.LM1UOx5zWhGGfMKdP6eocsMGpHPaa9ZKuvq7_Q__ZO0';
+  const token: string | undefined = process.env.MONDAY_API_TOKEN;
   const monday = mondaySdk();
   monday.setApiVersion('2024-04');
   if (token) {
