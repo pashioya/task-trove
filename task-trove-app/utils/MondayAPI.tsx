@@ -7,11 +7,14 @@ export async function updateLocation(
   long: number,
   task: string,
 ): Promise<void> {
-  const token: string =
-    'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjM1MzM1NTA2NSwiYWFpIjoxMSwidWlkIjo2MDA3MzYxNiwiaWFkIjoiMjAyNC0wNC0yOVQxNTozODozNy4wMzdaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTY1NTUwNTAsInJnbiI6ImV1YzEifQ.0Q6zPqqTJsZIH4oDkEmpwEtQU4-PgjDbGdBta92gkcQ';
+  const token: string | undefined = process.env.MONDAY_API_TOKEN;
   const monday = mondaySdk();
   monday.setApiVersion('2024-04');
-  monday.setToken(token);
+  if (token) {
+    monday.setToken(token);
+  } else {
+    throw new Error('Monday API token not found');
+  }
 
   const query = /* GraphQL */ `
     mutation ($boardId: ID!, $itemId: ID!, $columnValues: JSON!) {
