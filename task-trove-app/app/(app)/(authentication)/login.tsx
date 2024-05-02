@@ -3,6 +3,7 @@ import { Link, Stack } from 'expo-router';
 import { useContext } from 'react';
 import { Image, Button, styled } from 'tamagui';
 
+import { CLIENT_ID, OAUTH_SERVER_URL } from '~/app/_layout';
 import { Container } from '~/components/Container';
 import AuthContext from '~/contexts/AuthenticationContext';
 
@@ -17,6 +18,10 @@ export default function Login() {
     authContext.logOut();
   };
 
+  const printAccessToken = () => {
+    console.log('access token:', authContext.getAccessToken());
+  };
+
   const Logo = styled(Image, {
     name: 'Logo',
     source: require('~/assets/tryve-logo.png'),
@@ -26,7 +31,12 @@ export default function Login() {
 
   const openMonday = async () => {
     const url =
-      'https://auth.monday.com/oauth2/authorize?client_id=55b279c1eb45e23ce60d4cc032d63ab6&redirect_uri=http://localhost:8080/auth-token&scope=me:read&app_version_id=10233356';
+      'https://auth.monday.com/oauth2/authorize?client_id=' +
+      CLIENT_ID +
+      '&redirect_uri=' +
+      OAUTH_SERVER_URL +
+      'auth-token&app_version_id=10147702';
+    console.log('opening url:', url);
     await Linking.openURL(url);
   };
 
@@ -42,6 +52,7 @@ export default function Login() {
         <Button onPress={testLogout}>Test Logout</Button>
 
         <Button onPress={openMonday}>Sign In With Monday</Button>
+        <Button onPress={printAccessToken}>Print Access Token</Button>
 
         <Image
           source={{

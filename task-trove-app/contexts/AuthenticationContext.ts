@@ -7,6 +7,7 @@ export interface AuthenticationContext {
   loggedInUser: User | undefined;
   logIn: (accessToken: string) => void;
   logOut: () => void;
+  getAccessToken: () => string | null;
 }
 
 const AuthContext = createContext<AuthenticationContext>({
@@ -14,6 +15,7 @@ const AuthContext = createContext<AuthenticationContext>({
   loggedInUser: undefined,
   logIn: () => {},
   logOut: () => {},
+  getAccessToken: () => null,
 });
 
 export default AuthContext;
