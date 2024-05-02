@@ -1,4 +1,5 @@
 import mondaySdk from 'monday-sdk-js';
+import { Alert } from 'react-native';
 
 export async function updateLocation(
   boardId: string,
@@ -7,7 +8,8 @@ export async function updateLocation(
   long: number,
   task: string,
 ): Promise<void> {
-  const token: string | undefined = process.env.MONDAY_API_TOKEN;
+  const token: string | undefined =
+    'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjM1NDY1Mzk3OCwiYWFpIjoxMSwidWlkIjo1OTMyNDY0MywiaWFkIjoiMjAyNC0wNS0wMlQwOToxODoxNS4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6NTY3MTA4MywicmduIjoidXNlMSJ9.LM1UOx5zWhGGfMKdP6eocsMGpHPaa9ZKuvq7_Q__ZO0';
   const monday = mondaySdk();
   monday.setApiVersion('2024-04');
   if (token) {
@@ -40,7 +42,16 @@ export async function updateLocation(
     }),
   };
 
-  const response = await monday.api(query, { variables });
-  console.log(response);
-  return;
+  const showTrackingErrorAlert = () => {
+    Alert.alert('Location Tracking Error', 'There was an error starting location tracking', [
+      { text: 'OK' },
+    ]);
+  };
+
+  const { data } = await monday.api(query, { variables });
+  if (!data) {
+    console.error('Error updating location');
+    showTrackingErrorAlert();
+    throw new Error('Error updating location');
+  }
 }
