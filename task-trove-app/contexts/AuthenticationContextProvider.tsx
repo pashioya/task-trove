@@ -13,6 +13,8 @@ const AuthenticationContextProvider = ({ children }: IWithChildren) => {
   const [loggedInUser] = useState(undefined);
   // ! The isLoading not used but may be useful when doing the buffer authentication
   const [[isLoading, accessToken], setAccessToken] = useStorageState('accessToken');
+  const [[isLoadingST, storage_key], setStorageKey] = useStorageState('accessToken');
+  const [[isLoadingTC, temp_code], setTempCode] = useStorageState('accessToken');
 
   // check if accessToken is valid and set isAuthenticated
   useEffect(() => {
@@ -26,12 +28,19 @@ const AuthenticationContextProvider = ({ children }: IWithChildren) => {
       value={{
         loggedInUser,
         isAuthenticated,
+        isPendingAuthentication: false,
+        setTempCodes: (tempCode, storageKey) => {
+          setTempCode(tempCode);
+          setStorageKey(storageKey);
+        },
         logIn: accessToken => setAccessToken(accessToken),
         logOut: () => {
           setAccessToken(null);
           setIsAuthenticated(false);
         },
         getAccessToken: () => accessToken,
+        getStorageKey: () => storage_key,
+        getTempCode: () => temp_code,
       }}
     >
       {children}

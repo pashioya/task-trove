@@ -1,6 +1,6 @@
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { colorTokens } from '@tamagui/themes';
-import { Link, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
 import { useContext, useEffect } from 'react';
 
@@ -11,7 +11,7 @@ export default function DrawerLayout() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!authContext.isAuthenticated) {
+    if (!authContext.isAuthenticated && !authContext.isPendingAuthentication) {
       console.log('Redirecting to /Login');
       router.replace('/login');
     }
@@ -21,11 +21,7 @@ export default function DrawerLayout() {
     <Drawer
       screenOptions={{
         headerShown: true,
-        headerRight: () => (
-          <Link href="/map">
-            <MaterialIcons name="my-location" size={24} color="blue" />
-          </Link>
-        ),
+        headerRight: () => <MaterialIcons name="my-location" size={24} color="blue" />,
         drawerHideStatusBarOnOpen: true,
         drawerActiveBackgroundColor: colorTokens.light.blue.blue4,
         headerTitleAlign: 'center',

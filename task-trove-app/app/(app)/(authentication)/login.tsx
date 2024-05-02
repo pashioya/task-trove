@@ -38,6 +38,7 @@ export default function Login() {
       'auth-token&app_version_id=10147702';
     console.log('opening url:', url);
     await Linking.openURL(url);
+    authContext.isPendingAuthentication = true;
   };
 
   return (

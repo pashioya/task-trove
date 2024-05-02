@@ -75,9 +75,7 @@ const AuthTokenController = async (req: Request, res: Response) => {
       });
     }
 
-    return res.redirect(
-      'exp://127.0.0.1:8081/buffer/?token=' + generatedToken + '&key=' + generatedKey,
-    );
+    return res.redirect('exp://127.0.0.1:8081/?token=' + generatedToken + '&key=' + generatedKey);
   } catch (error) {
     console.error('Error exchanging authorization token:', error);
     res.redirect('exp://127.0.0.1:8081?error=' + 'InvalidAuthorizationToken');
