@@ -1,6 +1,7 @@
-import * as ExpoLocation from 'expo-location';
+import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
 import React from 'react';
+import { updateLocation } from './MondayAPI';
 
 const LOCATION_TASK_NAME = 'background-location-task';
 
@@ -10,11 +11,10 @@ export const toggleShareLocation = async (
   setRegion: React.Dispatch<React.SetStateAction<{ lat: number; long: number; speed: number }>>,
 ) => {
   const startLocationUpdates = async () => {
-    await ExpoLocation.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-      accuracy: ExpoLocation.Accuracy.Balanced,
-      timeInterval: 1000,
-      distanceInterval: 1,
-      // foregroundService is how you get the task to be updated as often as would be if the app was open
+    await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+      accuracy: Location.Accuracy.Highest,
+      timeInterval: 10000,
+      distanceInterval: 10,
       showsBackgroundLocationIndicator: true,
       foregroundService: {
         notificationTitle: 'Using your location',
@@ -22,7 +22,7 @@ export const toggleShareLocation = async (
       },
     });
 
-    const hasStarted = await ExpoLocation.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME);
+    const hasStarted = await Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME);
     console.log('Tracking started', hasStarted);
   };
 
@@ -31,7 +31,7 @@ export const toggleShareLocation = async (
 
     TaskManager.isTaskRegisteredAsync(LOCATION_TASK_NAME).then(tracking => {
       if (tracking) {
-        ExpoLocation.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
+        Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
       }
     });
   };
@@ -42,14 +42,20 @@ export const toggleShareLocation = async (
       return;
     }
     if (data) {
+      // @ts-ignore
       const locations = data.locations;
       const lat = locations[0].coords.latitude;
       const long = locations[0].coords.longitude;
       const speed = locations[0].coords.speed;
 
       setRegion({ lat, long, speed });
-
-      console.log(`${new Date(Date.now()).toLocaleString()}: ${lat},${long} - Speed ${speed}`);
+      try {
+        updateLocation('1478906273', '1478906281', lat, long, 'realtime location').then(() => {
+          console.log(`${new Date(Date.now()).toLocaleString()}: ${lat},${long} - Speed ${speed}`);
+        });
+      } catch {
+        console.error('Error updating location');
+      }
     }
   });
 
