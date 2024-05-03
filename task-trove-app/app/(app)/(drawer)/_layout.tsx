@@ -1,6 +1,6 @@
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { colorTokens } from '@tamagui/themes';
-import { useRouter } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
 import { useContext, useEffect } from 'react';
 
