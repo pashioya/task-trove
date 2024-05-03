@@ -11,10 +11,9 @@ interface IWithChildren {
 const AuthenticationContextProvider = ({ children }: IWithChildren) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loggedInUser] = useState(undefined);
-  // ! The isLoading not used but may be useful when doing the buffer authentication
-  const [[isLoading, accessToken], setAccessToken] = useStorageState('accessToken');
-  const [[isLoadingST, storage_key], setStorageKey] = useStorageState('accessToken');
-  const [[isLoadingTC, temp_code], setTempCode] = useStorageState('accessToken');
+  const [accessToken, setAccessToken] = useStorageState('accessToken');
+  const [storage_key, setStorageKey] = useStorageState('storageKey');
+  const [temp_code, setTempCode] = useStorageState('tempCode');
 
   // check if accessToken is valid and set isAuthenticated
   useEffect(() => {
@@ -29,8 +28,10 @@ const AuthenticationContextProvider = ({ children }: IWithChildren) => {
         loggedInUser,
         isAuthenticated,
         isPendingAuthentication: false,
-        setTempCodes: (tempCode, storageKey) => {
+        setTempCode: tempCode => {
           setTempCode(tempCode);
+        },
+        setStorageKey: storageKey => {
           setStorageKey(storageKey);
         },
         logIn: accessToken => setAccessToken(accessToken),
@@ -38,9 +39,9 @@ const AuthenticationContextProvider = ({ children }: IWithChildren) => {
           setAccessToken(null);
           setIsAuthenticated(false);
         },
-        getAccessToken: () => accessToken,
-        getStorageKey: () => storage_key,
-        getTempCode: () => temp_code,
+        getAccessToken: () => accessToken[1],
+        getStorageKey: () => storage_key[1],
+        getTempCode: () => temp_code[1],
       }}
     >
       {children}

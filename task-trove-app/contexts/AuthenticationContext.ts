@@ -6,7 +6,8 @@ export interface AuthenticationContext {
   isAuthenticated: boolean;
   isPendingAuthentication: boolean;
   loggedInUser: User | undefined;
-  setTempCodes: (tempCode: string, storageKey: string) => void;
+  setTempCode: (tempCode: string) => void;
+  setStorageKey: (storageKey: string) => void;
   logIn: (accessToken: string) => void;
   logOut: () => void;
   getAccessToken: () => string | null;
@@ -18,7 +19,8 @@ const AuthContext = createContext<AuthenticationContext>({
   isAuthenticated: false,
   isPendingAuthentication: false,
   loggedInUser: undefined,
-  setTempCodes: () => {},
+  setTempCode: () => {},
+  setStorageKey: () => {},
   logIn: () => {},
   logOut: () => {},
   getAccessToken: () => null,

@@ -3,7 +3,7 @@ import axios from 'axios';
 import { OAUTH_SERVER_URL } from '~/app/_layout';
 
 export async function getAccessToken(temporaryCode: string, storageKey: string) {
-  const url = `${OAUTH_SERVER_URL}/access-token`;
+  const url = `${OAUTH_SERVER_URL}access-token`;
   const config = {
     method: 'post',
     url,

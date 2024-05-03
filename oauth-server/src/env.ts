@@ -22,6 +22,7 @@ export const env = createEnv({
     MONDAY_CLIENT_SECRET: z.string().min(1),
     ACCESS_TOKEN: z.string().min(1),
     JWT_SECRET: z.string().min(1),
+    MONDAY_REDIRECT_URI: z.string().min(1),
   },
 
   isServer: true,
@@ -32,5 +33,6 @@ export const env = createEnv({
     MONDAY_CLIENT_SECRET: process.env.MONDAY_CLIENT_SECRET,
     ACCESS_TOKEN: process.env.ACCESS_TOKEN,
     JWT_SECRET: process.env.JWT_SECRET,
+    MONDAY_REDIRECT_URI: process.env.MONDAY_REDIRECT_URI,
   },
 });

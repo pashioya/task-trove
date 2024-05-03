@@ -8,6 +8,7 @@ import { env } from '@/env';
 import * as console from 'node:console';
 
 const AuthTokenController = async (req: Request, res: Response) => {
+  console.log('REQ_URL', req.query);
   // TODO:Add more logging
   // Extract authorization token from request
   const authorizationToken = req.query.code;
@@ -16,7 +17,7 @@ const AuthTokenController = async (req: Request, res: Response) => {
   // Check if authorization token exists
   if (!authorizationToken) {
     return res.status(ResponseStatus.UNAUTHORIZED).json({
-      message: 'Missing authorization token',
+      message: 'Missing authorization token: ' + req,
     });
   }
 
@@ -36,7 +37,7 @@ const AuthTokenController = async (req: Request, res: Response) => {
         client_id: clientId,
         client_secret: clientSecret,
         code: authorizationToken,
-        redirect_uri: 'https://1e4e-151-248-53-93.ngrok-free.app/auth-token',
+        redirect_uri: env.MONDAY_REDIRECT_URI,
       },
     });
 
@@ -44,11 +45,11 @@ const AuthTokenController = async (req: Request, res: Response) => {
 
     if (response.status === 401 || response.status === 403) {
       return res.status(ResponseStatus.UNAUTHORIZED).json({
-        message: 'Invalid authorization token',
+        message: 'Invalid authorization token:' + response,
       });
     } else if (response.status !== 200) {
       return res.status(ResponseStatus.INTERNAL_SERVER_ERROR).json({
-        message: 'Failed to obtain access token',
+        message: 'Failed to obtain access token: ' + response,
       });
     }
 
@@ -60,11 +61,9 @@ const AuthTokenController = async (req: Request, res: Response) => {
     // generate a small key to store the access token in storage
     const generatedKey = (Math.random() + 1).toString(36).substring(8);
 
-    const jwtSecret = env.JWT_SECRET;
-
-    // generate a temporary code that expires in 1 hour
-    const generatedToken = jwt.sign({ retrievedAccessToken }, jwtSecret, {
-      expiresIn: '1h',
+    // generate a temporary code that expires in 1 shour
+    const generatedToken = jwt.sign({ retrievedAccessToken }, env.JWT_SECRET, {
+      expiresIn: '5m',
     });
 
     const { success, error } = await storage.set(generatedKey, retrievedAccessToken);
@@ -78,7 +77,7 @@ const AuthTokenController = async (req: Request, res: Response) => {
     return res.redirect('exp://127.0.0.1:8081/?token=' + generatedToken + '&key=' + generatedKey);
   } catch (error) {
     console.error('Error exchanging authorization token:', error);
-    res.redirect('exp://127.0.0.1:8081?error=' + 'InvalidAuthorizationToken');
+    res.redirect('exp://127.0.0.1:8081?error=' + error);
   }
 };
 

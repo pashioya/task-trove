@@ -7,20 +7,26 @@ import { Text } from 'tamagui';
 import AuthContext from '~/contexts/AuthenticationContext';
 import { useAccessToken } from '~/hooks/useAccessToken';
 import { Container } from '~/tamagui.config';
+import { getAccessToken } from '~/utils/authApiMethods';
 
 export default function Home() {
   const url = Linking.useURL();
   const authContext = useContext(AuthContext);
-  const router = useRouter();
-  const mutation = useAccessToken();
+  // const mutation = useAccessToken();
 
-  // if url contains 'auth-token', then split the url and get the access token
-  if (url && url.includes('auth-token')) {
-    const authToken = url.split('auth-token=')[1];
-    // mutation.mutate({ temporaryCode: authToken, storage });
+  if (url?.includes('token')) {
+    const tempCode = url.split('token=')[1];
+    const storageKey = url.split('key=')[1];
+
+    console.log('tempCode:', url.split('token=')[1]);
+    console.log('storageKey:', url.split('key=')[1]);
+    getAccessToken(storageKey, tempCode).then(res => {
+      console.log('res:', res);
+      authContext.logIn(res.access_token);
+    });
   }
 
-  if (!authContext.isAuthenticated && authContext.isPendingAuthentication) {
+  if (authContext.isPendingAuthentication) {
     return (
       <Container>
         <AntDesign name="loading1" size={24} color="black" />;

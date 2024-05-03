@@ -22,6 +22,11 @@ export default function Login() {
     console.log('access token:', authContext.getAccessToken());
   };
 
+  const printTempCodes = () => {
+    console.log('Temp Code:', authContext.getTempCode());
+    console.log('Storage Key:', authContext.getStorageKey());
+  };
+
   const Logo = styled(Image, {
     name: 'Logo',
     source: require('~/assets/tryve-logo.png'),
@@ -35,12 +40,11 @@ export default function Login() {
       CLIENT_ID +
       '&redirect_uri=' +
       OAUTH_SERVER_URL +
-      'auth-token&app_version_id=10147702';
+      'auth-token';
     console.log('opening url:', url);
     await Linking.openURL(url);
     authContext.isPendingAuthentication = true;
   };
-
   return (
     <>
       <Stack.Screen options={{ title: 'login' }} />
@@ -54,6 +58,7 @@ export default function Login() {
 
         <Button onPress={openMonday}>Sign In With Monday</Button>
         <Button onPress={printAccessToken}>Print Access Token</Button>
+        <Button onPress={printTempCodes}>Print Temp Codes</Button>
 
         <Image
           source={{
