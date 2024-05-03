@@ -13,5 +13,5 @@ export async function getAccessToken(temporaryCode: string, storageKey: string) 
     },
   };
   // TODO: ADD ZOD to validate the response
-  return (await axios.request(config)).data.access_token;
+  return (await axios.request<{ access_token: string }>(config)).data.access_token;
 }

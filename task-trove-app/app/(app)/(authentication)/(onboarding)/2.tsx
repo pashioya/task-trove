@@ -1,5 +1,5 @@
 import { Stack } from 'expo-router';
-import { Button, Text } from 'tamagui';
+import { Text } from 'tamagui';
 
 import { Container } from '~/components/Container';
 

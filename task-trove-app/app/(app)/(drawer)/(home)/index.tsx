@@ -26,15 +26,18 @@ export default function Home() {
     });
   }
 
-  const showPermissionAlert = () => {
-    return Alert.alert(
-      'Location Permission Needed',
-      'This app requires location access to function correctly. Please consider granting permission.',
-      [{ text: 'Settings', onPress: () => Linking.openSettings() }, { text: 'Cancel' }],
-    );
-  };
-
   useEffect(() => {
+    const showPermissionAlert = () => {
+      Alert.alert(
+        'Location Permission Needed',
+        'This app requires location access to function correctly. Please consider granting permission.',
+        [
+          { text: 'Settings', onPress: async () => await Linking.openSettings() },
+          { text: 'Cancel' },
+        ],
+      );
+    };
+
     const requestPermissions = async () => {
       const { status: foregroundStatus } = await ExpoLocation.requestForegroundPermissionsAsync();
       console.log('foregroundStatus', foregroundStatus);
@@ -69,9 +72,7 @@ export default function Home() {
         <Text>URL: {url}</Text>
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <TouchableOpacity
-            onPress={() => {
-              toggleShareLocation(isTracking, setIsTracking, setRegion);
-            }}
+            onPress={async () => await toggleShareLocation(isTracking, setIsTracking, setRegion)}
           >
             {isTracking ? (
               <AntDesign name="pausecircleo" size={24} color="black" />

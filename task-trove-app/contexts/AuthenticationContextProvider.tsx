@@ -1,12 +1,12 @@
-import { ReactNode, useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 
 import AuthenticationContext from './AuthenticationContext';
 
 import { useStorageState } from '~/hooks/useStorageState';
 
-interface IWithChildren {
+type IWithChildren = {
   children: ReactNode;
-}
+};
 
 const AuthenticationContextProvider = ({ children }: IWithChildren) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

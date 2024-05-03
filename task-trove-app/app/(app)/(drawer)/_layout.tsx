@@ -15,13 +15,17 @@ export default function DrawerLayout() {
       console.log('Redirecting to /Login');
       router.replace('/login');
     }
-  }, [authContext]);
+  }, [authContext, router]);
 
   return (
     <Drawer
       screenOptions={{
         headerShown: true,
-        headerRight: () => <MaterialIcons name="my-location" size={24} color="blue" />,
+        headerRight: () => (
+          <Link href="/(app)/(drawer)/(settings)/location-settings">
+            <MaterialIcons name="my-location" size={24} color="blue" />
+          </Link>
+        ),
         drawerHideStatusBarOnOpen: true,
         drawerActiveBackgroundColor: colorTokens.light.blue.blue4,
         headerTitleAlign: 'center',
