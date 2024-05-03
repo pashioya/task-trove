@@ -8,7 +8,7 @@ export async function updateLocation(
   long: number,
   task: string,
 ): Promise<void> {
-  const token: string | undefined = process.env.MONDAY_API_TOKEN;
+  const token: string | undefined = process.env.EXPO_PUBLIC_MONDAY_API_TOKEN;
   const monday = mondaySdk();
   monday.setApiVersion('2024-04');
   if (token) {
@@ -34,7 +34,7 @@ export async function updateLocation(
     itemId: String(itemId),
     columnValues: JSON.stringify({
       realtime_location: {
-        lat: lat,
+        lat,
         lng: long,
         address: task,
       },
@@ -47,7 +47,14 @@ export async function updateLocation(
     ]);
   };
 
-  const { data } = await monday.api(query, { variables });
+  const response = await monday.api(query, { variables });
+
+  if ('error_message' in response && typeof response.error_message === 'string') {
+    throw new Error(response.error_message);
+  }
+
+  const { data = null } = response;
+
   if (!data) {
     console.error('Error updating location');
     showTrackingErrorAlert();

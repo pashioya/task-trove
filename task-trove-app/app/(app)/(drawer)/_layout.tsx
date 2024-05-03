@@ -15,14 +15,14 @@ export default function DrawerLayout() {
       console.log('Redirecting to /Login');
       router.replace('/login');
     }
-  }, [authContext]);
+  }, [authContext, router]);
 
   return (
     <Drawer
       screenOptions={{
         headerShown: true,
         headerRight: () => (
-          <Link href="/map">
+          <Link href="/(app)/(drawer)/(settings)/location-settings">
             <MaterialIcons name="my-location" size={24} color="blue" />
           </Link>
         ),

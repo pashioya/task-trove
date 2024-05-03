@@ -9,7 +9,7 @@ export default function NotFoundScreen() {
       <Stack.Screen options={{ title: 'Oops!' }} />
       <Main>
         <YStack>
-          <Title>This screen doesn't exist.</Title>
+          <Title>This screen doesn&apos;t exist.</Title>
           <Link href="/">
             <Subtitle>Go to home screen!</Subtitle>
           </Link>
