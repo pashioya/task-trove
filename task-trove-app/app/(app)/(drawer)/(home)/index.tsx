@@ -1,20 +1,19 @@
 import { AntDesign } from '@expo/vector-icons';
 import * as Linking from 'expo-linking';
-import { Stack, Link, useRouter } from 'expo-router';
-import { useContext } from 'react';
+import * as ExpoLocation from 'expo-location';
+import { Stack, Link } from 'expo-router';
+import React, { useContext, useEffect, useState } from 'react';
+import { TouchableOpacity, Alert } from 'react-native';
 import { Text, View } from 'tamagui';
 
 import AuthContext from '~/contexts/AuthenticationContext';
-import { useAccessToken } from '~/hooks/useAccessToken';
 import { Container } from '~/tamagui.config';
-import { getAccessToken } from '~/utils/authApiMethods';
-import React, { useEffect, useState } from 'react';
-import * as ExpoLocation from 'expo-location';
-import { TouchableOpacity, Alert } from 'react-native';
 import { toggleShareLocation } from '~/utils/LocationSync';
-import { AntDesign } from '@expo/vector-icons';
+import { getAccessToken } from '~/utils/authApiMethods';
 
 export default function Home() {
+  const [isTracking, setIsTracking] = useState(false);
+  const [region, setRegion] = useState({ lat: 0, long: 0, speed: 0 });
   const url = Linking.useURL();
   const authContext = useContext(AuthContext);
   // const mutation = useAccessToken();
@@ -22,25 +21,10 @@ export default function Home() {
   if (url?.includes('token')) {
     const tempCode = url.split('token=')[1];
     const storageKey = url.split('key=')[1];
-
-    console.log('tempCode:', url.split('token=')[1]);
-    console.log('storageKey:', url.split('key=')[1]);
-    getAccessToken(storageKey, tempCode).then(res => {
-      console.log('res:', res);
-      authContext.logIn(res.access_token);
+    getAccessToken(tempCode, storageKey).then(accessToken => {
+      authContext.logIn(accessToken);
     });
   }
-
-  if (authContext.isPendingAuthentication) {
-    return (
-      <Container>
-        <AntDesign name="loading1" size={24} color="black" />;
-      </Container>
-    );
-  }
-
-  const [isTracking, setIsTracking] = useState(false);
-  const [region, setRegion] = useState({ lat: 0, long: 0, speed: 0 });
 
   const showPermissionAlert = () => {
     return Alert.alert(
@@ -68,6 +52,14 @@ export default function Home() {
     };
     requestPermissions();
   }, []);
+
+  if (authContext.isPendingAuthentication) {
+    return (
+      <Container>
+        <AntDesign name="loading1" size={24} color="black" />;
+      </Container>
+    );
+  }
 
   return (
     <>
