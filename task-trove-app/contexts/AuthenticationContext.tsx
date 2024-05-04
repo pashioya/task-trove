@@ -1,22 +1,26 @@
 import { createContext } from 'react';
 
-import { User } from '~/model/User';
+import type { User } from '~/model/User';
 
-export interface AuthenticationContext {
+export type AuthenticationContext = {
   isAuthenticated: boolean;
   isPendingAuthentication: boolean;
   loggedInUser: User | undefined;
   logIn: (accessToken: string) => void;
   logOut: () => void;
   getAccessToken: () => string | null;
-}
+};
 
 const AuthContext = createContext<AuthenticationContext>({
   isAuthenticated: false,
   isPendingAuthentication: false,
   loggedInUser: undefined,
-  logIn: () => {},
-  logOut: () => {},
+  logIn: () => {
+    console.log('logIn');
+  },
+  logOut: () => {
+    console.log('logOut');
+  },
   getAccessToken: () => null,
 });
 

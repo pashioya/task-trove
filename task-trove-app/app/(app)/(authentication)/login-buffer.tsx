@@ -1,9 +1,10 @@
 import { AntDesign } from '@expo/vector-icons';
 
-import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { Stack, useLocalSearchParams } from 'expo-router';
 import { useContext, useEffect } from 'react';
 import { Container } from '~/components/Container';
-import AuthContext, { AuthenticationContext } from '~/contexts/AuthenticationContext';
+import AuthContext, { type AuthenticationContext } from '~/contexts/AuthenticationContext';
+
 import { getAccessToken } from '~/utils/authApiMethods';
 
 async function handleLogin(
@@ -28,13 +29,17 @@ export default function LoginBuffer() {
   useEffect(() => {
     console.log('tempCode:', tempCode.toString());
     console.log('storageKey:', storageKey.toString());
-
-    if (tempCode && storageKey) {
-      handleLogin(tempCode.toString(), storageKey.toString(), authContext);
-    }
-
-    router.push('/');
-  }, [tempCode, storageKey]);
+    handleLogin(tempCode.toString(), storageKey.toString(), authContext)
+      .then(() => {
+        authContext.isPendingAuthentication = false;
+        authContext.isAuthenticated = true;
+        // router.push('/');
+      })
+      .catch(error => {
+        console.error('Error handling login:', error);
+        authContext.isPendingAuthentication = false;
+      });
+  }, [tempCode, storageKey, authContext]);
 
   return (
     <>

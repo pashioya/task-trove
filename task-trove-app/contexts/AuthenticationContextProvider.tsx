@@ -10,13 +10,16 @@ type IWithChildren = {
 
 const AuthenticationContextProvider = ({ children }: IWithChildren) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isPendingAuthentication, setIsPendingAuthentication] = useState(false);
   const [loggedInUser] = useState(undefined);
   const [accessToken, setAccessToken] = useStorageState('accessToken');
 
   // check if accessToken is valid and set isAuthenticated
   useEffect(() => {
-    if (accessToken) {
-      setIsAuthenticated(true); // Update only when accessToken changes
+    if (accessToken[1] == null) {
+      setIsAuthenticated(false);
+    } else {
+      setIsAuthenticated(true);
     }
   }, [accessToken]);
 
@@ -25,13 +28,21 @@ const AuthenticationContextProvider = ({ children }: IWithChildren) => {
       value={{
         loggedInUser,
         isAuthenticated,
-        isPendingAuthentication: false,
-        logIn: accessToken => setAccessToken(accessToken),
+        isPendingAuthentication,
+        logIn: accessToken => {
+          setAccessToken(accessToken);
+          setIsAuthenticated(true);
+        },
         logOut: () => {
           setAccessToken(null);
+          setIsPendingAuthentication(false);
           setIsAuthenticated(false);
         },
-        getAccessToken: () => accessToken[1],
+        getAccessToken: () => {
+          console.log('access token:', accessToken);
+          console.log('isPendingAuthentication:', isPendingAuthentication);
+          return accessToken[1];
+        },
       }}
     >
       {children}

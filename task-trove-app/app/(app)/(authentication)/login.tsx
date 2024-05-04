@@ -1,5 +1,5 @@
 import * as Linking from 'expo-linking';
-import { Link, Stack } from 'expo-router';
+import { Link, Stack, useRouter } from 'expo-router';
 import { useContext } from 'react';
 import { Image, Button, styled } from 'tamagui';
 
@@ -12,10 +12,6 @@ export default function Login() {
   const testLogin = () => {
     console.log('inserting testAccessToken into authContext');
     authContext.logIn('testAccessToken');
-  };
-  const testLogout = () => {
-    console.log('removing testAccessToken from authContext');
-    authContext.logOut();
   };
 
   const printAccessToken = () => {
@@ -37,9 +33,27 @@ export default function Login() {
       OAUTH_SERVER_URL +
       'auth-token';
     console.log('opening url:', url);
-    await Linking.openURL(url);
     authContext.isPendingAuthentication = true;
+
+    console.log('authContext: ', authContext);
+    await Linking.openURL(url);
   };
+
+  const url = Linking.useURL();
+  const router = useRouter();
+
+  if (authContext.isAuthenticated) {
+    router.push({ pathname: '/' });
+  }
+  if (url?.includes('token=')) {
+    console.log('URL:', url);
+    const tempCode = url.split('token=')[1].split('&key=')[0];
+    const storageKey = url.split('key=')[1];
+    console.log('tempCode:', tempCode);
+    console.log('storageKey:', storageKey);
+    router.push({ pathname: '/login-buffer', params: { tempCode, storageKey } });
+  }
+
   return (
     <>
       <Stack.Screen options={{ title: 'login' }} />
@@ -49,8 +63,6 @@ export default function Login() {
         <Link href="/">Home</Link>
         <Link href="/1">Onboarding1</Link>
         <Button onPress={testLogin}>Test Login</Button>
-        <Button onPress={testLogout}>Test Logout</Button>
-
         <Button onPress={openMonday}>Sign In With Monday</Button>
         <Button onPress={printAccessToken}>Print Access Token</Button>
 
