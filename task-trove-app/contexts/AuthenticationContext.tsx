@@ -8,6 +8,8 @@ export type AuthenticationContext = {
   loggedInUser: User | undefined;
   logIn: (accessToken: string) => void;
   logOut: () => void;
+  setIsAuthenticated: (isAuthenticated: boolean) => void;
+  setIsPendingAuthentication: (isPendingAuthentication: boolean) => void;
   getAccessToken: () => string | null;
 };
 
@@ -15,12 +17,15 @@ const AuthContext = createContext<AuthenticationContext>({
   isAuthenticated: false,
   isPendingAuthentication: false,
   loggedInUser: undefined,
-  logIn: () => {
-    console.log('logIn');
-  },
-  logOut: () => {
-    console.log('logOut');
-  },
+  // ! Disabled because the functions for logIn, logOut are described in the provider
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  logIn: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  logOut: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  setIsAuthenticated: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  setIsPendingAuthentication: () => {},
   getAccessToken: () => null,
 });
 

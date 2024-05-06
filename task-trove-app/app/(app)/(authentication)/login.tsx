@@ -1,6 +1,6 @@
 import * as Linking from 'expo-linking';
 import { Link, Stack, useRouter } from 'expo-router';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { Image, Button, styled } from 'tamagui';
 
 import { CLIENT_ID, OAUTH_SERVER_URL } from '~/app/_layout';
@@ -14,8 +14,10 @@ export default function Login() {
     authContext.logIn('testAccessToken');
   };
 
-  const printAccessToken = () => {
+  const printAuthDetails = () => {
+    console.log('authContext: ', authContext);
     console.log('access token:', authContext.getAccessToken());
+    console.log('url:', url);
   };
 
   const Logo = styled(Image, {
@@ -32,27 +34,25 @@ export default function Login() {
       '&redirect_uri=' +
       OAUTH_SERVER_URL +
       'auth-token';
-    console.log('opening url:', url);
-    authContext.isPendingAuthentication = true;
-
-    console.log('authContext: ', authContext);
+    console.log('is Pending:', authContext.isPendingAuthentication);
+    authContext.setIsPendingAuthentication(true);
+    console.log('is Pending:', authContext.isPendingAuthentication);
     await Linking.openURL(url);
   };
 
   const url = Linking.useURL();
   const router = useRouter();
 
-  if (authContext.isAuthenticated) {
-    router.push({ pathname: '/' });
-  }
-  if (url?.includes('token=')) {
-    console.log('URL:', url);
-    const tempCode = url.split('token=')[1].split('&key=')[0];
-    const storageKey = url.split('key=')[1];
-    console.log('tempCode:', tempCode);
-    console.log('storageKey:', storageKey);
-    router.push({ pathname: '/login-buffer', params: { tempCode, storageKey } });
-  }
+  useEffect(() => {
+    if (authContext.isAuthenticated) {
+      router.push({ pathname: '/' });
+    }
+    if (url?.includes('token=') && !authContext.isAuthenticated) {
+      const tempCode = url.split('token=')[1].split('&key=')[0];
+      const storageKey = url.split('key=')[1];
+      router.replace({ pathname: '/login-buffer', params: { tempCode, storageKey } });
+    }
+  }, [authContext, router, url]);
 
   return (
     <>
@@ -64,7 +64,7 @@ export default function Login() {
         <Link href="/1">Onboarding1</Link>
         <Button onPress={testLogin}>Test Login</Button>
         <Button onPress={openMonday}>Sign In With Monday</Button>
-        <Button onPress={printAccessToken}>Print Access Token</Button>
+        <Button onPress={printAuthDetails}>Print Auth Details</Button>
 
         <Image
           source={{

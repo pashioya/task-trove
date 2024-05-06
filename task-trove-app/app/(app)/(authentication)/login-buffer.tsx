@@ -1,45 +1,28 @@
 import { AntDesign } from '@expo/vector-icons';
 
-import { Stack, useLocalSearchParams } from 'expo-router';
-import { useContext, useEffect } from 'react';
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
+import { useContext } from 'react';
 import { Container } from '~/components/Container';
-import AuthContext, { type AuthenticationContext } from '~/contexts/AuthenticationContext';
+import AuthContext from '~/contexts/AuthenticationContext';
 
-import { getAccessToken } from '~/utils/authApiMethods';
-
-async function handleLogin(
-  tempCode: string,
-  storageKey: string,
-  authContext: AuthenticationContext,
-) {
-  try {
-    const response = await getAccessToken(tempCode.toString(), storageKey.toString());
-    const accessToken = response.data.access_token;
-    console.log('accessToken:', accessToken);
-    authContext.logIn(accessToken);
-  } catch (error) {
-    console.error('Error getting access token:', error);
-  }
-}
+import { useAccessToken } from '~/hooks/useAccessToken';
 
 export default function LoginBuffer() {
   const authContext = useContext(AuthContext);
+  const router = useRouter();
   const { tempCode, storageKey } = useLocalSearchParams();
+  const { accessToken } = useAccessToken(tempCode.toString(), storageKey.toString());
 
-  useEffect(() => {
-    console.log('tempCode:', tempCode.toString());
-    console.log('storageKey:', storageKey.toString());
-    handleLogin(tempCode.toString(), storageKey.toString(), authContext)
-      .then(() => {
-        authContext.isPendingAuthentication = false;
-        authContext.isAuthenticated = true;
-        // router.push('/');
-      })
-      .catch(error => {
-        console.error('Error handling login:', error);
-        authContext.isPendingAuthentication = false;
-      });
-  }, [tempCode, storageKey, authContext]);
+  // ! should this be in a useEffect?
+  if (accessToken) {
+    authContext.logIn(accessToken);
+    authContext.setIsAuthenticated(true);
+    authContext.setIsPendingAuthentication(false);
+    console.log('Authenticated!');
+    router.replace('/');
+  }
+
+  console.log('accessToken:', accessToken);
 
   return (
     <>

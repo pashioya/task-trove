@@ -1,7 +1,7 @@
 import { AntDesign } from '@expo/vector-icons';
 import * as Linking from 'expo-linking';
 import * as ExpoLocation from 'expo-location';
-import { Stack, useRouter } from 'expo-router';
+import { Stack } from 'expo-router';
 import React, { useContext, useEffect, useState } from 'react';
 import { TouchableOpacity, Alert } from 'react-native';
 import { Button, Text, View } from 'tamagui';
@@ -14,19 +14,9 @@ export default function Home() {
   const [isTracking, setIsTracking] = useState(false);
   const [region, setRegion] = useState({ lat: 0, long: 0, speed: 0 });
   const url = Linking.useURL();
-  const router = useRouter();
   const authContext = useContext(AuthContext);
 
   useEffect(() => {
-    // if (url) {
-    //   console.log('URL:', url);
-    //   if (authContext.isPendingAuthentication) {
-    //     const tempCode = url.split('token=')[1].split('&key=')[0];
-    //     const storageKey = url.split('key=')[1];
-    //     router.push({ pathname: '/login-buffer', params: { tempCode, storageKey } });
-    //   }
-    // }
-
     // Handle location permissions on mount
     const requestPermissions = async () => {
       const { status: foregroundStatus } = await ExpoLocation.requestForegroundPermissionsAsync();
@@ -49,7 +39,7 @@ export default function Home() {
     };
 
     requestPermissions();
-  }, [authContext.isAuthenticated, authContext.isPendingAuthentication, router, url]);
+  }, [url]);
 
   // Handle location sharing toggle
   const handleToggleShareLocation = async () => {
@@ -58,6 +48,12 @@ export default function Home() {
     } catch (error) {
       console.error('Error toggling location sharing:', error);
     }
+  };
+
+  const printAuthDetails = () => {
+    console.log('authContext: ', authContext);
+    console.log('access token:', authContext.getAccessToken());
+    console.log('url:', url);
   };
 
   return (
@@ -79,6 +75,7 @@ export default function Home() {
               ? `${region.lat.toFixed(3)}, ${region.long.toFixed(3)}, Speed: ${region.speed.toFixed(3)}`
               : 'You are not currently sharing your location'}
           </Text>
+          <Button onPress={printAuthDetails}>Print Auth Details</Button>
         </View>
       </Container>
     </>

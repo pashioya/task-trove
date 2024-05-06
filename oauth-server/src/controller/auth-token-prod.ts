@@ -17,7 +17,7 @@ const AuthTokenController = async (req: Request, res: Response) => {
   // Check if authorization token exists
   if (!authorizationToken) {
     return res.status(ResponseStatus.UNAUTHORIZED).json({
-      message: 'Missing authorization token: ' + req,
+      message: 'Missing authorization token: ' + req
     })
   }
 
@@ -37,19 +37,19 @@ const AuthTokenController = async (req: Request, res: Response) => {
         client_id: clientId,
         client_secret: clientSecret,
         code: authorizationToken,
-        redirect_uri: env.MONDAY_REDIRECT_URI,
-      },
+        redirect_uri: env.MONDAY_REDIRECT_URI
+      }
     })
 
     console.log('Monday response status:', response.status)
 
     if (response.status === 401 || response.status === 403) {
       return res.status(ResponseStatus.UNAUTHORIZED).json({
-        message: 'Invalid authorization token:' + response,
+        message: 'Invalid authorization token:' + response
       })
     } else if (response.status !== 200) {
       return res.status(ResponseStatus.INTERNAL_SERVER_ERROR).json({
-        message: 'Failed to obtain access token: ' + response,
+        message: 'Failed to obtain access token: ' + response
       })
     }
 
@@ -63,14 +63,14 @@ const AuthTokenController = async (req: Request, res: Response) => {
 
     // generate a temporary code that expires in 1 shour
     const generatedToken = jwt.sign({ retrievedAccessToken }, env.JWT_SECRET, {
-      expiresIn: '5m',
+      expiresIn: '5m'
     })
 
     const { success, error } = await storage.set(generatedKey, retrievedAccessToken)
     if (!success) {
       console.error('Failed to store access token:', error)
       return res.status(ResponseStatus.INTERNAL_SERVER_ERROR).json({
-        message: 'Failed to store access token',
+        message: 'Failed to store access token'
       })
     }
 

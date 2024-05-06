@@ -28,10 +28,13 @@ const AuthenticationContextProvider = ({ children }: IWithChildren) => {
       value={{
         loggedInUser,
         isAuthenticated,
+        setIsAuthenticated,
         isPendingAuthentication,
+        setIsPendingAuthentication,
         logIn: accessToken => {
           setAccessToken(accessToken);
           setIsAuthenticated(true);
+          setIsPendingAuthentication(false);
         },
         logOut: () => {
           setAccessToken(null);
