@@ -14,13 +14,18 @@ export default function Home() {
 
   const [isTracking, setIsTracking] = useState(false);
   const [region, setRegion] = useState({ lat: 0, long: 0, speed: 0 });
+  const [foregroundStatus, setForegroundStatus] = useState('');
+  const [backgroundStatus, setBackgroundStatus] = useState('');
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    console.log(process.env);
     const requestPermissions = async () => {
       const { status: foregroundStatus } = await ExpoLocation.requestForegroundPermissionsAsync();
-      console.log('foregroundStatus', foregroundStatus);
+      setForegroundStatus(foregroundStatus);
       if (foregroundStatus === 'granted') {
         const { status: backgroundStatus } = await ExpoLocation.requestBackgroundPermissionsAsync();
+        setBackgroundStatus(backgroundStatus);
         console.log('backgroundStatus', backgroundStatus);
         if (backgroundStatus !== 'granted') {
           console.log('Background location permission not granted');
@@ -39,15 +44,23 @@ export default function Home() {
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <TouchableOpacity
             onPress={() => {
-              toggleShareLocation(isTracking, setIsTracking, setRegion);
+              try {
+                toggleShareLocation(isTracking, setIsTracking, setRegion);
+              } catch (e: any) {
+                setError(e);
+              }
             }}
           >
+            {error && <Text>{error}</Text>}
             {isTracking ? (
               <AntDesign name="pausecircleo" size={24} color="black" />
             ) : (
               <AntDesign name="playcircleo" size={24} color="black" />
             )}
           </TouchableOpacity>
+          <Text>Foreground permission: {foregroundStatus}</Text>
+          <Text>Background permission: {backgroundStatus}</Text>
+          <Text>Error: {error}</Text>
           <Text>
             {isTracking
               ? `${region.lat.toFixed(3)}, ${region.long.toFixed(3)}, Speed: ${region.speed.toFixed(3)}`
