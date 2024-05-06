@@ -1,6 +1,6 @@
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
-import React from 'react';
+import type React from 'react';
 import { updateLocation } from './MondayAPI';
 
 const LOCATION_TASK_NAME = 'background-location-task';
@@ -29,29 +29,38 @@ export const toggleShareLocation = async (
   const stopLocationUpdates = async () => {
     console.log('Tracking stopped');
 
-    TaskManager.isTaskRegisteredAsync(LOCATION_TASK_NAME).then(tracking => {
+    try {
+      const tracking = await Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME);
+
       if (tracking) {
-        Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
+        await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
       }
-    });
+    } catch (error) {
+      console.error('Error stopping location updates', error);
+    }
   };
 
-  TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
+  TaskManager.defineTask<{
+    locations?: { coords: { latitude: number; longitude: number; speed: number } }[];
+  }>(LOCATION_TASK_NAME, async ({ data, error }) => {
     if (error) {
       console.log('LOCATION_TRACKING task ERROR:', error);
       return;
     }
-    if (data) {
-      // @ts-ignore
+    if (data.locations && data.locations.length > 0) {
       const locations = data.locations;
       const lat = locations[0].coords.latitude;
       const long = locations[0].coords.longitude;
       const speed = locations[0].coords.speed;
 
       setRegion({ lat, long, speed });
-      updateLocation('1478906273', '1478906281', lat, long, 'realtime location').then(() => {
+
+      try {
+        await updateLocation('1478906273', '1478906281', lat, long, 'realtime location');
         console.log(`${new Date(Date.now()).toLocaleString()}: ${lat},${long} - Speed ${speed}`);
-      });
+      } catch (error) {
+        console.error('Error updating location', error);
+      }
     }
   });
 

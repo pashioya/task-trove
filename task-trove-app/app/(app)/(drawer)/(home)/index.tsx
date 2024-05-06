@@ -5,7 +5,7 @@ import { Text, View } from 'tamagui';
 import { Container } from '~/tamagui.config';
 import React, { useEffect, useState } from 'react';
 import * as ExpoLocation from 'expo-location';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, Alert } from 'react-native';
 import { toggleShareLocation } from '~/utils/LocationSync';
 import { AntDesign } from '@expo/vector-icons';
 
@@ -19,7 +19,17 @@ export default function Home() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    console.log(process.env);
+    const showPermissionAlert = () => {
+      Alert.alert(
+        'Location Permission Needed',
+        'This app requires location access to function correctly. Please consider granting permission.',
+        [
+          { text: 'Settings', onPress: async () => await Linking.openSettings() },
+          { text: 'Cancel' },
+        ],
+      );
+    };
+
     const requestPermissions = async () => {
       const { status: foregroundStatus } = await ExpoLocation.requestForegroundPermissionsAsync();
       setForegroundStatus(foregroundStatus);
@@ -29,7 +39,11 @@ export default function Home() {
         console.log('backgroundStatus', backgroundStatus);
         if (backgroundStatus !== 'granted') {
           console.log('Background location permission not granted');
+          showPermissionAlert();
         }
+      } else {
+        console.log('Foreground location permission not granted');
+        showPermissionAlert();
       }
     };
     requestPermissions();
@@ -43,12 +57,12 @@ export default function Home() {
         <Text>URL: {url}</Text>
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <TouchableOpacity
-            onPress={() => {
-              try {
-                toggleShareLocation(isTracking, setIsTracking, setRegion);
-              } catch (e: any) {
-                setError(e);
-              }
+            onPress={async () => {
+                try {
+                    await toggleShareLocation(isTracking, setIsTracking, setRegion)
+                } catch (e: any) {
+                    setError(e);
+                }
             }}
           >
             {error && <Text>{error}</Text>}
