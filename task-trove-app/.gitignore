@@ -9,7 +9,6 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 *.apk
-eas.json
 
 web-build/
 # expo router
