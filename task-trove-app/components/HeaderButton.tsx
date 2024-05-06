@@ -3,7 +3,7 @@ import { forwardRef } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 
 export const HeaderButton = forwardRef<typeof Pressable, { onPress?: () => void }>(
-  ({ onPress }, ref) => {
+  ({ onPress }) => {
     return (
       <Pressable onPress={onPress}>
         {({ pressed }) => (
@@ -21,8 +21,10 @@ export const HeaderButton = forwardRef<typeof Pressable, { onPress?: () => void 
         )}
       </Pressable>
     );
-  }
+  },
 );
+
+HeaderButton.displayName = 'HeaderButton';
 
 export const styles = StyleSheet.create({
   headerRight: {
