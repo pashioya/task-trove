@@ -7,8 +7,6 @@
 .expo/**
 android/**
 
-**.apk
-**/eas.json
 
 oauth-server/src/controller/auth-token-test.ts
 
