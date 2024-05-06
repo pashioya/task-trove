@@ -16,6 +16,9 @@
     "production": {
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "ANDROID_HOME": "/mnt/c/Users/noahd/AppData/Local/Android/Sdk"
       }
     }
   }
