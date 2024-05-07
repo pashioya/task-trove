@@ -3,11 +3,12 @@ import { Stack, Link } from 'expo-router';
 import { Text, View } from 'tamagui';
 
 import { Container } from '~/tamagui.config';
-import React, { useEffect, useState } from 'react';
+import React, {useContext, useEffect, useState } from 'react';
 import * as ExpoLocation from 'expo-location';
 import { TouchableOpacity, Alert } from 'react-native';
 import { toggleShareLocation } from '~/utils/LocationSync';
 import { AntDesign } from '@expo/vector-icons';
+import SettingsContext from '~/contexts/SettingsContext';
 
 export default function Home() {
   const url = Linking.useURL();
@@ -17,6 +18,8 @@ export default function Home() {
   const [foregroundStatus, setForegroundStatus] = useState('');
   const [backgroundStatus, setBackgroundStatus] = useState('');
   const [error, setError] = useState(null);
+
+  const { board, column, item } = useContext(SettingsContext);
 
   useEffect(() => {
     const showPermissionAlert = () => {
@@ -59,7 +62,7 @@ export default function Home() {
           <TouchableOpacity
             onPress={async () => {
                 try {
-                    await toggleShareLocation(isTracking, setIsTracking, setRegion)
+                    await toggleShareLocation(isTracking, setIsTracking, setRegion, board.id, column.id, item.id);
                 } catch (e: any) {
                     setError(e);
                 }
@@ -75,6 +78,16 @@ export default function Home() {
           <Text>Foreground permission: {foregroundStatus}</Text>
           <Text>Background permission: {backgroundStatus}</Text>
           <Text>Error: {error}</Text>
+
+            <Text>
+                {board ? `Board: ${board.name}` : 'No board selected'}
+            </Text>
+            <Text>
+                {column ? `Column: ${column.title}` : 'No column selected'}
+            </Text>
+            <Text>
+                {item ? `Item: ${item.name}` : 'No item selected'}
+            </Text>
           <Text>
             {isTracking
               ? `${region.lat.toFixed(3)}, ${region.long.toFixed(3)}, Speed: ${region.speed.toFixed(3)}`

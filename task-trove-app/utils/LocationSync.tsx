@@ -9,6 +9,9 @@ export const toggleShareLocation = async (
   isTracking: boolean,
   setIsTracking: React.Dispatch<React.SetStateAction<boolean>>,
   setRegion: React.Dispatch<React.SetStateAction<{ lat: number; long: number; speed: number }>>,
+  boardId: string,
+  columnId: string,
+  itemId: string,
 ) => {
   const startLocationUpdates = async () => {
     await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
@@ -56,7 +59,7 @@ export const toggleShareLocation = async (
       setRegion({ lat, long, speed });
 
       try {
-        await updateLocation('1478906273', '1478906281', lat, long, 'realtime location');
+        await updateLocation(boardId, columnId, itemId, lat, long, 'realtime location');
         console.log(`${new Date(Date.now()).toLocaleString()}: ${lat},${long} - Speed ${speed}`);
       } catch (error) {
         console.error('Error updating location', error);

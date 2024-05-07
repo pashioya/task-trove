@@ -5,6 +5,7 @@ import { Stack, SplashScreen } from 'expo-router';
 import React, { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { TamaguiProvider } from 'tamagui';
+import SettingsContextProvider from '~/contexts/SettingsContextProvider';
 
 import config from '../../tamagui.config';
 
@@ -36,6 +37,7 @@ export default function AppLayout() {
     <TamaguiProvider config={config}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <QueryClientProvider client={queryClient}>
+          <SettingsContextProvider>
           <Stack>
             <Stack.Screen name="(authentication)" options={{ headerShown: true }} />
             <Stack.Screen
@@ -45,6 +47,7 @@ export default function AppLayout() {
               }}
             />
           </Stack>
+          </SettingsContextProvider>
         </QueryClientProvider>
       </GestureHandlerRootView>
     </TamaguiProvider>
