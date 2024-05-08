@@ -1,8 +1,6 @@
 import mondaySdk from 'monday-sdk-js';
 import { Alert } from 'react-native';
-import type { Board } from '~/model/Board';
-import type { Column } from '~/model/Column';
-import type { Item } from '~/model/Item';
+import type { Board, Column, Item } from '~/model/Index';
 
 export async function updateLocation(
   boardId: string,
@@ -22,8 +20,8 @@ export async function updateLocation(
   }
 
   console.log('boardId', boardId);
-    console.log('itemId', itemId);
-    console.log('columnId', columnId);
+  console.log('itemId', itemId);
+  console.log('columnId', columnId);
 
   const query = /* GraphQL */ `
     mutation ($boardId: ID!, $itemId: ID!, $columnValues: JSON!) {
@@ -48,7 +46,7 @@ export async function updateLocation(
   const variables = {
     boardId: String(boardId),
     itemId: String(itemId),
-    columnValues: JSON.stringify({ ...columnValues}),
+    columnValues: JSON.stringify({ ...columnValues }),
   };
 
   const showTrackingErrorAlert = () => {
@@ -92,9 +90,16 @@ export async function fetchBoards(): Promise<Board[]> {
     }
   `;
 
-  const response = await monday.api(query);
+  const response = await monday.api<{
+    boards: Board[];
+  }>(query);
+
   const { data = null } = response;
-  return data.boards;
+  if (!data) {
+    throw new Error('Error fetching boards');
+  } else {
+    return data.boards;
+  }
 }
 
 export async function fetchLocationColumns(boardId: string): Promise<Column[]> {
@@ -105,7 +110,7 @@ export async function fetchLocationColumns(boardId: string): Promise<Column[]> {
     monday.setToken(token);
   } else {
     throw new Error('Monday API token not found');
-  };
+  }
 
   const query = /* GraphQL */ `
     query ($boardId: ID!) {
@@ -119,28 +124,40 @@ export async function fetchLocationColumns(boardId: string): Promise<Column[]> {
     }
   `;
 
-  const variables = {boardId: String(boardId)};
-  const response = await monday.api(query, {variables});
+  type columnsType = {
+    columns: Column[];
+  };
+
+  const variables = { boardId: String(boardId) };
+  const response = await monday.api<{
+    boards: columnsType[];
+  }>(query, { variables });
+
+  console.log('response', response.data.boards);
+  console.log(response.data.boards[0].columns);
+
   const { data = null } = response;
-  const columns = data.boards[0].columns;
-  return columns;
+  if (!data) {
+    throw new Error('Error fetching columns');
+  } else {
+    return data.boards[0].columns;
+  }
 }
 
 export async function fetchItems(boardId: string): Promise<Item[]> {
-  const token: string | undefined = process.env.EXPO_PUBLIC_MONDAY_API_TOKEN
+  const token: string | undefined = process.env.EXPO_PUBLIC_MONDAY_API_TOKEN;
   const monday = mondaySdk();
   monday.setApiVersion('2024-04');
   if (token) {
     monday.setToken(token);
   } else {
     throw new Error('Monday API token not found');
-  };
+  }
 
   const query = /* GraphQL */ `
     query ($boardId: ID!) {
       boards(ids: [$boardId]) {
         items_page(limit: 100) {
-          cursor
           items {
             id
             name
@@ -150,9 +167,22 @@ export async function fetchItems(boardId: string): Promise<Item[]> {
     }
   `;
 
-  const variables = {boardId: String(boardId)};
-  const response = await monday.api(query, {variables});
+  type itemsPageType = {
+    items_page: {
+      items: Item[];
+    };
+  };
+
+  const variables = { boardId: String(boardId) };
+  const response = await monday.api<{
+    boards: itemsPageType[];
+  }>(query, { variables });
+  console.log('response', response.data.boards[0]);
+
   const { data = null } = response;
+  if (!data) {
+    throw new Error('Error fetching items');
+  }
   const items = data.boards[0].items_page.items;
   return items;
 }

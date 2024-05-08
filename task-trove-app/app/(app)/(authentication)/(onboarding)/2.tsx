@@ -1,16 +1,12 @@
-import { Stack } from 'expo-router';
-import { router } from 'expo-router';
+import { Stack, router } from 'expo-router';
 import { Text } from 'tamagui';
 import { Button, View } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { fetchBoards, fetchLocationColumns, fetchItems } from '~/utils/MondayAPI';
-import React from 'react';
-import { Board } from '~/model/Board';
+import type { Board, Column, Item } from '~/model/Index';
 
 import { Container } from '~/components/Container';
-import { useEffect, useState, useContext } from 'react';
-import { Column } from '~/model/Column';
-import { Item } from '~/model/Item';
+import React, { useEffect, useState, useContext } from 'react';
 import SettingsContext from '~/contexts/SettingsContext';
 
 export default function Two() {
@@ -25,9 +21,13 @@ export default function Two() {
   const { setBoard, setColumn, setItem } = useContext(SettingsContext);
 
   useEffect(() => {
-    fetchBoards().then(data => {
-      setBoards(data);
-    });
+    fetchBoards()
+      .then(data => {
+        setBoards(data);
+      })
+      .catch(error => {
+        console.error('Error fetching boards:', error);
+      });
   }, []);
 
   const handleBoardChange = async (board: Board) => {
@@ -53,7 +53,7 @@ export default function Two() {
     setItem(selectedItem);
     console.log('Changes saved!');
     router.replace('/');
-  }
+  };
 
   return (
     <>
@@ -64,6 +64,7 @@ export default function Two() {
           <Picker
             style={{ flex: 1 }}
             selectedValue={selectedboard.name}
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             onValueChange={(_itemValue, itemIndex) => handleBoardChange(boards[itemIndex])}
           >
             {boards.map(board => (
@@ -71,37 +72,36 @@ export default function Two() {
             ))}
           </Picker>
 
-
           {columns.length > 0 ? (
-          <Picker
-            style={{ flex: 1 }}
-            selectedValue={selectedColumn.title}
-            onValueChange={(_itemValue, itemIndex) => setSelectedColumn(columns[itemIndex])}
-          >
-            {columns.map(column => (
-              <Picker.Item key={column.id} label={column.title} value={column.title} />
-            ))}
-          </Picker>) :
-              <Text>
-                    No location columns in that table
-              </Text>
-          }
+            <Picker
+              style={{ flex: 1 }}
+              selectedValue={selectedColumn.title}
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              onValueChange={(_itemValue, itemIndex) => setSelectedColumn(columns[itemIndex])}
+            >
+              {columns.map(column => (
+                <Picker.Item key={column.id} label={column.title} value={column.title} />
+              ))}
+            </Picker>
+          ) : (
+            <Text>No location columns in that table</Text>
+          )}
           {items.length > 0 ? (
-          <Picker
+            <Picker
               style={{ flex: 1 }}
               selectedValue={selectedItem.name}
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
               onValueChange={(_itemValue, itemIndex) => setSelectedItem(items[itemIndex])}
-          >
-            {items.map(item => (
+            >
+              {items.map(item => (
                 <Picker.Item key={item.id} label={item.name} value={item.name} />
-            ))}
-          </Picker>) :
-              <Text>
-                    No items in that table
-              </Text>
-          }
-            <Button title="Save" onPress={() => saveChanges()} />
-          </View>
+              ))}
+            </Picker>
+          ) : (
+            <Text>No items in that table</Text>
+          )}
+          <Button title="Save" onPress={() => saveChanges()} />
+        </View>
       </Container>
     </>
   );

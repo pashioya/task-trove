@@ -1,7 +1,5 @@
 import { useState, type ReactNode } from 'react';
-import { Board } from '~/model/Board';
-import { Column } from '~/model/Column';
-import { Item } from '~/model/Item';
+import type { Board, Column, Item } from '~/model/Index';
 import SettingsContext from './SettingsContext';
 
 type IWithChildren = {

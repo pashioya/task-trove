@@ -1,10 +1,10 @@
-import React, { createContext } from 'react';
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* the functions setBoard, setColumn, and setItem are empty here, the logic is in the SettingsContextProvider*/
+import { createContext } from 'react';
 
-import type { Board } from '~/model/Board';
-import type { Column } from '~/model/Column';
-import type { Item } from '~/model/Item';
+import type { Board, Column, Item } from '~/model/Index';
 
-export type SettingsContext = {
+export type SettContext = {
   board: Board;
   column: Column;
   item: Item;
@@ -13,7 +13,7 @@ export type SettingsContext = {
   setItem: (item: Item) => void;
 };
 
-const SettingsContext = createContext<SettingsContext>({
+const SettingsContext = createContext<SettContext>({
   board: {} as Board,
   column: {} as Column,
   item: {} as Item,

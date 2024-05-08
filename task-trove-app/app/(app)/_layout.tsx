@@ -38,15 +38,15 @@ export default function AppLayout() {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <QueryClientProvider client={queryClient}>
           <SettingsContextProvider>
-          <Stack>
-            <Stack.Screen name="(authentication)" options={{ headerShown: true }} />
-            <Stack.Screen
-              name="(drawer)"
-              options={{
-                headerShown: false,
-              }}
-            />
-          </Stack>
+            <Stack>
+              <Stack.Screen name="(authentication)" options={{ headerShown: true }} />
+              <Stack.Screen
+                name="(drawer)"
+                options={{
+                  headerShown: false,
+                }}
+              />
+            </Stack>
           </SettingsContextProvider>
         </QueryClientProvider>
       </GestureHandlerRootView>
