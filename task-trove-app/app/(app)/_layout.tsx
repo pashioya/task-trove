@@ -44,6 +44,7 @@ export default function AppLayout() {
                 headerShown: false,
               }}
             />
+            <Stack.Screen name="(onboarding)" options={{ headerShown: true }} />
           </Stack>
         </QueryClientProvider>
       </GestureHandlerRootView>

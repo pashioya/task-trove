@@ -1,6 +1,6 @@
 import * as Linking from 'expo-linking';
-import { Stack, Link } from 'expo-router';
-import { Text, View } from 'tamagui';
+import { Stack, useRouter } from 'expo-router';
+import { Button, Text, View } from 'tamagui';
 
 import { Container } from '~/tamagui.config';
 import React, { useEffect, useState } from 'react';
@@ -16,15 +16,19 @@ export default function Home() {
   const [region, setRegion] = useState({ lat: 0, long: 0, speed: 0 });
   const [foregroundStatus, setForegroundStatus] = useState('');
   const [backgroundStatus, setBackgroundStatus] = useState('');
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string>('');
 
+  const router = useRouter();
   useEffect(() => {
     const showPermissionAlert = () => {
       Alert.alert(
         'Location Permission Needed',
         'This app requires location access to function correctly. Please consider granting permission.',
         [
-          { text: 'Settings', onPress: async () => await Linking.openSettings() },
+          {
+            text: 'Settings',
+            onPress: async () => await Linking.openSettings(),
+          },
           { text: 'Cancel' },
         ],
       );
@@ -51,21 +55,17 @@ export default function Home() {
 
   return (
     <>
-      <Stack.Screen options={{ title: 'Home' }} />
+      <Stack.Screen options={{ title: 'Home', headerShown: false }} />
       <Container>
-        <Link href="/login">Login</Link>
         <Text>URL: {url}</Text>
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <TouchableOpacity
-            onPress={async () => {
-                try {
-                    await toggleShareLocation(isTracking, setIsTracking, setRegion)
-                } catch (e: any) {
-                    setError(e);
-                }
-            }}
+            onPress={async () =>
+              await toggleShareLocation(isTracking, setIsTracking, setRegion).catch(
+                (error: string) => setError(error),
+              )
+            }
           >
-            {error && <Text>{error}</Text>}
             {isTracking ? (
               <AntDesign name="pausecircleo" size={24} color="black" />
             ) : (
@@ -80,6 +80,13 @@ export default function Home() {
               ? `${region.lat.toFixed(3)}, ${region.long.toFixed(3)}, Speed: ${region.speed.toFixed(3)}`
               : 'You are not currently sharing your location'}
           </Text>
+          <Button marginBottom={3} onPress={() => router.replace('/login')}>
+            Login Page
+          </Button>
+          <Button marginBottom={3} onPress={() => router.replace('/1')}>
+            View OnBoarding 1
+          </Button>
+          <Button onPress={() => router.replace('/2')}>View OnBoarding 2</Button>
         </View>
       </Container>
     </>
