@@ -1,7 +1,7 @@
 import { Stack } from 'expo-router';
 import { router } from 'expo-router';
 import { Text } from 'tamagui';
-import { Button, FlatList, View } from 'react-native';
+import { Button, View } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { fetchBoards, fetchLocationColumns, fetchItems } from '~/utils/MondayAPI';
 import React from 'react';
@@ -12,12 +12,12 @@ import { useEffect, useState, useContext } from 'react';
 import { Column } from '~/model/Column';
 import { Item } from '~/model/Item';
 import SettingsContext from '~/contexts/SettingsContext';
-import { SearchBar } from 'react-native-screens';
 
 export default function Two() {
   const [boards, setBoards] = useState<Board[]>([]);
   const [columns, setColumns] = useState<Column[]>([]);
   const [items, setItems] = useState<Item[]>([]);
+
   const [selectedboard, setSelectedBoard] = useState<Board>({} as Board);
   const [selectedColumn, setSelectedColumn] = useState<Column>({} as Column);
   const [selectedItem, setSelectedItem] = useState<Item>({} as Item);
@@ -33,23 +33,18 @@ export default function Two() {
   const handleBoardChange = async (board: Board) => {
     setSelectedBoard(board);
 
-    const columns = await fetchLocationColumns(board.id);
-    const items = await fetchItems(board.id);
+    const retrievedColumns = await fetchLocationColumns(board.id);
+    const retrievedItems = await fetchItems(board.id);
 
-    if (columns.length === 0) {
-      return;
-    } else if (columns.length === 1) {
-      setSelectedColumn(columns[0]);
+    if (retrievedColumns.length === 1) {
+      setSelectedColumn(retrievedColumns[0]);
     }
+    setColumns(retrievedColumns);
 
-    if (items.length === 0) {
-      return;
-    } else if (items.length === 1) {
-        setSelectedItem(items[0]);
+    if (retrievedItems.length === 1) {
+      setSelectedItem(retrievedItems[0]);
     }
-
-    setColumns(columns);
-    setItems(items);
+    setItems(retrievedItems);
   };
 
   const saveChanges = () => {
@@ -75,6 +70,9 @@ export default function Two() {
               <Picker.Item key={board.id} label={board.name} value={board.name} />
             ))}
           </Picker>
+
+
+          {columns.length > 0 ? (
           <Picker
             style={{ flex: 1 }}
             selectedValue={selectedColumn.title}
@@ -83,7 +81,12 @@ export default function Two() {
             {columns.map(column => (
               <Picker.Item key={column.id} label={column.title} value={column.title} />
             ))}
-          </Picker>
+          </Picker>) :
+              <Text>
+                    No location columns in that table
+              </Text>
+          }
+          {items.length > 0 ? (
           <Picker
               style={{ flex: 1 }}
               selectedValue={selectedItem.name}
@@ -92,7 +95,11 @@ export default function Two() {
             {items.map(item => (
                 <Picker.Item key={item.id} label={item.name} value={item.name} />
             ))}
-          </Picker>
+          </Picker>) :
+              <Text>
+                    No items in that table
+              </Text>
+          }
             <Button title="Save" onPress={() => saveChanges()} />
           </View>
       </Container>

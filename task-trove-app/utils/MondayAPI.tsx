@@ -12,7 +12,7 @@ export async function updateLocation(
   long: number,
   task: string,
 ): Promise<void> {
-  const token: string | undefined = 'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjM1NDczNDc4OCwiYWFpIjoxMSwidWlkIjo2MDA3MzYxNiwiaWFkIjoiMjAyNC0wNS0wMlQxMjo0NTo1NC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTY1NTUwNTAsInJnbiI6ImV1YzEifQ.5qLJ_CEwNWoibLIF_jVCwHIbYCSSg4xTiLTeGGkooFc';
+  const token: string | undefined = process.env.EXPO_PUBLIC_MONDAY_API_TOKEN;
   const monday = mondaySdk();
   monday.setApiVersion('2024-04');
   if (token) {
@@ -74,7 +74,7 @@ export async function updateLocation(
 }
 
 export async function fetchBoards(): Promise<Board[]> {
-  const token: string | undefined = 'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjM1NDczNDc4OCwiYWFpIjoxMSwidWlkIjo2MDA3MzYxNiwiaWFkIjoiMjAyNC0wNS0wMlQxMjo0NTo1NC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTY1NTUwNTAsInJnbiI6ImV1YzEifQ.5qLJ_CEwNWoibLIF_jVCwHIbYCSSg4xTiLTeGGkooFc';
+  const token: string | undefined = process.env.EXPO_PUBLIC_MONDAY_API_TOKEN;
   const monday = mondaySdk();
   monday.setApiVersion('2024-04');
   if (token) {
@@ -85,7 +85,7 @@ export async function fetchBoards(): Promise<Board[]> {
 
   const query = /* GraphQL */ `
     {
-      boards(page: 1) {
+      boards(limit: 100, order_by: used_at) {
         id
         name
       }
@@ -98,7 +98,7 @@ export async function fetchBoards(): Promise<Board[]> {
 }
 
 export async function fetchLocationColumns(boardId: string): Promise<Column[]> {
-  const token: string | undefined = 'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjM1NDczNDc4OCwiYWFpIjoxMSwidWlkIjo2MDA3MzYxNiwiaWFkIjoiMjAyNC0wNS0wMlQxMjo0NTo1NC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTY1NTUwNTAsInJnbiI6ImV1YzEifQ.5qLJ_CEwNWoibLIF_jVCwHIbYCSSg4xTiLTeGGkooFc';
+  const token: string | undefined = process.env.EXPO_PUBLIC_MONDAY_API_TOKEN;
   const monday = mondaySdk();
   monday.setApiVersion('2024-04');
   if (token) {
@@ -127,7 +127,7 @@ export async function fetchLocationColumns(boardId: string): Promise<Column[]> {
 }
 
 export async function fetchItems(boardId: string): Promise<Item[]> {
-  const token: string | undefined = 'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjM1NDczNDc4OCwiYWFpIjoxMSwidWlkIjo2MDA3MzYxNiwiaWFkIjoiMjAyNC0wNS0wMlQxMjo0NTo1NC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTY1NTUwNTAsInJnbiI6ImV1YzEifQ.5qLJ_CEwNWoibLIF_jVCwHIbYCSSg4xTiLTeGGkooFc';
+  const token: string | undefined = process.env.EXPO_PUBLIC_MONDAY_API_TOKEN
   const monday = mondaySdk();
   monday.setApiVersion('2024-04');
   if (token) {
