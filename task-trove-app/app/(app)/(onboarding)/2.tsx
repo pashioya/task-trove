@@ -1,6 +1,6 @@
 import { router, Stack } from 'expo-router';
 import { useState } from 'react';
-import { Button, Text, View, XStack, YStack } from 'tamagui';
+import { Button, FontLanguage, Text, View, XStack, YStack } from 'tamagui';
 
 import { Container } from '~/components/Container';
 import { SelectBottomDrawer } from '~/components/SelectBottomDrawer';
@@ -29,9 +29,9 @@ export default function Two() {
         <View alignContent="center" alignItems="center">
           <YStack gap="$4" alignItems="center">
             <Text textAlign="center" color="blue" fontSize={40}>
-              Location Board Selection{' '}
+              Location Board Selection
             </Text>
-            <Text>Description</Text>
+            <Text color="black">Description</Text>
           </YStack>
           <YStack gap="$4" alignItems="center">
             <SelectBottomDrawer

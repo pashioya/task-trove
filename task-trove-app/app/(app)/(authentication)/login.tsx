@@ -3,8 +3,8 @@ import { router, Stack } from 'expo-router';
 import { useContext } from 'react';
 import { Image, Button, YStack } from 'tamagui';
 
-import { Container } from '~/components/Container';
 import AuthContext from '~/contexts/AuthenticationContext';
+import { Container } from '~/components/Container';
 
 export default function Login() {
   const authContext = useContext(AuthContext);
@@ -30,7 +30,7 @@ export default function Login() {
         <YStack marginTop="$15">
           <Image
             source={{
-              uri: require('~/assets/tryve-logo.png'),
+              uri: require('~/assets/images/tryve-logo.png'),
               height: 130,
             }}
             width="100%"

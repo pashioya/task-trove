@@ -78,5 +78,9 @@ module.exports = {
     react: {
       version: 'detect',
     },
+    paths: {
+      '@/*': ['./*'],
+      '~/*': ['*'],
+    },
   },
 };

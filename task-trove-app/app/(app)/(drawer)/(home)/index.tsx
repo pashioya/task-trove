@@ -77,7 +77,9 @@ export default function Home() {
           <Text>Error: {error}</Text>
           <Text>
             {isTracking
-              ? `${region.lat.toFixed(3)}, ${region.long.toFixed(3)}, Speed: ${region.speed.toFixed(3)}`
+              ? `${region.lat.toFixed(3)}, ${region.long.toFixed(
+                  3,
+                )}, Speed: ${region.speed.toFixed(3)}`
               : 'You are not currently sharing your location'}
           </Text>
           <Button marginBottom={3} onPress={() => router.replace('/login')}>
