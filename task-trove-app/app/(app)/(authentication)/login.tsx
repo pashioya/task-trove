@@ -15,15 +15,9 @@ export default function Login() {
     <>
       <Stack.Screen options={{ title: 'login' }} />
       <Container>
-        {/* <Card
-          backgroundColor="white"
-          height="95%"
-          width="95%"
-          alignContent="center"
-          justifyContent="center"
-        > */}
-        <YStack marginTop="$15">
+        <YStack marginTop="$15" alignContent="center" alignItems="center">
           <Image
+            objectFit="contain"
             source={{
               uri: require('~/assets/images/tryve-logo.png'),
               height: 130,
@@ -52,7 +46,6 @@ export default function Login() {
             />
           </Button>
         </YStack>
-        {/* </Card> */}
       </Container>
     </>
   );

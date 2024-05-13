@@ -1,4 +1,4 @@
-import { Adapt, Select, Sheet, YStack } from 'tamagui';
+import { Select, Sheet, YStack } from 'tamagui';
 import React, { useMemo } from 'react';
 import { Check, ChevronDown, ChevronUp } from '@tamagui/lucide-icons';
 import { LinearGradient } from 'tamagui/linear-gradient';
@@ -26,19 +26,14 @@ export const SelectBottomDrawer: React.FC<SelectBottomDrawerProps> = ({
       onValueChange={value => onValueChange && onValueChange(value)}
       disablePreventBodyScroll
     >
-      <Select.Trigger width={220} backgroundColor="white">
-        <Select.Value
-          color="black"
-          textAlign="center"
-          alignItems="center"
-          justifyContent="center"
-          placeholder={placeholder}
-        />
+      <Select.Trigger width={220} iconAfter={ChevronDown} backgroundColor="white" color="black">
+        <Select.Value placeholder={placeholder} color="black" />
       </Select.Trigger>
 
-      <Adapt platform="native">
-        <Sheet
-          native={false}
+      {/* //! Ignored because of an issue with the Adapt Component. Fix Later */}
+      {/* @ts-expect-error TS2308 */}
+      <Select.Adapt when="sm">
+        <Select.Sheet
           modal
           dismissOnSnapToBottom
           animationConfig={{
@@ -48,14 +43,14 @@ export const SelectBottomDrawer: React.FC<SelectBottomDrawerProps> = ({
             stiffness: 250,
           }}
         >
-          <Sheet.Frame>
+          <Select.Sheet.Frame>
             <Sheet.ScrollView>
-              <Adapt.Contents />
+              <Select.Adapt.Contents />
             </Sheet.ScrollView>
-          </Sheet.Frame>
+          </Select.Sheet.Frame>
           <Sheet.Overlay animation="lazy" enterStyle={{ opacity: 0 }} exitStyle={{ opacity: 0 }} />
-        </Sheet>
-      </Adapt>
+        </Select.Sheet>
+      </Select.Adapt>
 
       <Select.Content zIndex={200000}>
         <Select.ScrollUpButton
@@ -77,25 +72,17 @@ export const SelectBottomDrawer: React.FC<SelectBottomDrawerProps> = ({
           />
         </Select.ScrollUpButton>
 
-        <Select.Viewport
-          // to do animations:
-          // animation="quick"
-          // animateOnly={['transform', 'opacity']}
-          // enterStyle={{ o: 0, y: -10 }}
-          // exitStyle={{ o: 0, y: 10 }}
-          minWidth={200}
-        >
+        <Select.Viewport>
           <Select.Group>
             <Select.Label>Fruits</Select.Label>
-            {/* for longer lists memoizing these is useful */}
             {useMemo(
               () =>
                 items.map((item, i) => {
                   return (
-                    <Select.Item index={i} key={item.name} value={item.name.toLowerCase()}>
+                    <Select.Item index={i} key={item.name} value={item.name}>
                       <Select.ItemText>{item.name}</Select.ItemText>
-                      <Select.ItemIndicator marginLeft="auto">
-                        {item.value === 'selected' && <Check size={20} />}
+                      <Select.ItemIndicator>
+                        <Check size={24} />
                       </Select.ItemIndicator>
                     </Select.Item>
                   );
