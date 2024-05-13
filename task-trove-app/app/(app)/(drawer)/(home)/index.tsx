@@ -87,16 +87,6 @@ export default function Home() {
               <AntDesign name="playcircleo" size={24} color="black" />
             )}
           </TouchableOpacity>
-          <Text>Foreground permission: {foregroundStatus}</Text>
-          <Text>Background permission: {backgroundStatus}</Text>
-          <Text>Error: {error}</Text>
-
-          <Text>{Object.keys(board).length ? `Board: ${board.name}` : 'No board selected'}</Text>
-          <Text>
-            {Object.keys(column).length ? `Column: ${column.title}` : 'No column selected'}
-          </Text>
-          <Text>{Object.keys(item).length ? `Item: ${item.name}` : 'No item selected'}</Text>
-          <Text>
           <Text color="black">Foreground permission: {foregroundStatus}</Text>
           <Text color="black">Background permission: {backgroundStatus}</Text>
           <Text color="black">Error: {error}</Text>
@@ -106,6 +96,15 @@ export default function Home() {
                   3,
                 )}, Speed: ${region.speed.toFixed(3)}`
               : 'You are not currently sharing your location'}
+          </Text>
+          <Text color="black">
+            {Object.keys(board).length ? `Board: ${board.name}` : 'No board selected'}
+          </Text>
+          <Text color="black">
+            {Object.keys(column).length ? `Column: ${column.title}` : 'No column selected'}
+          </Text>
+          <Text color="black">
+            {Object.keys(item).length ? `Item: ${item.name}` : 'No item selected'}
           </Text>
           <Button marginBottom={3} onPress={() => router.replace('/login')}>
             Login Page

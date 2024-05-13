@@ -1,26 +1,26 @@
 import { router, Stack } from 'expo-router';
-import { useState } from 'react';
+import { useContext } from 'react';
 import { Button, Text, View, XStack, YStack } from 'tamagui';
 
 import { Container } from '~/components/Container';
 import { SelectBottomDrawer } from '~/components/SelectBottomDrawer';
+import SettingsContext from '~/contexts/SettingsContext';
+import type { Board, Column, Item } from '~/model/types';
 
 export default function Two() {
-  const [selectedBoard, setSelectedBoard] = useState('');
-  const [selectedColumn, setSelectedColumn] = useState('');
-  const [selectedItem, setSelectedItem] = useState('');
+  const { board, column, item, setBoard, setColumn, setItem } = useContext(SettingsContext);
 
   const boardSelectItems = boards.map(board => ({
     name: board.name,
-    value: board.board_id,
+    value: board.id,
   }));
   const columnSelectItems = columns.map(column => ({
-    name: column.name,
-    value: column.column_id,
+    name: column.title,
+    value: column.id,
   }));
   const itemSelectItems = items.map(item => ({
     name: item.name,
-    value: item.item_id,
+    value: item.id,
   }));
   return (
     <>
@@ -39,25 +39,26 @@ export default function Two() {
             <SelectBottomDrawer
               items={boardSelectItems}
               placeholder="Board Select"
-              selectedValue={selectedBoard}
-              onValueChange={board => {
-                setSelectedBoard(board);
+              selectedValue={board.name}
+              onValueChange={boardId => {
+                setBoard(boards.find(board => board.id === boardId) || ({} as Board));
               }}
             />
             <SelectBottomDrawer
               items={columnSelectItems}
               placeholder="Column Select"
-              selectedValue={selectedColumn}
-              onValueChange={column => {
-                setSelectedColumn(column);
+              selectedValue={column.title}
+              onValueChange={columnID => {
+                setColumn(columns.find(column => column.id === columnID) || ({} as Column));
               }}
             />
             <SelectBottomDrawer
               items={itemSelectItems}
               placeholder="Item Select"
-              selectedValue={selectedItem}
-              onValueChange={item => {
-                setSelectedItem(item);
+              selectedValue={item.name}
+              onValueChange={itemId => {
+                setItem(items.find(item => item.id === itemId) || ({} as Item));
+                console.log('item:', itemId);
               }}
             />
           </YStack>
@@ -72,20 +73,21 @@ export default function Two() {
   );
 }
 
-const boards = [
-  { name: 'TestBoard1', board_id: '1test_board' },
-  { name: 'TestBoard2', board_id: '2test_board' },
-  { name: 'TestBoard3', board_id: '3test_board' },
+const boards: Board[] = [
+  { id: 'board_1', name: 'Board 1' },
+  { id: 'board_2', name: 'Board 2' },
+  { id: 'board_3', name: 'Board 3' },
+  { id: 'board_4', name: 'Board 4' },
 ];
 
-const columns = [
-  { name: 'TestColumn1', column_id: '1' },
-  { name: 'TestColumn2', column_id: '2' },
-  { name: 'TestColumn3', column_id: '3' },
+const columns: Column[] = [
+  { title: 'TestColumn1', id: 'column_1', type: 'test' },
+  { title: 'TestColumn2', id: 'column_2', type: 'test' },
+  { title: 'TestColumn3', id: 'column_3', type: 'test' },
 ];
 
-const items = [
-  { name: 'TestItem1', item_id: '1' },
-  { name: 'TestItem2', item_id: '2' },
-  { name: 'TestItem3', item_id: '3' },
+const items: Item[] = [
+  { name: 'TestItem1', id: 'item_1' },
+  { name: 'TestItem2', id: 'item_2' },
+  { name: 'TestItem3', id: 'item_3' },
 ];

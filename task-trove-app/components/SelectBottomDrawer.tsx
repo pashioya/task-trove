@@ -18,11 +18,12 @@ type SelectBottomDrawerProps = {
 export const SelectBottomDrawer: React.FC<SelectBottomDrawerProps> = ({
   items,
   placeholder,
+  selectedValue,
   onValueChange,
 }) => {
   return (
     <Select
-      value={placeholder}
+      value={selectedValue}
       onValueChange={value => onValueChange && onValueChange(value)}
       disablePreventBodyScroll
     >
@@ -79,7 +80,7 @@ export const SelectBottomDrawer: React.FC<SelectBottomDrawerProps> = ({
               () =>
                 items.map((item, i) => {
                   return (
-                    <Select.Item index={i} key={item.name} value={item.name}>
+                    <Select.Item index={i} key={item.name} value={item.value}>
                       <Select.ItemText>{item.name}</Select.ItemText>
                       <Select.ItemIndicator>
                         <Check size={24} />
