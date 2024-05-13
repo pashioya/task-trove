@@ -3,11 +3,12 @@ import { Stack, useRouter } from 'expo-router';
 import { Button, Text, View } from 'tamagui';
 
 import { Container } from '~/tamagui.config';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import * as ExpoLocation from 'expo-location';
 import { TouchableOpacity, Alert } from 'react-native';
 import { toggleShareLocation } from '~/utils/LocationSync';
 import { AntDesign } from '@expo/vector-icons';
+import SettingsContext from '~/contexts/SettingsContext';
 
 export default function Home() {
   const url = Linking.useURL();
@@ -16,7 +17,10 @@ export default function Home() {
   const [region, setRegion] = useState({ lat: 0, long: 0, speed: 0 });
   const [foregroundStatus, setForegroundStatus] = useState('');
   const [backgroundStatus, setBackgroundStatus] = useState('');
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState('');
+
+  const { board, column, item } = useContext(SettingsContext);
+  console.log();
 
   const router = useRouter();
   useEffect(() => {
@@ -60,11 +64,22 @@ export default function Home() {
         <Text color="black">URL: {url}</Text>
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <TouchableOpacity
-            onPress={async () =>
-              await toggleShareLocation(isTracking, setIsTracking, setRegion).catch(
-                (error: string) => setError(error),
-              )
-            }
+            onPress={async () => {
+              try {
+                await toggleShareLocation(
+                  isTracking,
+                  setIsTracking,
+                  setRegion,
+                  board.id.toString(),
+                  column.id.toString(),
+                  item.id.toString(),
+                );
+              } catch (e) {
+                if (e instanceof Error) {
+                  setError(e.message);
+                }
+              }
+            }}
           >
             {isTracking ? (
               <AntDesign name="pausecircleo" size={24} color="black" />
@@ -72,6 +87,16 @@ export default function Home() {
               <AntDesign name="playcircleo" size={24} color="black" />
             )}
           </TouchableOpacity>
+          <Text>Foreground permission: {foregroundStatus}</Text>
+          <Text>Background permission: {backgroundStatus}</Text>
+          <Text>Error: {error}</Text>
+
+          <Text>{Object.keys(board).length ? `Board: ${board.name}` : 'No board selected'}</Text>
+          <Text>
+            {Object.keys(column).length ? `Column: ${column.title}` : 'No column selected'}
+          </Text>
+          <Text>{Object.keys(item).length ? `Item: ${item.name}` : 'No item selected'}</Text>
+          <Text>
           <Text color="black">Foreground permission: {foregroundStatus}</Text>
           <Text color="black">Background permission: {backgroundStatus}</Text>
           <Text color="black">Error: {error}</Text>

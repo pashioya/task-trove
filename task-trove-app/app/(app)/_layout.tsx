@@ -5,6 +5,8 @@ import { Stack, SplashScreen } from 'expo-router';
 import React, { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { PortalProvider, TamaguiProvider } from 'tamagui';
+import { TamaguiProvider } from 'tamagui';
+import SettingsContextProvider from '~/contexts/SettingsContextProvider';
 
 import config from '../../tamagui.config';
 
