@@ -1,27 +1,26 @@
 import { router, Stack } from 'expo-router';
-import { useState } from 'react';
-import { Button, FontLanguage, Text, View, XStack, YStack } from 'tamagui';
+import { Button, Text, View, XStack, YStack } from 'tamagui';
 
 import { Container } from '~/components/Container';
-import { SelectBottomDrawer } from '~/components/SelectBottomDrawer';
+import BasicSelect from '~/components/Select';
 
 export default function Two() {
-  const [selectedBoard, setSelectedBoard] = useState('');
-  const [selectedColumn, setSelectedColumn] = useState('');
-  const [selectedItem, setSelectedItem] = useState('');
+  // const [selectedBoard, setSelectedBoard] = useState('');
+  // const [selectedColumn, setSelectedColumn] = useState('');
+  // const [selectedItem, setSelectedItem] = useState('');
 
-  const boardSelectItems = boards.map(board => ({
-    name: board.name,
-    value: board.board_id,
-  }));
-  const columnSelectItems = columns.map(column => ({
-    name: column.name,
-    value: column.column_id,
-  }));
-  const itemSelectItems = items.map(item => ({
-    name: item.name,
-    value: item.item_id,
-  }));
+  // const boardSelectItems = boards.map(board => ({
+  //   name: board.name,
+  //   value: board.board_id,
+  // }));
+  // const columnSelectItems = columns.map(column => ({
+  //   name: column.name,
+  //   value: column.column_id,
+  // }));
+  // const itemSelectItems = items.map(item => ({
+  //   name: item.name,
+  //   value: item.item_id,
+  // }));
   return (
     <>
       <Stack.Screen options={{ title: 'Onboarding Two', headerShown: false }} />
@@ -34,7 +33,7 @@ export default function Two() {
             <Text color="black">Description</Text>
           </YStack>
           <YStack gap="$4" alignItems="center">
-            <SelectBottomDrawer
+            {/* <SelectBottomDrawer
               items={boardSelectItems}
               placeholder="Board Select"
               selectedValue={selectedBoard}
@@ -42,26 +41,12 @@ export default function Two() {
                 setSelectedBoard(board);
                 console.log(selectedBoard);
               }}
-            />
-            <SelectBottomDrawer
-              items={columnSelectItems}
-              placeholder="Column Select"
-              selectedValue={selectedColumn}
-              onValueChange={column => {
-                setSelectedColumn(column);
-                console.log(selectedColumn);
-              }}
-            />
-            <SelectBottomDrawer
-              items={itemSelectItems}
-              placeholder="Item Select"
-              selectedValue={selectedItem}
-              onValueChange={item => {
-                setSelectedItem(item);
-                console.log(selectedItem);
-              }}
-            />
+            /> */}
+            <BasicSelect />
+            <BasicSelect />
+            <BasicSelect />
           </YStack>
+
           <XStack marginTop={20} gap="$4" justifyContent="center">
             <Button onPress={() => router.push('/1')}>Back</Button>
             <Button onPress={() => router.push('/')}>Finish</Button>
@@ -72,20 +57,20 @@ export default function Two() {
   );
 }
 
-const boards = [
-  { name: 'TestBoard1', board_id: '1test_board' },
-  { name: 'TestBoard2', board_id: '2test_board' },
-  { name: 'TestBoard3', board_id: '3test_board' },
-];
+// const boards = [
+//   { name: 'TestBoard1', board_id: '1test_board' },
+//   { name: 'TestBoard2', board_id: '2test_board' },
+//   { name: 'TestBoard3', board_id: '3test_board' },
+// ];
 
-const columns = [
-  { name: 'TestColumn1', column_id: '1' },
-  { name: 'TestColumn2', column_id: '2' },
-  { name: 'TestColumn3', column_id: '3' },
-];
+// const columns = [
+//   { name: 'TestColumn1', column_id: '1' },
+//   { name: 'TestColumn2', column_id: '2' },
+//   { name: 'TestColumn3', column_id: '3' },
+// ];
 
-const items = [
-  { name: 'TestItem1', item_id: '1' },
-  { name: 'TestItem2', item_id: '2' },
-  { name: 'TestItem3', item_id: '3' },
-];
+// const items = [
+//   { name: 'TestItem1', item_id: '1' },
+//   { name: 'TestItem2', item_id: '2' },
+//   { name: 'TestItem3', item_id: '3' },
+// ];

@@ -57,7 +57,7 @@ export default function Home() {
     <>
       <Stack.Screen options={{ title: 'Home', headerShown: false }} />
       <Container>
-        <Text>URL: {url}</Text>
+        <Text color="black">URL: {url}</Text>
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <TouchableOpacity
             onPress={async () =>
@@ -72,10 +72,10 @@ export default function Home() {
               <AntDesign name="playcircleo" size={24} color="black" />
             )}
           </TouchableOpacity>
-          <Text>Foreground permission: {foregroundStatus}</Text>
-          <Text>Background permission: {backgroundStatus}</Text>
-          <Text>Error: {error}</Text>
-          <Text>
+          <Text color="black">Foreground permission: {foregroundStatus}</Text>
+          <Text color="black">Background permission: {backgroundStatus}</Text>
+          <Text color="black">Error: {error}</Text>
+          <Text color="black">
             {isTracking
               ? `${region.lat.toFixed(3)}, ${region.long.toFixed(
                   3,

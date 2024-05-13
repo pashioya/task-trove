@@ -12,8 +12,8 @@ export default function One() {
       <Stack.Screen options={{ title: 'Onboarding One' }} />
       <Container>
         <View>
-          <YStack gap="$4">
-            <Title textAlign="center" fontSize={40}>
+          <YStack gap="$4" justifyContent="space-between">
+            <Title marginTop={150} textAlign="center" fontSize={40}>
               {' '}
               Onboarding One
             </Title>
