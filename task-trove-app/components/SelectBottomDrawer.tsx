@@ -54,13 +54,7 @@ export const SelectBottomDrawer: React.FC<SelectBottomDrawerProps> = ({
       </Select.Adapt>
 
       <Select.Content zIndex={200000}>
-        <Select.ScrollUpButton
-          alignItems="center"
-          justifyContent="center"
-          position="relative"
-          width="100%"
-          height="$3"
-        >
+        <Select.ScrollUpButton position="relative" width="100%" height="$3">
           <YStack zIndex={10}>
             <ChevronUp size={20} />
           </YStack>

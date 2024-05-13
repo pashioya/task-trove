@@ -58,7 +58,6 @@ export default function Two() {
               selectedValue={item.name}
               onValueChange={itemId => {
                 setItem(items.find(item => item.id === itemId) || ({} as Item));
-                console.log('item:', itemId);
               }}
             />
           </YStack>

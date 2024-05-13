@@ -20,7 +20,6 @@ export default function Home() {
   const [error, setError] = useState('');
 
   const { board, column, item } = useContext(SettingsContext);
-  console.log();
 
   const router = useRouter();
   useEffect(() => {
