@@ -1,12 +1,12 @@
 import * as Linking from 'expo-linking';
 import { router, Stack } from 'expo-router';
 import { Button, View } from 'tamagui';
-
 import { Container, mondayColors } from '~/tamagui.config';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import * as ExpoLocation from 'expo-location';
 import { TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import { toggleShareLocation } from '~/utils/LocationSync';
+import { useSession } from '~/contexts/session-provider';
 import SettingsContext from '~/contexts/SettingsContext';
 import MapView from 'react-native-maps';
 import { Ionicons } from '@expo/vector-icons';
@@ -18,6 +18,11 @@ export default function Home() {
   const [backgroundStatus, setBackgroundStatus] = useState('');
   const { board, column, item, error, isTracking, setIsTracking, setError } =
     useContext(SettingsContext);
+  const [error, setError] = useState('');
+
+  const { signOut } = useSession();
+
+  const { board, column, item } = useContext(SettingsContext);
 
   const showAlert = (error: string, onPress: () => void, buttonText: string) => {
     Alert.alert('Error', error, [

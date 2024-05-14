@@ -1,25 +1,26 @@
-import 'dotenv/config';
-import cors from 'cors';
-import express from 'express';
-import helmet from 'helmet';
+import 'dotenv/config'
+import cors from 'cors'
+import express from 'express'
+import helmet from 'helmet'
 
-import { env } from './env';
-import routes from './routes/routes';
-const app = express();
+import { env } from './env'
+import routes from './routes/routes'
+const app = express()
 
 app.use(
   express.json(),
   /** Express middleware */
   cors({
-    origin: '*',
+    origin: '*'
   }),
-  helmet(), // security-related HTTP headers
-);
+  helmet() // security-related HTTP headers
+)
 
-app.disable('x-powered-by');
+/** Disable the 'X-Powered-By' header to obscure server technology details for security */
+app.disable('x-powered-by')
 
-routes(app);
+routes(app)
 
-app.listen(env.PORT, () => console.log('Starting ExpressJS server on Port ' + env.PORT));
+app.listen(env.PORT, () => console.log('Starting ExpressJS server on Port ' + env.PORT))
 
-export default app;
+export default app
