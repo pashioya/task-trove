@@ -1,14 +1,58 @@
 import { router, Stack } from 'expo-router';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Button, Text, View, XStack, YStack } from 'tamagui';
 
 import { Container } from '~/components/Container';
 import { SelectBottomDrawer } from '~/components/SelectBottomDrawer';
 import SettingsContext from '~/contexts/SettingsContext';
 import type { Board, Column, Item } from '~/model/types';
+import { fetchBoards, fetchItems, fetchLocationColumns } from '~/utils/MondayAPI';
 
 export default function Two() {
-  const { board, column, item, setBoard, setColumn, setItem } = useContext(SettingsContext);
+  const [boards, setBoards] = useState<Board[]>([]);
+  const [columns, setColumns] = useState<Column[]>([]);
+  const [items, setItems] = useState<Item[]>([]);
+
+  const [selectedBoard, setSelectedBoard] = useState<Board>({} as Board);
+  const [selectedColumn, setSelectedColumn] = useState<Column>({} as Column);
+  const [selectedItem, setSelectedItem] = useState<Item>({} as Item);
+
+  const { setBoard, setColumn, setItem } = useContext(SettingsContext);
+
+  useEffect(() => {
+    fetchBoards()
+      .then(data => {
+        setBoards(data);
+      })
+      .catch(error => {
+        console.error('Error fetching boards:', error);
+      });
+  }, []);
+
+  const handleBoardChange = async (board: Board) => {
+    setSelectedBoard(board);
+
+    const retrievedColumns = await fetchLocationColumns(board.id);
+    const retrievedItems = await fetchItems(board.id);
+
+    if (retrievedColumns.length === 1) {
+      setSelectedColumn(retrievedColumns[0]);
+    }
+    setColumns(retrievedColumns);
+
+    if (retrievedItems.length === 1) {
+      setSelectedItem(retrievedItems[0]);
+    }
+    setItems(retrievedItems);
+  };
+
+  const saveChanges = () => {
+    setBoard(selectedBoard);
+    setColumn(selectedColumn);
+    setItem(selectedItem);
+    console.log('Changes saved!');
+    router.replace('/');
+  };
 
   const boardSelectItems = boards.map(board => ({
     name: board.name,
@@ -39,54 +83,42 @@ export default function Two() {
             <SelectBottomDrawer
               items={boardSelectItems}
               placeholder="Board Select"
-              selectedValue={board.name}
+              selectedValue={selectedBoard.name}
               onValueChange={boardId => {
-                setBoard(boards.find(board => board.id === boardId) || ({} as Board));
+                handleBoardChange(boards.find(board => board.id === boardId) || ({} as Board));
               }}
             />
-            <SelectBottomDrawer
-              items={columnSelectItems}
-              placeholder="Column Select"
-              selectedValue={column.title}
-              onValueChange={columnID => {
-                setColumn(columns.find(column => column.id === columnID) || ({} as Column));
-              }}
-            />
-            <SelectBottomDrawer
-              items={itemSelectItems}
-              placeholder="Item Select"
-              selectedValue={item.name}
-              onValueChange={itemId => {
-                setItem(items.find(item => item.id === itemId) || ({} as Item));
-              }}
-            />
-          </YStack>
+            {/* if selected board isnt set dont show  */}
+            {selectedBoard.id && (
+              <SelectBottomDrawer
+                items={columnSelectItems}
+                placeholder="Column Select"
+                selectedValue={selectedColumn.title}
+                onValueChange={columnID => {
+                  setColumn(columns.find(column => column.id === columnID) || ({} as Column));
+                }}
+              />
+            )}
 
+            {selectedColumn.id ? (
+              <SelectBottomDrawer
+                items={itemSelectItems}
+                placeholder="Item Select"
+                selectedValue={selectedItem.name}
+                onValueChange={itemId => {
+                  setItem(items.find(item => item.id === itemId) || ({} as Item));
+                }}
+              />
+            ) : null}
+          </YStack>
           <XStack marginTop={20} gap="$4" justifyContent="center">
             <Button onPress={() => router.push('/1')}>Back</Button>
-            <Button onPress={() => router.push('/')}>Finish</Button>
+            <Button onPress={saveChanges} disabled={!selectedItem.id}>
+              Finish
+            </Button>
           </XStack>
         </View>
       </Container>
     </>
   );
 }
-
-const boards: Board[] = [
-  { id: 'board_1', name: 'Board 1' },
-  { id: 'board_2', name: 'Board 2' },
-  { id: 'board_3', name: 'Board 3' },
-  { id: 'board_4', name: 'Board 4' },
-];
-
-const columns: Column[] = [
-  { title: 'TestColumn1', id: 'column_1', type: 'test' },
-  { title: 'TestColumn2', id: 'column_2', type: 'test' },
-  { title: 'TestColumn3', id: 'column_3', type: 'test' },
-];
-
-const items: Item[] = [
-  { name: 'TestItem1', id: 'item_1' },
-  { name: 'TestItem2', id: 'item_2' },
-  { name: 'TestItem3', id: 'item_3' },
-];

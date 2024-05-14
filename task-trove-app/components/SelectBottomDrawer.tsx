@@ -67,9 +67,8 @@ export const SelectBottomDrawer: React.FC<SelectBottomDrawerProps> = ({
           />
         </Select.ScrollUpButton>
 
-        <Select.Viewport>
+        <Select.Viewport unstyled>
           <Select.Group>
-            <Select.Label>Fruits</Select.Label>
             {useMemo(
               () =>
                 items.map((item, i) => {
