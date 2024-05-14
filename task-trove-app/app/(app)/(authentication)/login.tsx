@@ -1,5 +1,5 @@
 import * as Linking from 'expo-linking';
-import { router, Stack } from 'expo-router';
+import { Stack } from 'expo-router';
 import { Image, Button, YStack } from 'tamagui';
 import { Container } from '~/components/Container';
 import { mondayColors } from '~/tamagui.config';
@@ -35,7 +35,6 @@ export default function Login() {
           justifyContent="center"
           alignContent="center"
         >
-          <Button onPress={() => router.replace('/1')}>Onboarding 1</Button>
           <Button backgroundColor={mondayColors.mondayDark} onPress={openMonday}>
             <Image
               source={{
