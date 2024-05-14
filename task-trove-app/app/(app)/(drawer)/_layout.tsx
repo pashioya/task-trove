@@ -9,7 +9,7 @@ import SettingsContext from '~/contexts/SettingsContext';
 
 export default function DrawerLayout() {
   const authContext = useContext(AuthContext);
-  const { isTracking } = useContext(SettingsContext);
+  const { isTracking, isError } = useContext(SettingsContext);
   const router = useRouter();
 
   useEffect(() => {
@@ -24,7 +24,11 @@ export default function DrawerLayout() {
       screenOptions={{
         headerShown: true,
         headerRight: () => (
-          <MaterialIcons name="my-location" size={30} color={isTracking ? 'blue' : 'gray'} />
+          <MaterialIcons
+            name="my-location"
+            size={30}
+            color={isError ? 'red' : isTracking ? 'blue' : 'gray'}
+          />
         ),
         drawerHideStatusBarOnOpen: true,
         drawerActiveBackgroundColor: colorTokens.light.blue.blue4,
