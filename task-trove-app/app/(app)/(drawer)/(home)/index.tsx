@@ -20,7 +20,10 @@ export default function Home() {
   const [error, setError] = useState('');
 
   const { board, column, item } = useContext(SettingsContext);
-  console.log();
+
+  const showTrackingErrorAlert = (e: Error) => {
+    Alert.alert('Location Tracking Error', e.message, [{ text: 'OK' }]);
+  };
 
   useEffect(() => {
     const showPermissionAlert = () => {
@@ -74,6 +77,7 @@ export default function Home() {
               } catch (e) {
                 if (e instanceof Error) {
                   setError(e.message);
+                  showTrackingErrorAlert(e);
                 }
               }
             }}

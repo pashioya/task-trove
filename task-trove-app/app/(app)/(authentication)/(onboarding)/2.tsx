@@ -1,6 +1,6 @@
 import { Stack, router } from 'expo-router';
 import { Text } from 'tamagui';
-import { Button, View } from 'react-native';
+import { Alert, Button, View } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { fetchBoards, fetchLocationColumns, fetchItems } from '~/utils/MondayAPI';
 import type { Board, Column, Item } from '~/model/Index';
@@ -20,12 +20,19 @@ export default function Two() {
 
   const { setBoard, setColumn, setItem } = useContext(SettingsContext);
 
+  const showTrackingErrorAlert = (e: Error) => {
+    Alert.alert('Location Tracking Error', e.message, [{ text: 'OK' }]);
+  };
+
   useEffect(() => {
     fetchBoards()
       .then(data => {
         setBoards(data);
       })
       .catch(error => {
+        if (error instanceof Error) {
+          showTrackingErrorAlert(error);
+        }
         console.error('Error fetching boards:', error);
       });
   }, []);
@@ -51,7 +58,6 @@ export default function Two() {
     setBoard(selectedboard);
     setColumn(selectedColumn);
     setItem(selectedItem);
-    console.log('Changes saved!');
     router.replace('/');
   };
 

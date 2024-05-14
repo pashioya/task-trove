@@ -1,5 +1,4 @@
 import mondaySdk from 'monday-sdk-js';
-import { Alert } from 'react-native';
 import type { Board, Column, Item } from '~/model/Index';
 
 export async function updateLocation(
@@ -18,10 +17,6 @@ export async function updateLocation(
   } else {
     throw new Error('Monday API token not found');
   }
-
-  console.log('boardId', boardId);
-  console.log('itemId', itemId);
-  console.log('columnId', columnId);
 
   const query = /* GraphQL */ `
     mutation ($boardId: ID!, $itemId: ID!, $columnValues: JSON!) {
@@ -49,24 +44,19 @@ export async function updateLocation(
     columnValues: JSON.stringify({ ...columnValues }),
   };
 
-  const showTrackingErrorAlert = () => {
-    Alert.alert('Location Tracking Error', 'There was an error starting location tracking', [
-      { text: 'OK' },
-    ]);
-  };
-
   const response = await monday.api(query, { variables });
-  console.log('response', response);
 
-  if ('error_message' in response && typeof response.error_message === 'string') {
-    throw new Error(response.error_message);
+  if ('error_code' in response && 'error_message' in response) {
+    throw new Error('hello');
+  } else if ('error_message' in response) {
+    throw new Error('hello');
+  } else if ('errors' in response) {
+    throw new Error('hello');
   }
 
   const { data = null } = response;
 
   if (!data) {
-    console.error('Error updating location');
-    showTrackingErrorAlert();
     throw new Error('Error updating location');
   }
 }
@@ -133,9 +123,6 @@ export async function fetchLocationColumns(boardId: string): Promise<Column[]> {
     boards: columnsType[];
   }>(query, { variables });
 
-  console.log('response', response.data.boards);
-  console.log(response.data.boards[0].columns);
-
   const { data = null } = response;
   if (!data) {
     throw new Error('Error fetching columns');
@@ -177,7 +164,6 @@ export async function fetchItems(boardId: string): Promise<Item[]> {
   const response = await monday.api<{
     boards: itemsPageType[];
   }>(query, { variables });
-  console.log('response', response.data.boards[0]);
 
   const { data = null } = response;
   if (!data) {
