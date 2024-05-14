@@ -29,18 +29,18 @@ export default function AppLayout() {
   return (
     <TamaguiProvider config={config}>
       <GestureHandlerRootView style={{ flex: 1 }}>
-          <SettingsContextProvider>
-            <Stack>
-              <Stack.Screen name="(authentication)" options={{ headerShown: false }} />
-              <Stack.Screen
-                name="(drawer)"
-                options={{
-                  headerShown: false,
-                }}
-              />
-              <Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
-            </Stack>
-          </SettingsContextProvider>
+        <SettingsContextProvider>
+          <Stack>
+            <Stack.Screen name="(authentication)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="(drawer)"
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
+          </Stack>
+        </SettingsContextProvider>
       </GestureHandlerRootView>
     </TamaguiProvider>
   );

@@ -61,10 +61,10 @@ type SessionContextType = {
 };
 
 const fetchAccessToken = async (authParams: AuthParams) => {
-  const tokenResponse = await axios.post<TokenResponse>(
-    `${OAUTH_SERVER_URL}/access-token`,
-    authParams,
-  );
+  const tokenResponse = await axios.post<TokenResponse>(`${OAUTH_SERVER_URL}/access-token`, {
+    code: authParams.code,
+    state: authParams.state,
+  });
 
   const parsedTokenResponse = TokenResponseSchema.parse(tokenResponse.data);
   const accessToken = parsedTokenResponse.access_token;

@@ -6,9 +6,7 @@ import { ResponseStatus } from '@/enums/api'
 
 const AccessTokenRequestBodySchema = z.object({
   code: z.string().min(1),
-  scope: z.string().optional(),
-  state: z.string().optional(),
-  region: z.string().optional()
+  state: z.string().optional()
 })
 
 const MONDAY_TOKEN_ENDPOINT = 'https://auth.monday.com/oauth2/token'
