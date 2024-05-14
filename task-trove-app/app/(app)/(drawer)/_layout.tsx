@@ -1,21 +1,20 @@
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { colorTokens } from '@tamagui/themes';
-import { Link, useRouter } from 'expo-router';
+import { Link, Redirect } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
-import { useContext, useEffect } from 'react';
-
-import AuthContext from '~/contexts/AuthenticationContext';
+import { useSession } from '~/contexts/session-provider';
+import { Text } from 'tamagui';
 
 export default function DrawerLayout() {
-  const authContext = useContext(AuthContext);
-  const router = useRouter();
+  const { isLoading, session } = useSession();
 
-  useEffect(() => {
-    if (!authContext.isAuthenticated) {
-      console.log('Redirecting to /Login');
-      router.replace('/login');
-    }
-  }, [authContext, router]);
+  if (isLoading) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (!session) {
+    return <Redirect href="/login" />;
+  }
 
   return (
     <Drawer

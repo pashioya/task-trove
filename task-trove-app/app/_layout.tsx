@@ -1,14 +1,15 @@
-import AuthenticationContextProvider from '~/contexts/AuthenticationContextProvider';
 import { Slot } from 'expo-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { SessionProvider } from '~/contexts/session-provider';
 
-export const OAUTH_SERVER_URL = 'https://ac351-service-5671083-df6cea70.us.monday.app';
+const queryClient = new QueryClient();
 
 export default function RootLayout() {
   return (
-    <>
-      <AuthenticationContextProvider>
+    <QueryClientProvider client={queryClient}>
+      <SessionProvider>
         <Slot />
-      </AuthenticationContextProvider>
-    </>
+      </SessionProvider>
+    </QueryClientProvider>
   );
 }

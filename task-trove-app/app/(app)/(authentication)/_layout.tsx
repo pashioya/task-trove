@@ -1,6 +1,17 @@
-import { Stack } from 'expo-router';
-
+import { Stack, Redirect } from 'expo-router';
+import { useSession } from '~/contexts/session-provider';
+import { Text } from 'tamagui';
 export default function AuthenticationLayout() {
+  const { session, isLoading } = useSession();
+
+  if (isLoading) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (session) {
+    return <Redirect href="/" />;
+  }
+
   return (
     <Stack
       screenOptions={{
