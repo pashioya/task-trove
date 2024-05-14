@@ -58,12 +58,8 @@ export const toggleShareLocation = async (
 
       setRegion({ lat, long, speed });
 
-      try {
-        await updateLocation(boardId, columnId, itemId, lat, long, 'realtime location');
-        console.log(`${new Date(Date.now()).toLocaleString()}: ${lat},${long} - Speed ${speed}`);
-      } catch (error) {
-        console.error('Error updating location', error);
-      }
+      await updateLocation(boardId, columnId, itemId, lat, long, 'realtime location');
+      console.log(`${new Date(Date.now()).toLocaleString()}: ${lat},${long} - Speed ${speed}`);
     }
   });
 

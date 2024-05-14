@@ -1,6 +1,6 @@
 import mondaySdk from 'monday-sdk-js';
-import { Alert } from 'react-native';
 import type { Board, Column, Item } from '~/model/types';
+import { handleMondayErrorCode, handleMondayErrorStatusCode } from './MondayErrorHandling';
 
 export async function updateLocation(
   boardId: string,
@@ -18,10 +18,6 @@ export async function updateLocation(
   } else {
     throw new Error('Monday API token not found');
   }
-
-  console.log('boardId', boardId);
-  console.log('itemId', itemId);
-  console.log('columnId', columnId);
 
   const query = /* GraphQL */ `
     mutation ($boardId: ID!, $itemId: ID!, $columnValues: JSON!) {
@@ -49,24 +45,25 @@ export async function updateLocation(
     columnValues: JSON.stringify({ ...columnValues }),
   };
 
-  const showTrackingErrorAlert = () => {
-    Alert.alert('Location Tracking Error', 'There was an error starting location tracking', [
-      { text: 'OK' },
-    ]);
-  };
-
   const response = await monday.api(query, { variables });
   console.log('response', response);
 
-  if ('error_message' in response && typeof response.error_message === 'string') {
-    throw new Error(response.error_message);
+  if ('error_code' in response && typeof response.error_code === 'string') {
+    handleMondayErrorCode(response.error_code);
+  } else if (
+    'error_message' in response &&
+    typeof response.error_message === 'string' &&
+    'status_code' in response &&
+    typeof response.status_code === 'number'
+  ) {
+    handleMondayErrorStatusCode(response.status_code);
+  } else if ('errors' in response) {
+    throw new Error('hello');
   }
 
   const { data = null } = response;
 
   if (!data) {
-    console.error('Error updating location');
-    showTrackingErrorAlert();
     throw new Error('Error updating location');
   }
 }
