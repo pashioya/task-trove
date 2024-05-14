@@ -3,6 +3,7 @@ import { Stack, SplashScreen } from 'expo-router';
 import React, { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { TamaguiProvider } from 'tamagui';
+import SettingsContextProvider from '~/contexts/SettingsContextProvider';
 import config from '../../tamagui.config';
 
 SplashScreen.preventAutoHideAsync();
@@ -13,8 +14,8 @@ export const unstable_settings = {
 
 export default function AppLayout() {
   const [loaded] = useFonts({
-    Inter: require('@tamagui/font-inter/otf/Inter-Medium.otf'),
-    InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
+    Inter: require('~/assets/fonts/Figtree-Regular.ttf'),
+    InterBold: require('~/assets/fonts/Figtree-SemiBold.ttf'),
   });
 
   useEffect(() => {
@@ -28,15 +29,18 @@ export default function AppLayout() {
   return (
     <TamaguiProvider config={config}>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <Stack>
-          <Stack.Screen name="(authentication)" options={{ headerShown: true }} />
-          <Stack.Screen
-            name="(drawer)"
-            options={{
-              headerShown: false,
-            }}
-          />
-        </Stack>
+          <SettingsContextProvider>
+            <Stack>
+              <Stack.Screen name="(authentication)" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="(drawer)"
+                options={{
+                  headerShown: false,
+                }}
+              />
+              <Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
+            </Stack>
+          </SettingsContextProvider>
       </GestureHandlerRootView>
     </TamaguiProvider>
   );

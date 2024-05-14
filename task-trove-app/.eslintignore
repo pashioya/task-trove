@@ -1,6 +1,6 @@
 .expo/
 *.config.js
 .eslintrc.*
-android/
-ios/
 node_modules/
+ios/
+android/
