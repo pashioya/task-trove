@@ -50,6 +50,19 @@ export const Subtitle = styled(SizableText, {
   size: '$9',
 });
 
+export const mondayColors = {
+  mondayPurple: '#6161FF',
+  mondayDark: '#181B34',
+  mondayLight: '#F0F3FF',
+  white: '#FFFFFF',
+  greenDone: '#00CA72',
+  yellowInProgress: '#FFCC00',
+  redStuck: '#FB275D',
+  logoGreen: '#00854D',
+  logoYellow: '#D79700',
+  logoRed: '#B1123B',
+};
+
 const config = createTamagui({
   light: {
     color: {

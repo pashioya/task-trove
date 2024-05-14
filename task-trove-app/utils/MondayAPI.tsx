@@ -1,6 +1,6 @@
 import mondaySdk from 'monday-sdk-js';
 import { Alert } from 'react-native';
-import type { Board, Column, Item } from '~/model/Index';
+import type { Board, Column, Item } from '~/model/types';
 
 export async function updateLocation(
   boardId: string,

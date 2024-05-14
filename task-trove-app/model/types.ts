@@ -13,3 +13,9 @@ export type Column = {
   title: string;
   type: string;
 };
+
+export type User = {
+  firstName: string;
+  lastName: string;
+  email: string;
+};

@@ -21,8 +21,8 @@ export const unstable_settings = {
 
 export default function AppLayout() {
   const [loaded] = useFonts({
-    Inter: require('@tamagui/font-inter/otf/Inter-Medium.otf'),
-    InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
+    Inter: require('~/assets/fonts/Figtree-Regular.ttf'),
+    InterBold: require('~/assets/fonts/Figtree-SemiBold.ttf'),
   });
 
   useEffect(() => {
@@ -39,13 +39,14 @@ export default function AppLayout() {
         <QueryClientProvider client={queryClient}>
           <SettingsContextProvider>
             <Stack>
-              <Stack.Screen name="(authentication)" options={{ headerShown: true }} />
+              <Stack.Screen name="(authentication)" options={{ headerShown: false }} />
               <Stack.Screen
                 name="(drawer)"
                 options={{
                   headerShown: false,
                 }}
               />
+              <Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
             </Stack>
           </SettingsContextProvider>
         </QueryClientProvider>
