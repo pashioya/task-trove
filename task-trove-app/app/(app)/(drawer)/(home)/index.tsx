@@ -1,42 +1,75 @@
 import * as Linking from 'expo-linking';
-import { Stack, useRouter } from 'expo-router';
-import { Button, Text, View } from 'tamagui';
+import { router, Stack } from 'expo-router';
+import { Button, View } from 'tamagui';
 
-import { Container } from '~/tamagui.config';
-import React, { useContext, useEffect, useState } from 'react';
+import { Container, mondayColors } from '~/tamagui.config';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import * as ExpoLocation from 'expo-location';
-import { TouchableOpacity, Alert } from 'react-native';
+import { TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import { toggleShareLocation } from '~/utils/LocationSync';
-import { AntDesign } from '@expo/vector-icons';
 import SettingsContext from '~/contexts/SettingsContext';
+import MapView from 'react-native-maps';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function Home() {
-  const url = Linking.useURL();
-
-  const [isTracking, setIsTracking] = useState(false);
-  const [region, setRegion] = useState({ lat: 0, long: 0, speed: 0 });
+  const [region, setRegion] = useState({ lat: 51.215239, long: 4.425671, speed: 0 });
+  const mapRef = useRef<MapView>(null);
   const [foregroundStatus, setForegroundStatus] = useState('');
   const [backgroundStatus, setBackgroundStatus] = useState('');
-  const [error, setError] = useState('');
+  const { board, column, item, error, isTracking, setIsTracking, setError } =
+    useContext(SettingsContext);
 
-  const { board, column, item } = useContext(SettingsContext);
+  const showAlert = (error: string, onPress: () => void, buttonText: string) => {
+    Alert.alert('Error', error, [
+      {
+        text: buttonText,
+        onPress,
+      },
+      { text: 'Dismiss' },
+    ]);
+  };
 
-  const router = useRouter();
-  useEffect(() => {
-    const showPermissionAlert = () => {
-      Alert.alert(
-        'Location Permission Needed',
-        'This app requires location access to function correctly. Please consider granting permission.',
-        [
-          {
-            text: 'Settings',
-            onPress: async () => await Linking.openSettings(),
+  const onLocateMe = async () => {
+    try {
+      if (foregroundStatus !== 'granted' || backgroundStatus !== 'granted') {
+        showAlert(error.message, async () => await Linking.openSettings(), 'Open Settings');
+        return;
+      }
+      if (item.id === '') {
+        showAlert(
+          'Location Column Not Correctly Setup',
+          () => {
+            router.replace('/(app)/(drawer)/settings/settings');
           },
-          { text: 'Cancel' },
-        ],
+          'Go to Settings',
+        );
+        return;
+      }
+      const location = await ExpoLocation.getCurrentPositionAsync();
+      setRegion({
+        lat: location.coords.latitude,
+        long: location.coords.longitude,
+        speed: location.coords.speed ? location.coords.speed : 0,
+      });
+      mapRef.current?.animateToRegion(
+        { latitude: region.lat, longitude: region.long, latitudeDelta: 0.9, longitudeDelta: 0.9 },
+        1000,
       );
-    };
+    } catch (e) {
+      if (e instanceof Error) {
+        setError(e);
+      }
+    }
+  };
 
+  const INITIAL_REGION = {
+    latitude: region.lat,
+    longitude: region.long,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  };
+
+  useEffect(() => {
     const requestPermissions = async () => {
       const { status: foregroundStatus } = await ExpoLocation.requestForegroundPermissionsAsync();
       setForegroundStatus(foregroundStatus);
@@ -45,75 +78,94 @@ export default function Home() {
         setBackgroundStatus(backgroundStatus);
         console.log('backgroundStatus', backgroundStatus);
         if (backgroundStatus !== 'granted') {
-          console.log('Background location permission not granted');
-          showPermissionAlert();
+          showAlert(
+            'Background location permission not granted',
+            async () => await Linking.openSettings(),
+            'Open Settings',
+          );
         }
       } else {
-        console.log('Foreground location permission not granted');
-        showPermissionAlert();
+        showAlert(
+          'Foreground location permission not granted',
+          async () => await Linking.openSettings(),
+          'Open Settings',
+        );
       }
     };
     requestPermissions();
   }, []);
-
   return (
     <>
       <Stack.Screen options={{ title: 'Home', headerShown: false }} />
       <Container>
-        <Text color="black">URL: {url}</Text>
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <TouchableOpacity
+        <View alignItems="center" flex={1} justifyContent="center">
+          <MapView
+            showsUserLocation={isTracking}
+            style={{ width: '105%', height: '85%', borderRadius: 10, overflow: 'hidden' }}
+            userInterfaceStyle="dark"
+            initialRegion={INITIAL_REGION}
+            region={{
+              latitude: region.lat,
+              longitude: region.long,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }}
+          />
+
+          <Button
+            marginTop={50}
             onPress={async () => {
               try {
                 await toggleShareLocation(
                   isTracking,
                   setIsTracking,
                   setRegion,
-                  board.id.toString(),
-                  column.id.toString(),
-                  item.id.toString(),
+                  board.id,
+                  column.id,
+                  item.id,
                 );
               } catch (e) {
                 if (e instanceof Error) {
-                  setError(e.message);
+                  setError(e);
+                  showAlert(
+                    e.message,
+                    () => {
+                      console.log(e.message);
+                    },
+                    'Dismiss',
+                  );
                 }
               }
             }}
           >
-            {isTracking ? (
-              <AntDesign name="pausecircleo" size={24} color="black" />
-            ) : (
-              <AntDesign name="playcircleo" size={24} color="black" />
-            )}
-          </TouchableOpacity>
-          <Text color="black">Foreground permission: {foregroundStatus}</Text>
-          <Text color="black">Background permission: {backgroundStatus}</Text>
-          <Text color="black">Error: {error}</Text>
-          <Text color="black">
-            {isTracking
-              ? `${region.lat.toFixed(3)}, ${region.long.toFixed(
-                  3,
-                )}, Speed: ${region.speed.toFixed(3)}`
-              : 'You are not currently sharing your location'}
-          </Text>
-          <Text color="black">
-            {Object.keys(board).length ? `Board: ${board.name}` : 'No board selected'}
-          </Text>
-          <Text color="black">
-            {Object.keys(column).length ? `Column: ${column.title}` : 'No column selected'}
-          </Text>
-          <Text color="black">
-            {Object.keys(item).length ? `Item: ${item.name}` : 'No item selected'}
-          </Text>
-          <Button marginBottom={3} onPress={() => router.replace('/login')}>
-            Login Page
+            {!isTracking ? 'Start' : 'Stop'}Tracking
           </Button>
-          <Button marginBottom={3} onPress={() => router.replace('/1')}>
-            View OnBoarding 1
-          </Button>
-          <Button onPress={() => router.replace('/2')}>View OnBoarding 2</Button>
+          {isTracking && (
+            <TouchableOpacity style={styles.locateBtn} onPress={onLocateMe}>
+              <Ionicons name="navigate" size={24} color={mondayColors.mondayDark} />
+            </TouchableOpacity>
+          )}
         </View>
       </Container>
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  locateBtn: {
+    position: 'absolute',
+    top: 500,
+    right: 20,
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 10,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    shadowOffset: {
+      width: 1,
+      height: 10,
+    },
+  },
+});
