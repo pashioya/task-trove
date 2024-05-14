@@ -1,14 +1,15 @@
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { colorTokens } from '@tamagui/themes';
-import { Link, Redirect } from 'expo-router';
+import { Redirect } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
 import { useSession } from '~/contexts/session-provider';
 import { Text } from 'tamagui';
+import { useContext } from 'react';
+import SettingsContext from '~/contexts/SettingsContext';
 
 export default function DrawerLayout() {
-  const authContext = useContext(AuthContext);
   const { isTracking, isError } = useContext(SettingsContext);
-  const router = useRouter();
+  const { session, isLoading } = useSession();
 
   if (isLoading) {
     return <Text>Loading...</Text>;
