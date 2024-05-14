@@ -1,6 +1,6 @@
 import * as Linking from 'expo-linking';
-import { Stack, Link } from 'expo-router';
-import { Text, View } from 'tamagui';
+import { Stack, useRouter } from 'expo-router';
+import { Button, Text, View } from 'tamagui';
 
 import { Container } from '~/tamagui.config';
 import React, { useContext, useEffect, useState } from 'react';
@@ -21,17 +21,17 @@ export default function Home() {
 
   const { board, column, item } = useContext(SettingsContext);
 
-  const showTrackingErrorAlert = (e: Error) => {
-    Alert.alert('Location Tracking Error', e.message, [{ text: 'OK' }]);
-  };
-
+  const router = useRouter();
   useEffect(() => {
     const showPermissionAlert = () => {
       Alert.alert(
         'Location Permission Needed',
         'This app requires location access to function correctly. Please consider granting permission.',
         [
-          { text: 'Settings', onPress: async () => await Linking.openSettings() },
+          {
+            text: 'Settings',
+            onPress: async () => await Linking.openSettings(),
+          },
           { text: 'Cancel' },
         ],
       );
@@ -58,10 +58,9 @@ export default function Home() {
 
   return (
     <>
-      <Stack.Screen options={{ title: 'Home' }} />
+      <Stack.Screen options={{ title: 'Home', headerShown: false }} />
       <Container>
-        <Link href="/login">Login</Link>
-        <Text>URL: {url}</Text>
+        <Text color="black">URL: {url}</Text>
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <TouchableOpacity
             onPress={async () => {
@@ -77,32 +76,42 @@ export default function Home() {
               } catch (e) {
                 if (e instanceof Error) {
                   setError(e.message);
-                  showTrackingErrorAlert(e);
                 }
               }
             }}
           >
-            {error && <Text>{error}</Text>}
             {isTracking ? (
               <AntDesign name="pausecircleo" size={24} color="black" />
             ) : (
               <AntDesign name="playcircleo" size={24} color="black" />
             )}
           </TouchableOpacity>
-          <Text>Foreground permission: {foregroundStatus}</Text>
-          <Text>Background permission: {backgroundStatus}</Text>
-          <Text>Error: {error}</Text>
-
-          <Text>{Object.keys(board).length ? `Board: ${board.name}` : 'No board selected'}</Text>
-          <Text>
-            {Object.keys(column).length ? `Column: ${column.title}` : 'No column selected'}
-          </Text>
-          <Text>{Object.keys(item).length ? `Item: ${item.name}` : 'No item selected'}</Text>
-          <Text>
+          <Text color="black">Foreground permission: {foregroundStatus}</Text>
+          <Text color="black">Background permission: {backgroundStatus}</Text>
+          <Text color="black">Error: {error}</Text>
+          <Text color="black">
             {isTracking
-              ? `${region.lat.toFixed(3)}, ${region.long.toFixed(3)}, Speed: ${region.speed.toFixed(3)}`
+              ? `${region.lat.toFixed(3)}, ${region.long.toFixed(
+                  3,
+                )}, Speed: ${region.speed.toFixed(3)}`
               : 'You are not currently sharing your location'}
           </Text>
+          <Text color="black">
+            {Object.keys(board).length ? `Board: ${board.name}` : 'No board selected'}
+          </Text>
+          <Text color="black">
+            {Object.keys(column).length ? `Column: ${column.title}` : 'No column selected'}
+          </Text>
+          <Text color="black">
+            {Object.keys(item).length ? `Item: ${item.name}` : 'No item selected'}
+          </Text>
+          <Button marginBottom={3} onPress={() => router.replace('/login')}>
+            Login Page
+          </Button>
+          <Button marginBottom={3} onPress={() => router.replace('/1')}>
+            View OnBoarding 1
+          </Button>
+          <Button onPress={() => router.replace('/2')}>View OnBoarding 2</Button>
         </View>
       </Container>
     </>

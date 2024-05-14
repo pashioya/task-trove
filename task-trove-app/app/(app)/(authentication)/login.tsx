@@ -1,29 +1,10 @@
 import * as Linking from 'expo-linking';
-import { Link, Stack } from 'expo-router';
-import { useContext } from 'react';
-import { Image, Button, styled } from 'tamagui';
-
+import { Stack } from 'expo-router';
+import { Image, Button, YStack } from 'tamagui';
 import { Container } from '~/components/Container';
-import AuthContext from '~/contexts/AuthenticationContext';
+import { mondayColors } from '~/tamagui.config';
 
 export default function Login() {
-  const authContext = useContext(AuthContext);
-  const testLogin = () => {
-    console.log('inserting testAccessToken into authContext');
-    authContext.logIn('testAccessToken');
-  };
-  const testLogout = () => {
-    console.log('removing testAccessToken from authContext');
-    authContext.logOut();
-  };
-
-  const Logo = styled(Image, {
-    name: 'Logo',
-    source: require('~/assets/tryve-logo.png'),
-    width: '100%',
-    height: 130,
-  });
-
   const openMonday = async () => {
     const url =
       'https://auth.monday.com/oauth2/authorize?client_id=55b279c1eb45e23ce60d4cc032d63ab6&redirect_uri=http://localhost:8080/auth-token&scope=me:read&app_version_id=10233356';
@@ -34,22 +15,36 @@ export default function Login() {
     <>
       <Stack.Screen options={{ title: 'login' }} />
       <Container>
-        <Logo />
+        <YStack marginTop="$15" alignContent="center" alignItems="center">
+          <Image
+            objectFit="contain"
+            source={{
+              uri: require('~/assets/images/tryve-logo.png'),
+              height: 130,
+            }}
+            width="100%"
+          />
+        </YStack>
 
-        <Link href="/">Home</Link>
-        <Link href="/1">Onboarding1</Link>
-        <Button onPress={testLogin}>Test Login</Button>
-        <Button onPress={testLogout}>Test Logout</Button>
-
-        <Button onPress={openMonday}>Sign In With Monday</Button>
-
-        <Image
-          source={{
-            uri: '/task-trove-app/assets/monday-avatar-2.svg',
-            width: 500,
-            height: 500,
-          }}
-        />
+        <YStack
+          marginBottom="$15"
+          alignSelf="center"
+          gap="$4"
+          position="absolute"
+          bottom={0}
+          justifyContent="center"
+          alignContent="center"
+        >
+          <Button backgroundColor={mondayColors.mondayDark} onPress={openMonday}>
+            <Image
+              source={{
+                uri: require('~/assets/images/monday-white.png'),
+                height: 30,
+              }}
+              width={100}
+            />
+          </Button>
+        </YStack>
       </Container>
     </>
   );

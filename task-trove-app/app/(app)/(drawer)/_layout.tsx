@@ -55,7 +55,7 @@ export default function DrawerLayout() {
         }}
       />
       <Drawer.Screen
-        name="(settings)"
+        name="settings"
         options={{
           headerTitle: 'Settings',
           drawerLabel: 'Settings',
