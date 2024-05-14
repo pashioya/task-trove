@@ -73,7 +73,7 @@ export const SelectBottomDrawer: React.FC<SelectBottomDrawerProps> = ({
               () =>
                 items.map((item, i) => {
                   return (
-                    <Select.Item index={i} key={item.name} value={item.value}>
+                    <Select.Item index={i} key={i} value={item.value}>
                       <Select.ItemText>{item.name}</Select.ItemText>
                       <Select.ItemIndicator>
                         <Check size={24} />

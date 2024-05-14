@@ -43,6 +43,13 @@ export default function Two() {
     if (retrievedItems.length === 1) {
       setSelectedItem(retrievedItems[0]);
     }
+
+    if (retrievedColumns.length === 0) {
+      console.log('No columns found');
+    }
+    if (retrievedItems.length === 0) {
+      console.log('No items found');
+    }
     setItems(retrievedItems);
   };
 
@@ -95,21 +102,23 @@ export default function Two() {
                 placeholder="Column Select"
                 selectedValue={selectedColumn.title}
                 onValueChange={columnID => {
-                  setColumn(columns.find(column => column.id === columnID) || ({} as Column));
+                  setSelectedColumn(
+                    columns.find(column => column.id === columnID) || ({} as Column),
+                  );
                 }}
               />
             )}
 
-            {selectedColumn.id ? (
+            {selectedColumn.id && (
               <SelectBottomDrawer
                 items={itemSelectItems}
                 placeholder="Item Select"
                 selectedValue={selectedItem.name}
                 onValueChange={itemId => {
-                  setItem(items.find(item => item.id === itemId) || ({} as Item));
+                  setSelectedItem(items.find(item => item.id === itemId) || ({} as Item));
                 }}
               />
-            ) : null}
+            )}
           </YStack>
           <XStack marginTop={20} gap="$4" justifyContent="center">
             <Button onPress={() => router.push('/1')}>Back</Button>
