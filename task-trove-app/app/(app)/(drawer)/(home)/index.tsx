@@ -1,13 +1,13 @@
 import * as Linking from 'expo-linking';
 import { Stack, useRouter } from 'expo-router';
 import { Button, Text, View } from 'tamagui';
-
 import { Container } from '~/tamagui.config';
 import React, { useContext, useEffect, useState } from 'react';
 import * as ExpoLocation from 'expo-location';
 import { TouchableOpacity, Alert } from 'react-native';
 import { toggleShareLocation } from '~/utils/LocationSync';
 import { AntDesign } from '@expo/vector-icons';
+import { useSession } from '~/contexts/session-provider';
 import SettingsContext from '~/contexts/SettingsContext';
 
 export default function Home() {
@@ -18,6 +18,8 @@ export default function Home() {
   const [foregroundStatus, setForegroundStatus] = useState('');
   const [backgroundStatus, setBackgroundStatus] = useState('');
   const [error, setError] = useState('');
+
+  const { signOut } = useSession();
 
   const { board, column, item } = useContext(SettingsContext);
 
@@ -60,6 +62,7 @@ export default function Home() {
     <>
       <Stack.Screen options={{ title: 'Home', headerShown: false }} />
       <Container>
+        <Button onPress={signOut}>Log Out</Button>
         <Text color="black">URL: {url}</Text>
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <TouchableOpacity
