@@ -7,7 +7,7 @@ import * as ExpoLocation from 'expo-location';
 import { TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import { toggleShareLocation } from '~/utils/LocationSync';
 import SettingsContext from '~/contexts/SettingsContext';
-import MapView from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function Home() {
@@ -99,6 +99,7 @@ export default function Home() {
       <Container>
         <View alignItems="center" flex={1} justifyContent="center">
           <MapView
+            provider={PROVIDER_GOOGLE}
             showsUserLocation={isTracking}
             style={{ width: '105%', height: '85%', borderRadius: 10, overflow: 'hidden' }}
             userInterfaceStyle="dark"
