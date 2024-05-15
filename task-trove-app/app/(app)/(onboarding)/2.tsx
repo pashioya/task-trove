@@ -20,7 +20,7 @@ export default function Two() {
 
   const { setBoard, setColumn, setItem } = useContext(SettingsContext);
 
-  const showTrackingErrorAlert = (error: Error) => {
+  const showErrorAlert = (error: Error) => {
     Alert.alert('Location Tracking Error: ', error.message, [{ text: 'OK' }]);
   };
 
@@ -31,7 +31,7 @@ export default function Two() {
       })
       .catch(error => {
         if (error instanceof Error) {
-          showTrackingErrorAlert(error);
+          showErrorAlert(error);
         }
       });
   }, []);
@@ -61,11 +61,14 @@ export default function Two() {
   };
 
   const saveChanges = () => {
-    setBoard(selectedBoard);
-    setColumn(selectedColumn);
-    setItem(selectedItem);
-    console.log('Changes saved!');
-    router.replace('/');
+    if (selectedBoard.id === null || selectedColumn.id === null || selectedItem.id === null) {
+      showErrorAlert(new Error('Please select a board, column, and item to save'));
+    } else {
+      setBoard(selectedBoard);
+      setColumn(selectedColumn);
+      setItem(selectedItem);
+      router.replace('/');
+    }
   };
 
   const boardSelectItems = boards.map(board => ({
