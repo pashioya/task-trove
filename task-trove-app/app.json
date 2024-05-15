@@ -39,9 +39,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.tryve.tasktroveapp",
       "config": {
-        "googleMaps": {
-          "apiKey": "AIzaSyARgWMJ1glQBaLcrMZLh8eORbRKSen-tT8"
-        }
+        "googleMapsApiKey": "AIzaSyARgWMJ1glQBaLcrMZLh8eORbRKSen-tT8"
       }
     },
     "android": {
