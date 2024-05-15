@@ -19,6 +19,7 @@
           "isAndroidForegroundLocationEnabled": true
         }
       ],
+
       "expo-font"
     ],
     "experiments": {

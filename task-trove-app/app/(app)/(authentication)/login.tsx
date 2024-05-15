@@ -1,15 +1,11 @@
-import * as Linking from 'expo-linking';
 import { Stack } from 'expo-router';
 import { Image, Button, YStack } from 'tamagui';
 import { Container } from '~/components/Container';
 import { mondayColors } from '~/tamagui.config';
+import { useSession } from '~/contexts/session-provider';
 
 export default function Login() {
-  const openMonday = async () => {
-    const url =
-      'https://auth.monday.com/oauth2/authorize?client_id=55b279c1eb45e23ce60d4cc032d63ab6&redirect_uri=http://localhost:8080/auth-token&scope=me:read&app_version_id=10233356';
-    await Linking.openURL(url);
-  };
+  const { signIn } = useSession();
 
   return (
     <>
@@ -35,7 +31,7 @@ export default function Login() {
           justifyContent="center"
           alignContent="center"
         >
-          <Button backgroundColor={mondayColors.mondayDark} onPress={openMonday}>
+          <Button backgroundColor={mondayColors.mondayDark} onPress={signIn}>
             <Image
               source={{
                 uri: require('~/assets/images/monday-white.png'),
