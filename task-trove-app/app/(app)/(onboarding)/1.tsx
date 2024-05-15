@@ -14,7 +14,7 @@ export default function One() {
         <View>
           <YStack height="70%" gap="$4" marginTop={160}>
             <Title color={mondayColors.mondayPurple} textAlign="center" fontSize={40}>
-              Welcome To Task-Trove
+              Welcome To TaskTrove
             </Title>
             <Separator width="70%" alignSelf="center" />
             <Text textAlign="center" color="black">
