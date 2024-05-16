@@ -7,7 +7,7 @@ export function handleMondayErrorCode(code: string): void {
   } else if (code === 'InvalidItemIdException') {
     throw new Error('The item you chose is invalid');
   } else if (code === 'missingRequiredPermissions') {
-    throw new Error('The required OAuth permissions for the TaskTrove app are not met');
+    throw new Error('The required permissions for the TaskTrove app are not met');
   } else if (code === 'InvalidArgumentException') {
     throw new Error('The arguments you provided are invalid');
   } else if (code === 'ResourceNotFoundException') {
