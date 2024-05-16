@@ -21,7 +21,7 @@ export default function Two() {
   const { setBoard, setColumn, setItem } = useContext(SettingsContext);
 
   const showErrorAlert = (error: Error) => {
-    Alert.alert('Location Tracking Error: ', error.message, [{ text: 'OK' }]);
+    Alert.alert('Error fetching boards: ', error.message, [{ text: 'OK' }]);
   };
 
   useEffect(() => {

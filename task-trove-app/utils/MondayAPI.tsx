@@ -46,7 +46,6 @@ export async function updateLocation(
   };
 
   const response = await monday.api(query, { variables });
-  console.log('response', response);
 
   if ('error_code' in response && typeof response.error_code === 'string') {
     handleMondayErrorCode(response.error_code);
@@ -91,6 +90,19 @@ export async function fetchBoards(): Promise<Board[]> {
     boards: Board[];
   }>(query);
 
+  if ('error_code' in response && typeof response.error_code === 'string') {
+    handleMondayErrorCode(response.error_code);
+  } else if (
+    'error_message' in response &&
+    typeof response.error_message === 'string' &&
+    'status_code' in response &&
+    typeof response.status_code === 'number'
+  ) {
+    handleMondayErrorStatusCode(response.status_code);
+  } else if ('errors' in response) {
+    throw new Error('hello');
+  }
+
   const { data = null } = response;
   if (!data) {
     throw new Error('Error fetching boards');
@@ -130,8 +142,18 @@ export async function fetchLocationColumns(boardId: string): Promise<Column[]> {
     boards: columnsType[];
   }>(query, { variables });
 
-  console.log('response', response.data.boards);
-  console.log(response.data.boards[0].columns);
+  if ('error_code' in response && typeof response.error_code === 'string') {
+    handleMondayErrorCode(response.error_code);
+  } else if (
+    'error_message' in response &&
+    typeof response.error_message === 'string' &&
+    'status_code' in response &&
+    typeof response.status_code === 'number'
+  ) {
+    handleMondayErrorStatusCode(response.status_code);
+  } else if ('errors' in response) {
+    throw new Error('hello');
+  }
 
   const { data = null } = response;
   if (!data) {
@@ -174,7 +196,19 @@ export async function fetchItems(boardId: string): Promise<Item[]> {
   const response = await monday.api<{
     boards: itemsPageType[];
   }>(query, { variables });
-  console.log('response', response.data.boards[0]);
+
+  if ('error_code' in response && typeof response.error_code === 'string') {
+    handleMondayErrorCode(response.error_code);
+  } else if (
+    'error_message' in response &&
+    typeof response.error_message === 'string' &&
+    'status_code' in response &&
+    typeof response.status_code === 'number'
+  ) {
+    handleMondayErrorStatusCode(response.status_code);
+  } else if ('errors' in response) {
+    throw new Error('hello');
+  }
 
   const { data = null } = response;
   if (!data) {

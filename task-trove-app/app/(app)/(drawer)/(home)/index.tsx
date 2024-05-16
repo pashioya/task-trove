@@ -19,6 +19,17 @@ export default function Home() {
   const [backgroundStatus, setBackgroundStatus] = useState('');
   const [error, setError] = useState('');
 
+  const showLocationTrackingErrorAlert = (errorMessage: string) => {
+    Alert.alert('An unexpected error occurred',
+      errorMessage,
+      [{ text: 'Dismiss' }])
+  }
+
+  const updateError = (message: string) => {
+    showLocationTrackingErrorAlert(message)
+    setError(message);
+  }
+
   const { signOut } = useSession();
 
   const { board, column, item } = useContext(SettingsContext);
@@ -75,6 +86,7 @@ export default function Home() {
                   board.id.toString(),
                   column.id.toString(),
                   item.id.toString(),
+                  updateError,
                 );
               } catch (e) {
                 if (e instanceof Error) {
