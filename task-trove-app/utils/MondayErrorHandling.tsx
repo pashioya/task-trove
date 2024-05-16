@@ -1,5 +1,5 @@
 export function handleMondayErrorCode(code: string): void {
-  console.log('code', code);
+  console.log('monday has responded with the following error code: ', code);
   if (code === 'InvalidBoardIdException') {
     throw new Error('The board you chose is invalid');
   } else if (code === 'InvalidColumnIdException') {
@@ -18,7 +18,7 @@ export function handleMondayErrorCode(code: string): void {
 }
 
 export function handleMondayErrorStatusCode(code: number): void {
-  console.log('code', code);
+  console.log('monday has responded with the following status code: ', code);
   if (code === 500) {
     throw new Error(
       'The Monday server is having issues at the moment, please try again in a few minutes',
