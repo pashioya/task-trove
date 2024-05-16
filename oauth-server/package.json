@@ -8,7 +8,7 @@
     "dev": "tsx watch src/app.ts",
     "build": "tsup src/app.ts --minify --format cjs --outDir dist && tsc-alias -p tsconfig.json",
     "clean": "rm -rf ./dist",
-    "serve": "node dist/app.cjs",
+    "serve": "NODE_ENV=production node dist/app.cjs",
     "start": "npm run serve",
     "test": "jest",
     "watch-ts": "tsc --watch"
