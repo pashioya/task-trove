@@ -61,7 +61,7 @@ export default function Two() {
   };
 
   const saveChanges = () => {
-    if (selectedBoard.id === null || selectedColumn.id === null || selectedItem.id === null) {
+    if (selectedBoard.id === '' || selectedColumn.id === '' || selectedItem.id === '') {
       showErrorAlert(new Error('Please select a board, column, and item to save'));
     } else {
       setBoard(selectedBoard);
