@@ -43,21 +43,21 @@
       }
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
       "package": "com.tryve.tasktroveapp",
-      "permissions": [
-        "ACCESS_BACKGROUND_LOCATION",
-        "ACCESS_FINE_LOCATION",
-        "ACCESS_COARSE_LOCATION"
-      ],
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyARgWMJ1glQBaLcrMZLh8eORbRKSen-tT8"
         }
-      }
+      },
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "permissions": [
+        "ACCESS_BACKGROUND_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ]
     },
     "extra": {
       "router": {

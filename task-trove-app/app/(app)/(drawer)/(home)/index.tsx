@@ -9,6 +9,7 @@ import { toggleShareLocation } from '~/utils/LocationSync';
 import SettingsContext from '~/contexts/SettingsContext';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { Ionicons } from '@expo/vector-icons';
+import lightStyle from '~/assets/map/lightStyle.json';
 
 export default function Home() {
   const [region, setRegion] = useState({ lat: 51.215239, long: 4.425671, speed: 0 });
@@ -101,9 +102,11 @@ export default function Home() {
           <MapView
             provider={PROVIDER_GOOGLE}
             showsUserLocation={isTracking}
-            style={{ width: '105%', height: '85%', borderRadius: 10, overflow: 'hidden' }}
+            style={styles.map}
             userInterfaceStyle="dark"
             initialRegion={INITIAL_REGION}
+            ref={mapRef}
+            customMapStyle={lightStyle}
             region={{
               latitude: region.lat,
               longitude: region.long,
@@ -111,7 +114,6 @@ export default function Home() {
               longitudeDelta: 0.0421,
             }}
           />
-
           <Button
             marginTop={50}
             onPress={async () => {
@@ -154,8 +156,8 @@ export default function Home() {
 const styles = StyleSheet.create({
   locateBtn: {
     position: 'absolute',
-    top: 500,
-    right: 20,
+    top: 550,
+    right: 10,
     backgroundColor: '#fff',
     padding: 10,
     borderRadius: 10,
@@ -167,5 +169,11 @@ const styles = StyleSheet.create({
       width: 1,
       height: 10,
     },
+  },
+  map: {
+    width: '105%',
+    height: '85%',
+    borderRadius: 10,
+    overflow: 'hidden',
   },
 });
