@@ -6,6 +6,7 @@ import { Container } from '~/components/Container';
 import { SelectBottomDrawer } from '~/components/SelectBottomDrawer';
 import SettingsContext from '~/contexts/SettingsContext';
 import type { Board, Column, Item } from '~/model/types';
+import { mondayColors } from '~/tamagui.config';
 import { fetchBoards, fetchItems, fetchLocationColumns } from '~/utils/MondayAPI';
 
 export default function Two() {
@@ -77,16 +78,14 @@ export default function Two() {
     <>
       <Stack.Screen options={{ title: 'Onboarding Two', headerShown: false }} />
       <Container>
-        <View alignContent="center" alignItems="center">
-          <YStack gap="$4" alignItems="center" marginTop={50}>
-            <Text textAlign="center" color="blue" fontSize={40}>
+        <View>
+          <YStack gap="$4" alignItems="center" height="40%" marginTop={160}>
+            <Text textAlign="center" color={mondayColors.mondayPurple} fontSize={40}>
               Location Board Selection
             </Text>
-            <Text marginTop={40} color="black">
-              Where would you like to save your location
-            </Text>
+            <Text color="black">Where would you like to save your location</Text>
           </YStack>
-          <YStack gap="$4" alignItems="center" marginTop={150}>
+          <YStack gap="$4" alignItems="center">
             <SelectBottomDrawer
               items={boardSelectItems}
               placeholder="Board Select"
@@ -96,33 +95,34 @@ export default function Two() {
               }}
             />
             {/* if selected board isnt set dont show  */}
-            {selectedBoard.id && (
-              <SelectBottomDrawer
-                items={columnSelectItems}
-                placeholder="Column Select"
-                selectedValue={selectedColumn.title}
-                onValueChange={columnID => {
-                  setSelectedColumn(
-                    columns.find(column => column.id === columnID) || ({} as Column),
-                  );
-                }}
-              />
-            )}
 
-            {selectedColumn.id && (
-              <SelectBottomDrawer
-                items={itemSelectItems}
-                placeholder="Item Select"
-                selectedValue={selectedItem.name}
-                onValueChange={itemId => {
-                  setSelectedItem(items.find(item => item.id === itemId) || ({} as Item));
-                }}
-              />
-            )}
+            <SelectBottomDrawer
+              items={columnSelectItems}
+              placeholder="Column Select"
+              selectedValue={selectedColumn.title}
+              disabled={!selectedBoard.id}
+              onValueChange={columnID => {
+                setSelectedColumn(columns.find(column => column.id === columnID) || ({} as Column));
+              }}
+            />
+
+            <SelectBottomDrawer
+              items={itemSelectItems}
+              disabled={!selectedColumn.id}
+              placeholder="Item Select"
+              selectedValue={selectedItem.name}
+              onValueChange={itemId => {
+                setSelectedItem(items.find(item => item.id === itemId) || ({} as Item));
+              }}
+            />
           </YStack>
           <XStack marginTop={20} gap="$4" justifyContent="center">
-            <Button onPress={() => router.push('/1')}>Back</Button>
-            <Button onPress={saveChanges} disabled={!selectedItem.id}>
+            <Button onPress={() => router.push('/(app)/(onboarding)/1')}>Back</Button>
+            <Button
+              backgroundColor={!selectedItem.id ? 'gray' : 'black'}
+              onPress={saveChanges}
+              disabled={!selectedItem.id}
+            >
               Finish
             </Button>
           </XStack>

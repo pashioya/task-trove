@@ -1,7 +1,7 @@
 import { Stack } from 'expo-router';
-import { Image, Button, YStack } from 'tamagui';
+import { Image, Button, YStack, Separator } from 'tamagui';
 import { Container } from '~/components/Container';
-import { mondayColors } from '~/tamagui.config';
+import { mondayColors, Title } from '~/tamagui.config';
 import { useSession } from '~/contexts/session-provider';
 
 export default function Login() {
@@ -16,28 +16,28 @@ export default function Login() {
             objectFit="contain"
             source={{
               uri: require('~/assets/images/tryve-logo.png'),
-              height: 130,
+              height: 100,
             }}
             width="100%"
           />
         </YStack>
 
-        <YStack
-          marginBottom="$15"
-          alignSelf="center"
-          gap="$4"
-          position="absolute"
-          bottom={0}
-          justifyContent="center"
-          alignContent="center"
-        >
-          <Button backgroundColor={mondayColors.mondayDark} onPress={signIn}>
+        <YStack marginTop="80%" gap="$3" alignItems="center">
+          <Title fontSize={30}>Sign in with</Title>
+          <Separator width={250} marginBottom={40} />
+          <Button
+            color="white"
+            size={60}
+            backgroundColor={mondayColors.mondayDark}
+            onPress={signIn}
+          >
             <Image
               source={{
                 uri: require('~/assets/images/monday-white.png'),
-                height: 30,
+                width: 90,
+                height: 80,
               }}
-              width={100}
+              width="100%"
             />
           </Button>
         </YStack>

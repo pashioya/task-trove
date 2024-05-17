@@ -10,6 +10,7 @@ export type SelectItem = {
 
 type SelectBottomDrawerProps = {
   items: SelectItem[];
+  disabled?: boolean;
   placeholder: string;
   selectedValue: string;
   onValueChange?: (value: string) => void;
@@ -17,6 +18,7 @@ type SelectBottomDrawerProps = {
 
 export const SelectBottomDrawer: React.FC<SelectBottomDrawerProps> = ({
   items,
+  disabled,
   placeholder,
   selectedValue,
   onValueChange,
@@ -27,7 +29,13 @@ export const SelectBottomDrawer: React.FC<SelectBottomDrawerProps> = ({
       onValueChange={value => onValueChange && onValueChange(value)}
       disablePreventBodyScroll
     >
-      <Select.Trigger width={220} iconAfter={ChevronDown} backgroundColor="white" color="black">
+      <Select.Trigger
+        disabled={disabled}
+        width={220}
+        iconAfter={ChevronDown}
+        backgroundColor="white"
+        color="black"
+      >
         <Select.Value placeholder={placeholder} color="black" />
       </Select.Trigger>
 

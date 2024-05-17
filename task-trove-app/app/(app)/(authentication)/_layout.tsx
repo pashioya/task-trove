@@ -9,7 +9,7 @@ export default function AuthenticationLayout() {
   }
 
   if (session) {
-    return <Redirect href="/" />;
+    return <Redirect href="/1" />;
   }
 
   return (
