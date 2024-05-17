@@ -7,7 +7,7 @@ const TASK_FETCH_LOCATION = 'background-location-task';
 
 export const toggleShareLocation = async (
   isTracking: boolean,
-  setIsTracking: React.Dispatch<React.SetStateAction<boolean>>,
+  setIsTracking: (value: boolean) => void,
   setRegion: React.Dispatch<React.SetStateAction<{ lat: number; long: number; speed: number }>>,
   boardId: string,
   columnId: string,
@@ -74,5 +74,5 @@ export const toggleShareLocation = async (
   } else {
     await startLocationUpdates();
   }
-  setIsTracking(previousState => !previousState);
+  setIsTracking(!isTracking);
 };

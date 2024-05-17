@@ -33,19 +33,25 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.tryve.tasktroveapp"
+      "bundleIdentifier": "com.tryve.tasktroveapp",
+      "config": {
+        "googleMapsApiKey": "AIzaSyARgWMJ1glQBaLcrMZLh8eORbRKSen-tT8"
+      }
     },
     "android": {
+      "package": "com.tryve.tasktroveapp",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyARgWMJ1glQBaLcrMZLh8eORbRKSen-tT8"
+        }
+      },
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.tryve.tasktroveapp",
       "permissions": [
         "ACCESS_BACKGROUND_LOCATION",
         "ACCESS_FINE_LOCATION",

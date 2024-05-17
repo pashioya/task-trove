@@ -1,10 +1,10 @@
 import { router, Stack } from 'expo-router';
 
 import { View } from 'react-native';
-import { Button, Text, XStack, YStack } from 'tamagui';
+import { Button, Separator, Text, XStack, YStack } from 'tamagui';
 
 import { Container } from '~/components/Container';
-import { Title } from '~/tamagui.config';
+import { mondayColors, Title } from '~/tamagui.config';
 
 export default function One() {
   return (
@@ -12,19 +12,23 @@ export default function One() {
       <Stack.Screen options={{ title: 'Onboarding One' }} />
       <Container>
         <View>
-          <YStack gap="$4" justifyContent="space-between">
-            <Title marginTop={150} textAlign="center" fontSize={40}>
-              {' '}
-              Onboarding One
+          <YStack height="70%" gap="$4" marginTop={160}>
+            <Title color={mondayColors.mondayPurple} textAlign="center" fontSize={40}>
+              Welcome To TaskTrove
             </Title>
-            <Text color="black">Welcome to the onboarding process! This is the first screen.</Text>
-            <XStack gap="$4" justifyContent="center">
-              <Button onPress={() => router.navigate('/(app)/(authentication)/login')}>
-                Login
-              </Button>
-              <Button onPress={() => router.push('/2')}>Next</Button>
-            </XStack>
+            <Separator width="70%" alignSelf="center" />
+            <Text textAlign="center" color="black">
+              Keep Track of your location
+            </Text>
+            <Text textAlign="center" color="black">
+              Keep track of your tasks as well
+            </Text>
           </YStack>
+          <XStack gap="$4" justifyContent="center">
+            <Button fontSize={20} onPress={() => router.push('/(app)/(onboarding)/2')}>
+              Begin
+            </Button>
+          </XStack>
         </View>
       </Container>
     </>
