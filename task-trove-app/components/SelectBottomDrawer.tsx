@@ -1,14 +1,14 @@
-import { Select, Sheet, YStack } from 'tamagui';
+import { Select, type SelectProps, Sheet, YStack } from 'tamagui';
 import React, { useId, useMemo } from 'react';
 import { Check, ChevronDown, ChevronUp } from '@tamagui/lucide-icons';
 import { LinearGradient } from 'tamagui/linear-gradient';
-
+import { mondayColors } from '~/tamagui.config';
 export type SelectItem = {
   name: string;
   value: string;
 };
 
-type SelectBottomDrawerProps = {
+type SelectBottomDrawerProps = SelectProps & {
   items: SelectItem[];
   disabled?: boolean;
   placeholder: string;
@@ -22,21 +22,24 @@ export const SelectBottomDrawer: React.FC<SelectBottomDrawerProps> = ({
   placeholder,
   selectedValue,
   onValueChange,
+  ...rest
 }) => {
-  const id = useId();
-
   const handleValueChange = (value: string) => {
     if (onValueChange) {
       onValueChange(value);
     }
   };
 
+  const id = useId();
+
   return (
     <Select
       id={id}
-      value={selectedValue}
+      defaultValue={placeholder}
+      value={selectedValue || placeholder}
       onValueChange={handleValueChange}
       disablePreventBodyScroll
+      {...rest}
     >
       <Select.Trigger
         disabled={disabled}
@@ -45,7 +48,7 @@ export const SelectBottomDrawer: React.FC<SelectBottomDrawerProps> = ({
         backgroundColor="white"
         color="black"
       >
-        <Select.Value placeholder={placeholder} color="black" />
+        <Select.Value placeholder={placeholder || 'Select'} color="black" />
       </Select.Trigger>
 
       {/* Ignored because of an issue with the Adapt Component. Fix Later */}
@@ -86,6 +89,17 @@ export const SelectBottomDrawer: React.FC<SelectBottomDrawerProps> = ({
 
         <Select.Viewport unstyled>
           <Select.Group>
+            <Select.Item
+              disabled
+              backgroundColor={mondayColors.mondayDark}
+              index={-1}
+              value={placeholder}
+            >
+              <Select.ItemText>{placeholder}</Select.ItemText>
+              <Select.ItemIndicator>
+                <Check size={24} />
+              </Select.ItemIndicator>
+            </Select.Item>
             {useMemo(
               () =>
                 items.map((item, index) => (
@@ -99,6 +113,21 @@ export const SelectBottomDrawer: React.FC<SelectBottomDrawerProps> = ({
               [items],
             )}
           </Select.Group>
+          {/* Native gets an extra icon */}
+          {rest.native && (
+            <YStack
+              position="absolute"
+              right={0}
+              top={0}
+              bottom={0}
+              alignItems="center"
+              justifyContent="center"
+              width="$4"
+              pointerEvents="none"
+            >
+              <ChevronDown />
+            </YStack>
+          )}
         </Select.Viewport>
 
         <Select.ScrollDownButton

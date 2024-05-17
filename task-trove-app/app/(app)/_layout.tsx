@@ -2,7 +2,7 @@ import { useFonts } from 'expo-font';
 import { Stack, SplashScreen } from 'expo-router';
 import React, { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { TamaguiProvider } from 'tamagui';
+import { PortalProvider, TamaguiProvider } from 'tamagui';
 import SettingsContextProvider from '~/contexts/SettingsContextProvider';
 import config from '../../tamagui.config';
 
@@ -29,18 +29,20 @@ export default function AppLayout() {
   return (
     <TamaguiProvider config={config}>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <SettingsContextProvider>
-          <Stack>
-            <Stack.Screen name="(authentication)" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="(drawer)"
-              options={{
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
-          </Stack>
-        </SettingsContextProvider>
+        <PortalProvider>
+          <SettingsContextProvider>
+            <Stack>
+              <Stack.Screen name="(authentication)" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="(drawer)"
+                options={{
+                  headerShown: false,
+                }}
+              />
+              <Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
+            </Stack>
+          </SettingsContextProvider>
+        </PortalProvider>
       </GestureHandlerRootView>
     </TamaguiProvider>
   );

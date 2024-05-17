@@ -47,7 +47,7 @@ export default function Two() {
       name: item.name,
       value: item.id,
     }));
-  }, [boards, columns, items]);
+  }, [columns, items]);
 
   const handleBoardChange = async (board: Board) => {
     setSelectedBoard(board);
@@ -65,9 +65,6 @@ export default function Two() {
     router.replace('/');
   };
 
-  const boardSelectItems = boardSelectItemsRef.current;
-  const columnSelectItems = columnSelectItemsRef.current;
-  const itemSelectItems = itemSelectItemsRef.current;
   return (
     <>
       <Stack.Screen options={{ title: 'Onboarding Two', headerShown: false }} />
@@ -81,7 +78,7 @@ export default function Two() {
           </YStack>
           <YStack gap="$4" alignItems="center">
             <SelectBottomDrawer
-              items={boardSelectItems}
+              items={boardSelectItemsRef.current}
               placeholder="Board Select"
               selectedValue={selectedBoard.name}
               onValueChange={boardId => {
@@ -93,7 +90,7 @@ export default function Two() {
             {/* if selected board isnt set dont show  */}
 
             <SelectBottomDrawer
-              items={columnSelectItems}
+              items={columnSelectItemsRef.current}
               placeholder="Column Select"
               selectedValue={selectedColumn.title}
               disabled={!selectedBoard.id}
@@ -104,7 +101,7 @@ export default function Two() {
             />
 
             <SelectBottomDrawer
-              items={itemSelectItems}
+              items={itemSelectItemsRef.current}
               disabled={!selectedColumn.id}
               placeholder="Item Select"
               selectedValue={selectedItem.name}
