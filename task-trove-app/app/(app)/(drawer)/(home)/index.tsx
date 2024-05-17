@@ -114,6 +114,7 @@ export default function Home() {
               longitudeDelta: 0.0421,
             }}
           />
+          <Button onPress={() => router.replace('/(app)/(onboarding)/2')}> onboarding </Button>
           <Button
             marginTop={50}
             onPress={async () => {
