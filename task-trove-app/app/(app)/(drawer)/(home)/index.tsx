@@ -16,8 +16,20 @@ export default function Home() {
   const mapRef = useRef<MapView>(null);
   const [foregroundStatus, setForegroundStatus] = useState('');
   const [backgroundStatus, setBackgroundStatus] = useState('');
-  const { board, column, item, error, isTracking, setIsTracking, setError } =
-    useContext(SettingsContext);
+  const [error, setError] = useState('');
+
+  const showLocationTrackingErrorAlert = (errorMessage: string) => {
+    Alert.alert('An unexpected error occurred',
+      errorMessage,
+      [{ text: 'Dismiss' }])
+  }
+
+  const updateError = (message: string) => {
+    showLocationTrackingErrorAlert(message)
+    setError(message);
+  }
+
+  const { signOut } = useSession();
 
   const showAlert = (error: string, onPress: () => void, buttonText: string) => {
     Alert.alert('Error', error, [
@@ -122,9 +134,10 @@ export default function Home() {
                   isTracking,
                   setIsTracking,
                   setRegion,
-                  board.id,
-                  column.id,
-                  item.id,
+                  board.id.toString(),
+                  column.id.toString(),
+                  item.id.toString(),
+                  updateError,
                 );
               } catch (e) {
                 if (e instanceof Error) {

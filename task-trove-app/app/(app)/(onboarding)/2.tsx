@@ -1,5 +1,6 @@
 import { router, Stack } from 'expo-router';
 import { useContext, useEffect, useState } from 'react';
+import { Alert } from 'react-native';
 import { Button, Text, View, XStack, YStack } from 'tamagui';
 
 import { Container } from '~/components/Container';
@@ -20,13 +21,19 @@ export default function Two() {
 
   const { setBoard, setColumn, setItem } = useContext(SettingsContext);
 
+  const showErrorAlert = (error: Error) => {
+    Alert.alert('Error fetching boards: ', error.message, [{ text: 'OK' }]);
+  };
+
   useEffect(() => {
     fetchBoards()
       .then(data => {
         setBoards(data);
       })
       .catch(error => {
-        console.error('Error fetching boards:', error);
+        if (error instanceof Error) {
+          showErrorAlert(error);
+        }
       });
   }, []);
 
@@ -55,11 +62,14 @@ export default function Two() {
   };
 
   const saveChanges = () => {
-    setBoard(selectedBoard);
-    setColumn(selectedColumn);
-    setItem(selectedItem);
-    console.log('Changes saved!');
-    router.replace('/');
+    if (selectedBoard.id === '' || selectedColumn.id === '' || selectedItem.id === '') {
+      showErrorAlert(new Error('Please select a board, column, and item to save'));
+    } else {
+      setBoard(selectedBoard);
+      setColumn(selectedColumn);
+      setItem(selectedItem);
+      router.replace('/');
+    }
   };
 
   const boardSelectItems = boards.map(board => ({
