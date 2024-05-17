@@ -12,7 +12,7 @@ import { Ionicons } from '@expo/vector-icons';
 import lightStyle from '~/assets/map/lightStyle.json';
 
 export default function Home() {
-  const [region, setRegion] = useState({ lat: 51.215239, long: 4.425671, speed: 0 });
+  const [region, setRegion] = useState({ lat: 51.1475192, long: 4.4338499, speed: 0 });
   const mapRef = useRef<MapView>(null);
   const [foregroundStatus, setForegroundStatus] = useState('');
   const [backgroundStatus, setBackgroundStatus] = useState('');
