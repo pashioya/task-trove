@@ -1,5 +1,5 @@
 import { Select, Sheet, YStack } from 'tamagui';
-import React, { useMemo } from 'react';
+import React, { useId, useMemo } from 'react';
 import { Check, ChevronDown, ChevronUp } from '@tamagui/lucide-icons';
 import { LinearGradient } from 'tamagui/linear-gradient';
 
@@ -18,15 +18,24 @@ type SelectBottomDrawerProps = {
 
 export const SelectBottomDrawer: React.FC<SelectBottomDrawerProps> = ({
   items,
-  disabled,
+  disabled = false,
   placeholder,
   selectedValue,
   onValueChange,
 }) => {
+  const id = useId();
+
+  const handleValueChange = (value: string) => {
+    if (onValueChange) {
+      onValueChange(value);
+    }
+  };
+
   return (
     <Select
+      id={id}
       value={selectedValue}
-      onValueChange={value => onValueChange && onValueChange(value)}
+      onValueChange={handleValueChange}
       disablePreventBodyScroll
     >
       <Select.Trigger
@@ -39,7 +48,7 @@ export const SelectBottomDrawer: React.FC<SelectBottomDrawerProps> = ({
         <Select.Value placeholder={placeholder} color="black" />
       </Select.Trigger>
 
-      {/* //! Ignored because of an issue with the Adapt Component. Fix Later */}
+      {/* Ignored because of an issue with the Adapt Component. Fix Later */}
       {/* @ts-expect-error TS2308 */}
       <Select.Adapt when="sm">
         <Select.Sheet
@@ -79,16 +88,14 @@ export const SelectBottomDrawer: React.FC<SelectBottomDrawerProps> = ({
           <Select.Group>
             {useMemo(
               () =>
-                items.map((item, i) => {
-                  return (
-                    <Select.Item index={i} key={i} value={item.value}>
-                      <Select.ItemText>{item.name}</Select.ItemText>
-                      <Select.ItemIndicator>
-                        <Check size={24} />
-                      </Select.ItemIndicator>
-                    </Select.Item>
-                  );
-                }),
+                items.map((item, index) => (
+                  <Select.Item index={index} key={index} value={item.value}>
+                    <Select.ItemText>{item.name}</Select.ItemText>
+                    <Select.ItemIndicator>
+                      <Check size={24} />
+                    </Select.ItemIndicator>
+                  </Select.Item>
+                )),
               [items],
             )}
           </Select.Group>
