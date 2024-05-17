@@ -92,6 +92,8 @@ export default function Two() {
               selectedValue={selectedBoard.name}
               onValueChange={boardId => {
                 handleBoardChange(boards.find(board => board.id === boardId) || ({} as Board));
+                setSelectedColumn({} as Column);
+                setSelectedItem({} as Item);
               }}
             />
             {/* if selected board isnt set dont show  */}
@@ -103,6 +105,7 @@ export default function Two() {
               disabled={!selectedBoard.id}
               onValueChange={columnID => {
                 setSelectedColumn(columns.find(column => column.id === columnID) || ({} as Column));
+                setSelectedItem({} as Item);
               }}
             />
 
