@@ -39,7 +39,7 @@ export default function Home() {
         showAlert(
           'Location Column Not Correctly Setup',
           () => {
-            router.replace('/(app)/(drawer)/settings/settings');
+            router.replace('/(app)/(drawer)/settings/main');
           },
           'Go to Settings',
         );
@@ -114,7 +114,7 @@ export default function Home() {
               longitudeDelta: 0.0421,
             }}
           />
-          <Button onPress={() => router.replace('/(app)/(onboarding)/2')}> onboarding </Button>
+
           <Button
             marginTop={50}
             onPress={async () => {
