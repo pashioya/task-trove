@@ -55,7 +55,12 @@ export default function Settings() {
           </TouchableOpacity>
         </YStack>
 
-        <Button backgroundColor="red" onPress={() => signOut}>
+        <Button
+          animation="lazy"
+          enterStyle={{ opacity: 0 }}
+          backgroundColor="red"
+          onPress={() => signOut}
+        >
           Logout
         </Button>
       </Container>
