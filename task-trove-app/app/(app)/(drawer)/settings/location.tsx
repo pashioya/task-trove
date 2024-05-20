@@ -18,6 +18,8 @@ import { ChevronDown, ChevronRight } from '@tamagui/lucide-icons';
 import DateTimePickerAndroid from '@react-native-community/datetimepicker';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useState } from 'react';
+import { DialogInstance } from '~/components/Dialog';
+import LocationItemSelects from '~/components/LocationItemSelects';
 
 export default function LocationSettings() {
   const [showTimePicker, setShowTimePicker] = useState(false);
@@ -44,24 +46,34 @@ export default function LocationSettings() {
               <Switch.Thumb backgroundColor="white" animation="lazy" />
             </Switch>
           </XStack>
-          <XStack
-            borderRadius={10}
-            borderWidth={1}
-            width="100%"
-            margin={10}
-            alignItems="center"
-            padding={20}
-            backgroundColor="white"
-            justifyContent="space-between"
-          >
-            <XStack gap={15}>
-              <Ionicons marginTop={2} name="notifications-outline" size={24} />
-              <Text fontSize={24} color="black">
-                Location Save Item
-              </Text>
-            </XStack>
-            <ChevronRight marginTop={2} color="black" size={24} />
-          </XStack>
+
+          <DialogInstance
+            title="Location Save Item"
+            trigger={
+              <TouchableOpacity>
+                <XStack
+                  borderRadius={10}
+                  borderWidth={1}
+                  width="100%"
+                  margin={10}
+                  alignItems="center"
+                  padding={20}
+                  backgroundColor="white"
+                  justifyContent="space-between"
+                >
+                  <XStack gap={15}>
+                    <Ionicons marginTop={2} name="notifications-outline" size={24} />
+                    <Text fontSize={24} color="black">
+                      Location Save Item
+                    </Text>
+                  </XStack>
+                  <ChevronRight marginTop={2} color="black" size={24} />
+                </XStack>
+              </TouchableOpacity>
+            }
+            description="Change where location is saved"
+            content={<LocationItemSelects />}
+          />
           <TouchableOpacity onPress={() => setShowTimePicker(!showTimePicker)}>
             <XStack
               borderRadius={10}
@@ -82,7 +94,6 @@ export default function LocationSettings() {
               <ChevronRight marginTop={2} color="black" size={24} />
             </XStack>
           </TouchableOpacity>
-
           <TouchableOpacity onPress={() => setShowTimePicker(!showTimePicker)}>
             <XStack
               borderRadius={10}
@@ -113,7 +124,6 @@ export default function LocationSettings() {
               onChange={startTime => console.log(startTime.nativeEvent.timestamp)}
             />
           )}
-
           <Accordion overflow="hidden" width="100%" type="single" collapsable>
             <Accordion.Item value="work-days">
               <Accordion.Trigger

@@ -59,10 +59,7 @@ export const SelectBottomDrawer: React.FC<SelectBottomDrawerProps> = ({
             modal
             dismissOnSnapToBottom
             animationConfig={{
-              type: 'spring',
-              damping: 20,
-              mass: 1.2,
-              stiffness: 250,
+              type: 'direct',
             }}
           >
             <Select.Sheet.Frame>
