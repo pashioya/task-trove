@@ -114,7 +114,7 @@ export default function LocationSettings() {
             />
           )}
 
-          <Accordion overflow="hidden" width="100%" type="single">
+          <Accordion overflow="hidden" width="100%" type="single" collapsable>
             <Accordion.Item value="work-days">
               <Accordion.Trigger
                 borderRadius={10}
@@ -140,18 +140,59 @@ export default function LocationSettings() {
                 <Accordion.Content
                   backgroundColor="white"
                   width="100%"
+                  borderWidth={1}
+                  borderRadius={10}
                   animation="lazy"
                   exitStyle={{ opacity: 0 }}
                 >
-                  <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                  <ScrollView
+                    horizontal
+                    backgroundColor="white"
+                    showsHorizontalScrollIndicator={false}
+                  >
                     <XStack gap={15}>
-                      <Circle size={50} backgroundColor="blue" elevation="$4" />
-                      <Circle size={50} backgroundColor="blue" elevation="$4" />
-                      <Circle size={50} backgroundColor="blue" elevation="$4" />
-                      <Circle size={50} backgroundColor="blue" elevation="$4" />
-                      <Circle size={50} backgroundColor="blue" elevation="$4" />
-                      <Circle size={50} backgroundColor="blue" elevation="$4" />
-                      <Circle size={50} backgroundColor="blue" elevation="$4" />
+                      <TouchableOpacity>
+                        <Circle size={50} backgroundColor="blue" elevation="$4" />
+                        <Text position="absolute" top={16} right={19}>
+                          M
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity>
+                        <Circle size={50} backgroundColor="blue" elevation="$4" />
+                        <Text position="absolute" top={16} right={20}>
+                          T
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity>
+                        <Circle size={50} backgroundColor="blue" elevation="$4" />
+                        <Text position="absolute" top={16} right={20}>
+                          W
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity>
+                        <Circle size={50} backgroundColor="blue" elevation="$4" />
+                        <Text position="absolute" top={16} right={20}>
+                          T
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity>
+                        <Circle size={50} backgroundColor="blue" elevation="$4" />
+                        <Text position="absolute" top={16} right={20}>
+                          F
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity>
+                        <Circle size={50} backgroundColor="blue" elevation="$4" />
+                        <Text position="absolute" top={16} right={20}>
+                          Sa
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity>
+                        <Circle size={50} backgroundColor="blue" elevation="$4" />
+                        <Text position="absolute" top={16} right={20}>
+                          Su
+                        </Text>
+                      </TouchableOpacity>
                     </XStack>
                   </ScrollView>
                 </Accordion.Content>
