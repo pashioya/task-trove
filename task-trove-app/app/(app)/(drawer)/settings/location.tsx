@@ -10,7 +10,6 @@ import {
   Switch,
   Label,
 } from 'tamagui';
-import { Ionicons } from '@expo/vector-icons';
 
 import { Container } from '~/components/Container';
 import { ChevronDown, ChevronRight } from '@tamagui/lucide-icons';
@@ -30,6 +29,7 @@ export default function LocationSettings() {
       <Container>
         <YStack alignItems="center">
           <XStack
+            disabled
             width="100%"
             gap={15}
             backgroundColor="white"
@@ -39,7 +39,7 @@ export default function LocationSettings() {
             justifyContent="space-between"
             padding={20}
           >
-            <Label fontSize={24} color="black">
+            <Label disabled fontSize={24} color="black">
               Location Tracking
             </Label>
             <Switch backgroundColor="blue" onCheckedChange={checked => console.log(checked)}>
@@ -54,15 +54,13 @@ export default function LocationSettings() {
                 <XStack
                   borderRadius={10}
                   borderWidth={1}
-                  width="100%"
                   margin={10}
                   alignItems="center"
                   padding={20}
                   backgroundColor="white"
                   justifyContent="space-between"
                 >
-                  <XStack gap={15}>
-                    <Ionicons marginTop={2} name="notifications-outline" size={24} />
+                  <XStack width="100%" gap={15}>
                     <Text fontSize={24} color="black">
                       Location Save Item
                     </Text>
@@ -80,13 +78,11 @@ export default function LocationSettings() {
               borderWidth={1}
               margin={10}
               alignItems="center"
-              width="100%"
               padding={20}
               backgroundColor="white"
               justifyContent="space-between"
             >
-              <XStack gap={15}>
-                <Ionicons marginTop={2} name="notifications-outline" size={24} />
+              <XStack width="100%" gap={15}>
                 <Text fontSize={24} color="black">
                   Start Time
                 </Text>
@@ -98,15 +94,13 @@ export default function LocationSettings() {
             <XStack
               borderRadius={10}
               borderWidth={1}
-              width="100%"
               margin={10}
               alignItems="center"
               padding={20}
               backgroundColor="white"
               justifyContent="space-between"
             >
-              <XStack gap={15}>
-                <Ionicons marginTop={2} name="notifications-outline" size={24} />
+              <XStack width="100%" gap={15}>
                 <Text fontSize={24} color="black">
                   End Time
                 </Text>
@@ -124,9 +118,10 @@ export default function LocationSettings() {
               onChange={startTime => console.log(startTime.nativeEvent.timestamp)}
             />
           )}
-          <Accordion overflow="hidden" width="100%" type="single" collapsable>
+          <Accordion overflow="hidden" type="single" collapsable>
             <Accordion.Item value="work-days">
               <Accordion.Trigger
+                width="100%"
                 borderRadius={10}
                 backgroundColor="white"
                 flexDirection="row"
@@ -135,7 +130,6 @@ export default function LocationSettings() {
                 {({ open }: { open: boolean }) => (
                   <>
                     <XStack gap={15}>
-                      <Ionicons marginTop={2} name="notifications-outline" size={24} />
                       <Text fontSize={24} color="black">
                         Work Days
                       </Text>
