@@ -1,132 +1,191 @@
 import * as Linking from 'expo-linking';
 import { Stack, useRouter } from 'expo-router';
-import { Button, Text, View } from 'tamagui';
-import { Container } from '~/tamagui.config';
-import React, { useContext, useEffect, useState } from 'react';
-import * as ExpoLocation from 'expo-location';
-import { TouchableOpacity, Alert } from 'react-native';
-import { toggleShareLocation } from '~/utils/LocationSync';
-import { AntDesign } from '@expo/vector-icons';
-import { useSession } from '~/contexts/session-provider';
+import { Button, View } from 'tamagui';
+import { Container, mondayColors } from '~/tamagui.config';
+import React, { useContext, useEffect, useRef } from 'react';
+import { TouchableOpacity, Alert, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import SettingsContext from '~/contexts/SettingsContext';
+import { useToggleShareLocation, useLocationPermissions } from '~/hooks';
+import { useMondayMutation } from '~/lib/monday/api';
+import { changeMultipleColumnValuesMutation } from '~/lib/monday/queries';
+import * as ExpoLocation from 'expo-location';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import lightStyle from '~/assets/map/lightStyle.json';
+
+const showAlert = (error: string, onPress: () => void, buttonText: string) => {
+  Alert.alert('Error', error, [
+    {
+      text: buttonText,
+      onPress,
+    },
+    { text: 'Dismiss' },
+  ]);
+};
+
+const INITIAL_REGION = {
+  latitude: 51.1475192,
+  longitude: 4.4338499,
+  latitudeDelta: 0.0922,
+  longitudeDelta: 0.0421,
+};
 
 export default function Home() {
-  const url = Linking.useURL();
-
-  const [isTracking, setIsTracking] = useState(false);
-  const [region, setRegion] = useState({ lat: 0, long: 0, speed: 0 });
-  const [foregroundStatus, setForegroundStatus] = useState('');
-  const [backgroundStatus, setBackgroundStatus] = useState('');
-  const [error, setError] = useState('');
-
-  const showLocationTrackingErrorAlert = (errorMessage: string) => {
-    Alert.alert('An unexpected error occurred', errorMessage, [{ text: 'Dismiss' }]);
-  };
-
-  const updateError = (message: string) => {
-    showLocationTrackingErrorAlert(message);
-    setError(message);
-  };
-
-  const { signOut } = useSession();
-
-  const { board, column, item } = useContext(SettingsContext);
-
+  const { toggleShareLocation, isTracking, region, setRegion } = useToggleShareLocation();
+  const { foregroundStatus, backgroundStatus } = useLocationPermissions();
+  const { board, column, item, error, setError } = useContext(SettingsContext);
   const router = useRouter();
-  useEffect(() => {
-    const showPermissionAlert = () => {
-      Alert.alert(
-        'Location Permission Needed',
-        'This app requires location access to function correctly. Please consider granting permission.',
-        [
-          {
-            text: 'Settings',
-            onPress: async () => await Linking.openSettings(),
-          },
-          { text: 'Cancel' },
-        ],
-      );
-    };
+  const mapRef = useRef<MapView>(null);
 
-    const requestPermissions = async () => {
-      const { status: foregroundStatus } = await ExpoLocation.requestForegroundPermissionsAsync();
-      setForegroundStatus(foregroundStatus);
-      if (foregroundStatus === 'granted') {
-        const { status: backgroundStatus } = await ExpoLocation.requestBackgroundPermissionsAsync();
-        setBackgroundStatus(backgroundStatus);
-        console.log('backgroundStatus', backgroundStatus);
-        if (backgroundStatus !== 'granted') {
-          console.log('Background location permission not granted');
-          showPermissionAlert();
-        }
-      } else {
-        console.log('Foreground location permission not granted');
-        showPermissionAlert();
+  const { mutate: updateLocation, error: updateLocationError } = useMondayMutation({
+    mutation: changeMultipleColumnValuesMutation,
+  });
+
+  useEffect(() => {
+    if (isTracking && region && board && column && item) {
+      updateLocation({
+        boardId: board.id,
+        itemId: item.id,
+        columnValues: JSON.stringify({
+          [column.id]: {
+            lat: region.latitude,
+            lng: region.longitude,
+            address: 'realtime location',
+          },
+        }),
+      });
+    }
+  }, [region, isTracking, board, column, item, updateLocation]);
+
+  useEffect(() => {
+    if (updateLocationError) {
+      if (updateLocationError.errors) {
+        /* Handle specific errors here */
+        console.log(updateLocationError.errors.map(e => e.message));
       }
-    };
-    requestPermissions();
-  }, []);
+
+      Alert.alert('An unexpected error occurred', updateLocationError.message, [
+        { text: 'Dismiss' },
+      ]);
+    }
+  }, [updateLocationError]);
+
+  const onLocateMe = async () => {
+    try {
+      if (foregroundStatus !== 'granted' || backgroundStatus !== 'granted') {
+        showAlert(
+          error ? error.message : 'Location permissions not granted',
+          async () => await Linking.openSettings(),
+          'Open Settings',
+        );
+        return;
+      }
+      if (!item) {
+        showAlert(
+          'Location Column Not Correctly Setup',
+          () => {
+            router.replace('/(app)/(drawer)/settings/settings');
+          },
+          'Go to Settings',
+        );
+        return;
+      }
+      const location = await ExpoLocation.getCurrentPositionAsync();
+      setRegion({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        speed: location.coords.speed ? location.coords.speed : 0,
+      });
+      mapRef.current?.animateToRegion(
+        {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+          latitudeDelta: 0.9,
+          longitudeDelta: 0.9,
+        },
+        1000,
+      );
+    } catch (e) {
+      if (e instanceof Error) {
+        setError(e);
+      }
+    }
+  };
 
   return (
     <>
       <Stack.Screen options={{ title: 'Home', headerShown: false }} />
       <Container>
-        <Button onPress={signOut}>Log Out</Button>
-        <Text color="black">URL: {url}</Text>
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <TouchableOpacity
+        <View alignItems="center" flex={1} justifyContent="center">
+          <MapView
+            provider={PROVIDER_GOOGLE}
+            showsUserLocation={isTracking}
+            style={styles.map}
+            userInterfaceStyle="dark"
+            initialRegion={INITIAL_REGION}
+            ref={mapRef}
+            customMapStyle={lightStyle}
+            region={{
+              latitude: region?.latitude || INITIAL_REGION.latitude,
+              longitude: region?.longitude || INITIAL_REGION.longitude,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }}
+          />
+          <Button onPress={() => router.replace('/(app)/(onboarding)/2')}> onboarding </Button>
+          <Button
+            marginTop={50}
             onPress={async () => {
               try {
-                await toggleShareLocation(
-                  isTracking,
-                  setIsTracking,
-                  setRegion,
-                  board.id.toString(),
-                  column.id.toString(),
-                  item.id.toString(),
-                  updateError,
-                );
+                await toggleShareLocation();
               } catch (e) {
                 if (e instanceof Error) {
-                  setError(e.message);
+                  setError(e);
+                  showAlert(
+                    e.message,
+                    () => {
+                      console.log(e);
+                    },
+                    'Dismiss',
+                  );
                 }
               }
             }}
           >
-            {isTracking ? (
-              <AntDesign name="pausecircleo" size={24} color="black" />
-            ) : (
-              <AntDesign name="playcircleo" size={24} color="black" />
-            )}
-          </TouchableOpacity>
-          <Text color="black">Foreground permission: {foregroundStatus}</Text>
-          <Text color="black">Background permission: {backgroundStatus}</Text>
-          <Text color="black">Error: {error}</Text>
-          <Text color="black">
-            {isTracking
-              ? `${region.lat.toFixed(3)}, ${region.long.toFixed(
-                  3,
-                )}, Speed: ${region.speed.toFixed(3)}`
-              : 'You are not currently sharing your location'}
-          </Text>
-          <Text color="black">
-            {Object.keys(board).length ? `Board: ${board.name}` : 'No board selected'}
-          </Text>
-          <Text color="black">
-            {Object.keys(column).length ? `Column: ${column.title}` : 'No column selected'}
-          </Text>
-          <Text color="black">
-            {Object.keys(item).length ? `Item: ${item.name}` : 'No item selected'}
-          </Text>
-          <Button marginBottom={3} onPress={() => router.replace('/login')}>
-            Login Page
+            {!isTracking ? 'Start' : 'Stop'}Tracking
           </Button>
-          <Button marginBottom={3} onPress={() => router.replace('/1')}>
-            View OnBoarding 1
-          </Button>
-          <Button onPress={() => router.replace('/2')}>View OnBoarding 2</Button>
+          {isTracking && (
+            <TouchableOpacity style={styles.locateBtn} onPress={onLocateMe}>
+              <Ionicons name="navigate" size={24} color={mondayColors.mondayDark} />
+            </TouchableOpacity>
+          )}
         </View>
       </Container>
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  locateBtn: {
+    position: 'absolute',
+    top: 550,
+    right: 10,
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 10,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    shadowOffset: {
+      width: 1,
+      height: 10,
+    },
+  },
+  map: {
+    width: '105%',
+    height: '85%',
+    borderRadius: 10,
+    overflow: 'hidden',
+  },
+});
