@@ -54,16 +54,10 @@ export const SelectBottomDrawer: React.FC<SelectBottomDrawerProps> = ({
 
         {/* Ignored because of an issue with the Adapt Component. Fix Later */}
         {/* @ts-expect-error TS2308 */}
-        <Select.Adapt when="sm">
-          <Select.Sheet
-            modal
-            dismissOnSnapToBottom
-            animationConfig={{
-              type: 'direct',
-            }}
-          >
+        <Select.Adapt when="sm" platform="touch">
+          <Select.Sheet native={!!rest.native} modal dismissOnSnapToBottom>
             <Select.Sheet.Frame>
-              <Sheet.ScrollView>
+              <Sheet.ScrollView height="50%">
                 <Select.Adapt.Contents />
               </Sheet.ScrollView>
             </Select.Sheet.Frame>

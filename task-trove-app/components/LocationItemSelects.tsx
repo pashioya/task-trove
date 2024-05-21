@@ -3,8 +3,9 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import SettingsContext from '~/contexts/SettingsContext';
 import type { Board, Column, Item } from '~/model/types';
 import { fetchBoards, fetchItems, fetchLocationColumns } from '~/utils/MondayAPI';
-import { SelectBottomDrawer } from './SelectBottomDrawer';
+
 import { Button, YStack } from 'tamagui';
+import { CustomAutomateSelect } from './CustomAutomateSelect';
 
 export default function LocationItemSelects() {
   const [boards, setBoards] = useState<Board[]>([]);
@@ -15,18 +16,18 @@ export default function LocationItemSelects() {
   const [selectedColumn, setSelectedColumn] = useState<Column>({} as Column);
   const [selectedItem, setSelectedItem] = useState<Item>({} as Item);
 
-  const boardSelectItemsRef = useRef<{ name: string; value: string }[]>([]);
-  const columnSelectItemsRef = useRef<{ name: string; value: string }[]>([]);
-  const itemSelectItemsRef = useRef<{ name: string; value: string }[]>([]);
+  const boardSelectItemsRef = useRef<{ label: string; value: string }[]>([]);
+  const columnSelectItemsRef = useRef<{ label: string; value: string }[]>([]);
+  const itemSelectItemsRef = useRef<{ label: string; value: string }[]>([]);
 
-  const { setBoard, setColumn, setItem, board, column, item } = useContext(SettingsContext);
+  const { setBoard, setColumn, setItem } = useContext(SettingsContext);
 
   useEffect(() => {
     fetchBoards()
       .then(data => {
         setBoards(data);
         boardSelectItemsRef.current = data.map(board => ({
-          name: board.name,
+          label: board.name,
           value: board.id,
         }));
       })
@@ -44,28 +45,39 @@ export default function LocationItemSelects() {
         console.error('Error fetching boards:', error);
       });
     boardSelectItemsRef.current = boards.map(board => ({
-      name: board.name,
+      label: board.name,
       value: board.id,
     }));
   }, [boards]);
 
   useEffect(() => {
     columnSelectItemsRef.current = columns.map(column => ({
-      name: column.title,
+      label: column.title,
       value: column.id,
     }));
     itemSelectItemsRef.current = items.map(item => ({
-      name: item.name,
+      label: item.name,
       value: item.id,
     }));
+    autoSelect();
   }, [columns, items]);
+
+  function autoSelect() {
+    if (boards.length === 1) {
+      setSelectedBoard(boards[0]);
+    }
+    if (!selectedColumn.id && columns.length === 1) {
+      setSelectedColumn(columns[0]);
+    }
+    if (!selectedItem.id && items.length === 1) {
+      setSelectedItem(items[0]);
+    }
+  }
 
   const handleBoardChange = async (board: Board) => {
     setSelectedBoard(board);
-    const retrievedColumns = await fetchLocationColumns(board.id);
-    const retrievedItems = await fetchItems(board.id);
-    setColumns(retrievedColumns);
-    setItems(retrievedItems);
+    setColumns(await fetchLocationColumns(board.id));
+    setItems(await fetchItems(board.id));
   };
 
   const saveChanges = () => {
@@ -73,43 +85,41 @@ export default function LocationItemSelects() {
     setColumn(selectedColumn);
     setItem(selectedItem);
 
-    console.log('board:', board);
-    console.log('column:', column);
-    console.log('item', item);
-    console.log('Changes saved!');
     router.replace('/');
   };
 
   return (
     <YStack gap="$4" alignItems="center">
-      <SelectBottomDrawer
-        items={boardSelectItemsRef.current}
+      <CustomAutomateSelect
+        options={boardSelectItemsRef.current}
         placeholder="Board Select"
-        selectedValue={selectedBoard.name}
-        onValueChange={boardId => {
-          handleBoardChange(boards.find(board => board.id === boardId) || ({} as Board));
+        selectedValue={{ label: selectedBoard.name, value: selectedBoard.id }}
+        onValueChange={async boardId => {
+          await handleBoardChange(
+            boards.find(board => board.id === boardId?.value) || ({} as Board),
+          );
           setSelectedColumn({} as Column);
           setSelectedItem({} as Item);
         }}
       />
-      <SelectBottomDrawer
-        items={columnSelectItemsRef.current}
+      <CustomAutomateSelect
+        options={columnSelectItemsRef.current}
         placeholder="Column Select"
-        selectedValue={selectedColumn.title}
-        disabled={!selectedBoard.id}
-        onValueChange={columnID => {
-          setSelectedColumn(columns.find(column => column.id === columnID) || ({} as Column));
-          setSelectedItem({} as Item);
+        selectedValue={{ label: selectedColumn.title, value: selectedColumn.id }}
+        onValueChange={newBoard => {
+          setSelectedColumn(
+            columns.find(column => column.id === newBoard?.value) || ({} as Column),
+          );
+          autoSelect();
         }}
       />
 
-      <SelectBottomDrawer
-        items={itemSelectItemsRef.current}
-        disabled={!selectedColumn.id}
+      <CustomAutomateSelect
+        options={itemSelectItemsRef.current}
         placeholder="Item Select"
-        selectedValue={selectedItem.name}
-        onValueChange={itemId => {
-          setSelectedItem(items.find(item => item.id === itemId) || ({} as Item));
+        selectedValue={{ label: selectedItem.name, value: selectedItem.id }}
+        onValueChange={newItem => {
+          setSelectedItem(items.find(item => item.id === newItem?.value) || ({} as Item));
         }}
       />
       <Button
