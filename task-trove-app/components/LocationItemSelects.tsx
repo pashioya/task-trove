@@ -119,7 +119,7 @@ export default function LocationItemSelects() {
         onPress={saveChanges}
         disabled={!selectedItem.id}
       >
-        Finish
+        Save
       </Button>
     </YStack>
   );
