@@ -92,8 +92,6 @@ export default function LocationItemSelects() {
           setSelectedItem({} as Item);
         }}
       />
-      {/* if selected board isnt set dont show  */}
-
       <SelectBottomDrawer
         items={columnSelectItemsRef.current}
         placeholder="Column Select"
