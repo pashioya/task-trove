@@ -1,18 +1,21 @@
 import { Button, Input, ListItem, ScrollView, XGroup, YGroup, YStack } from 'tamagui';
 import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
+import { mondayColors } from '~/tamagui.config';
 
 type Option = { label: string; value: string };
 
 type CustomAutomateSelectProps = {
   options: Option[];
-  selectedValue?: null | Option;
+  disabled?: boolean;
+  selectedValue?: Option | null;
   onValueChange: (v: null | Option) => void;
   placeholder?: string;
 };
 
 export function CustomAutomateSelect({
   options,
+  disabled,
   selectedValue,
   onValueChange,
   placeholder,
@@ -32,29 +35,45 @@ export function CustomAutomateSelect({
     setPopoverOpen(false);
   };
 
+  const inputPlaceholder = disabled
+    ? placeholder
+    : selection?.label
+      ? selection.label
+      : placeholder;
+
   return (
     <YStack alignItems="center">
       <XGroup width={240}>
         <XGroup.Item>
           <Input
+            color="black"
             backgroundColor="white"
-            color={selection ? 'black' : 'red'}
+            disabled={disabled}
             flex={1}
             width={240}
             borderRadius={0}
-            onFocus={() => setPopoverOpen(!popoverOpen)}
+            onFocus={() => setPopoverOpen(true)}
             onChangeText={searchTerm => setSearchTerm(searchTerm.toLowerCase())}
-            placeholder={selection ? selection.label : placeholder}
+            placeholder={inputPlaceholder}
           />
         </XGroup.Item>
         <XGroup.Item>
-          <Button onPress={() => setPopoverOpen(!popoverOpen)}>▼</Button>
+          <Button disabled={disabled} onPress={() => setPopoverOpen(!popoverOpen)}>
+            ▼
+          </Button>
         </XGroup.Item>
       </XGroup>
       {popoverOpen && (
-        <YGroup>
+        <YGroup position="absolute" top="100%" zIndex={999}>
           <YStack>
-            <YGroup alignSelf="center" bordered width={240} size="$5" height={500}>
+            <YGroup
+              alignSelf="center"
+              bordered
+              width={240}
+              size="$5"
+              height={200}
+              backgroundColor={mondayColors.mondayDark}
+            >
               <ScrollView>
                 {filteredOptions.map(item => (
                   <YGroup.Item key={item.value}>

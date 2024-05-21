@@ -148,9 +148,6 @@ export default function Home() {
               <Ionicons name="navigate" size={24} color={mondayColors.mondayDark} />
             </TouchableOpacity>
           )}
-          <Button onPress={() => router.push('/(app)/(drawer)/settings/notifications')}>
-            test
-          </Button>
         </View>
       </Container>
     </>

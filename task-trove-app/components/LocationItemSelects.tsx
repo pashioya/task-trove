@@ -59,7 +59,6 @@ export default function LocationItemSelects() {
       label: item.name,
       value: item.id,
     }));
-    autoSelect();
   }, [columns, items]);
 
   function autoSelect() {
@@ -93,31 +92,39 @@ export default function LocationItemSelects() {
       <CustomAutomateSelect
         options={boardSelectItemsRef.current}
         placeholder="Board Select"
-        selectedValue={{ label: selectedBoard.name, value: selectedBoard.id }}
+        selectedValue={
+          selectedBoard.id ? { label: selectedBoard.name, value: selectedBoard.id } : null
+        }
         onValueChange={async boardId => {
           await handleBoardChange(
             boards.find(board => board.id === boardId?.value) || ({} as Board),
           );
           setSelectedColumn({} as Column);
           setSelectedItem({} as Item);
+          autoSelect();
         }}
       />
       <CustomAutomateSelect
         options={columnSelectItemsRef.current}
         placeholder="Column Select"
-        selectedValue={{ label: selectedColumn.title, value: selectedColumn.id }}
-        onValueChange={newBoard => {
+        selectedValue={
+          selectedColumn.id ? { label: selectedColumn.title, value: selectedColumn.id } : null
+        }
+        disabled={!selectedBoard.id}
+        onValueChange={newColumn => {
           setSelectedColumn(
-            columns.find(column => column.id === newBoard?.value) || ({} as Column),
+            columns.find(column => column.id === newColumn?.value) || ({} as Column),
           );
-          autoSelect();
         }}
       />
 
       <CustomAutomateSelect
         options={itemSelectItemsRef.current}
         placeholder="Item Select"
-        selectedValue={{ label: selectedItem.name, value: selectedItem.id }}
+        selectedValue={
+          selectedItem.id ? { label: selectedItem.name, value: selectedItem.id } : null
+        }
+        disabled={!selectedColumn.id}
         onValueChange={newItem => {
           setSelectedItem(items.find(item => item.id === newItem?.value) || ({} as Item));
         }}
