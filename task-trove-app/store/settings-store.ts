@@ -3,15 +3,13 @@ import { devtools } from 'zustand/middleware';
 import type { Board, Column, Item } from '../model/types';
 
 type SettingsState = {
-  isTracking: boolean;
   isError: boolean;
-  error: Error;
-  board: Board;
-  column: Column;
-  item: Item;
+  error: Error | null;
+  board: Board | null;
+  column: Column | null;
+  item: Item | null;
   setIsError: (isError: boolean) => void;
   setError: (error: Error) => void;
-  setIsTracking: (isTracking: boolean) => void;
   setBoard: (board: Board) => void;
   setColumn: (column: Column) => void;
   setItem: (item: Item) => void;
@@ -19,15 +17,13 @@ type SettingsState = {
 
 const useSettingsStore = create<SettingsState>()(
   devtools(set => ({
-    isTracking: false,
     isError: false,
-    error: {} as Error,
-    board: {} as Board,
-    column: {} as Column,
-    item: {} as Item,
+    error: null,
+    board: null,
+    column: null,
+    item: null,
     setIsError: isError => set({ isError }),
     setError: error => set({ error }),
-    setIsTracking: isTracking => set({ isTracking }),
     setBoard: board => set({ board }),
     setColumn: column => set({ column }),
     setItem: item => set({ item }),

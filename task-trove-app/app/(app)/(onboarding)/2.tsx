@@ -3,8 +3,8 @@ import { Button, Text, View, XStack, YStack } from 'tamagui';
 
 import { Container } from '~/components/Container';
 import LocationItemSelects from '~/components/LocationItemSelects';
-import { useSettingsStore } from '~/store';
 
+import { useSettingsStore } from '~/store';
 import { mondayColors } from '~/tamagui.config';
 
 export default function Two() {
@@ -24,9 +24,9 @@ export default function Two() {
           <XStack marginTop={20} gap="$4" justifyContent="center">
             <Button onPress={() => router.push('/(app)/(onboarding)/1')}>Back</Button>
             <Button
-              backgroundColor={!item.id ? 'gray' : 'black'}
+              backgroundColor={!item ? 'gray' : 'black'}
               onPress={() => router.replace('/')}
-              disabled={!item.id}
+              disabled={!item}
             >
               Finish
             </Button>

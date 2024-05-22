@@ -65,7 +65,7 @@ const SessionProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 function useSession() {
   const context = useContext(SessionContext);
   if (!context) {
-    throw new Error('useSession must be used within an SessionProvider');
+    throw new Error('useSession must be used within a SessionProvider');
   }
   return context;
 }

@@ -1,40 +1,87 @@
 import * as Linking from 'expo-linking';
-import { router, Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import { Button, View } from 'tamagui';
 import { Container, mondayColors } from '~/tamagui.config';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as ExpoLocation from 'expo-location';
 import { TouchableOpacity, Alert, StyleSheet } from 'react-native';
-import { toggleShareLocation } from '~/utils/LocationSync';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { Ionicons } from '@expo/vector-icons';
+import { useToggleShareLocation, useLocationPermissions } from '~/hooks';
+import { useMondayMutation } from '~/lib/monday/api';
+import { changeMultipleColumnValuesMutation } from '~/lib/monday/queries';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import lightStyle from '~/assets/map/lightStyle.json';
 import { useSettingsStore } from '~/store';
 
-export default function Home() {
-  const [region, setRegion] = useState({ lat: 51.1475192, long: 4.4338499, speed: 0 });
-  const mapRef = useRef<MapView>(null);
-  const [foregroundStatus, setForegroundStatus] = useState('');
-  const [backgroundStatus, setBackgroundStatus] = useState('');
-  const { board, column, item, error, isTracking, setIsTracking, setError } = useSettingsStore();
+const showAlert = (error: string, onPress: () => void, buttonText: string) => {
+  Alert.alert('Error', error, [
+    {
+      text: buttonText,
+      onPress,
+    },
+    { text: 'Dismiss' },
+  ]);
+};
 
-  const showAlert = (error: string, onPress: () => void, buttonText: string) => {
-    Alert.alert('Error', error, [
-      {
-        text: buttonText,
-        onPress,
-      },
-      { text: 'Dismiss' },
-    ]);
-  };
+const INITIAL_REGION = {
+  latitude: 51.1475192,
+  longitude: 4.4338499,
+  latitudeDelta: 0.0922,
+  longitudeDelta: 0.0421,
+};
+
+export default function Home() {
+  const { toggleShareLocation, isTracking, region, setRegion } = useToggleShareLocation();
+  const { foregroundStatus, backgroundStatus } = useLocationPermissions();
+  const router = useRouter();
+
+  const mapRef = useRef<MapView>(null);
+  const { board, column, item, error, setError } = useSettingsStore();
+
+  const { mutate: updateLocation, error: updateLocationError } = useMondayMutation({
+    mutation: changeMultipleColumnValuesMutation,
+  });
+
+  useEffect(() => {
+    if (isTracking && region && board && column && item) {
+      updateLocation({
+        boardId: board.id,
+        itemId: item.id,
+        columnValues: JSON.stringify({
+          [column.id]: {
+            lat: region.latitude,
+            lng: region.longitude,
+            address: 'realtime location',
+          },
+        }),
+      });
+    }
+  }, [region, isTracking, board, column, item, updateLocation]);
+
+  useEffect(() => {
+    if (updateLocationError) {
+      if (updateLocationError.errors) {
+        /* Handle specific errors here */
+        console.log(updateLocationError.errors.map(e => e.message));
+      }
+
+      Alert.alert('An unexpected error occurred', updateLocationError.message, [
+        { text: 'Dismiss' },
+      ]);
+    }
+  }, [updateLocationError]);
 
   const onLocateMe = async () => {
     try {
       if (foregroundStatus !== 'granted' || backgroundStatus !== 'granted') {
-        showAlert(error.message, async () => await Linking.openSettings(), 'Open Settings');
+        showAlert(
+          error ? error.message : 'Location permissions not granted',
+          async () => await Linking.openSettings(),
+          'Open Settings',
+        );
         return;
       }
-      if (item.id === '') {
+      if (!item) {
         showAlert(
           'Location Column Not Correctly Setup',
           () => {
@@ -46,12 +93,17 @@ export default function Home() {
       }
       const location = await ExpoLocation.getCurrentPositionAsync();
       setRegion({
-        lat: location.coords.latitude,
-        long: location.coords.longitude,
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
         speed: location.coords.speed ? location.coords.speed : 0,
       });
       mapRef.current?.animateToRegion(
-        { latitude: region.lat, longitude: region.long, latitudeDelta: 0.9, longitudeDelta: 0.9 },
+        {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+          latitudeDelta: 0.9,
+          longitudeDelta: 0.9,
+        },
         1000,
       );
     } catch (e) {
@@ -61,38 +113,6 @@ export default function Home() {
     }
   };
 
-  const INITIAL_REGION = {
-    latitude: region.lat,
-    longitude: region.long,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  };
-
-  useEffect(() => {
-    const requestPermissions = async () => {
-      const { status: foregroundStatus } = await ExpoLocation.requestForegroundPermissionsAsync();
-      setForegroundStatus(foregroundStatus);
-      if (foregroundStatus === 'granted') {
-        const { status: backgroundStatus } = await ExpoLocation.requestBackgroundPermissionsAsync();
-        setBackgroundStatus(backgroundStatus);
-        console.log('backgroundStatus', backgroundStatus);
-        if (backgroundStatus !== 'granted') {
-          showAlert(
-            'Background location permission not granted',
-            async () => await Linking.openSettings(),
-            'Open Settings',
-          );
-        }
-      } else {
-        showAlert(
-          'Foreground location permission not granted',
-          async () => await Linking.openSettings(),
-          'Open Settings',
-        );
-      }
-    };
-    requestPermissions();
-  }, []);
   return (
     <>
       <Stack.Screen options={{ title: 'Home', headerShown: false }} />
@@ -107,32 +127,24 @@ export default function Home() {
             ref={mapRef}
             customMapStyle={lightStyle}
             region={{
-              latitude: region.lat,
-              longitude: region.long,
+              latitude: region?.latitude || INITIAL_REGION.latitude,
+              longitude: region?.longitude || INITIAL_REGION.longitude,
               latitudeDelta: 0.0922,
               longitudeDelta: 0.0421,
             }}
           />
-
           <Button
             marginTop={50}
             onPress={async () => {
               try {
-                await toggleShareLocation(
-                  isTracking,
-                  setIsTracking,
-                  setRegion,
-                  board.id,
-                  column.id,
-                  item.id,
-                );
+                await toggleShareLocation();
               } catch (e) {
                 if (e instanceof Error) {
                   setError(e);
                   showAlert(
                     e.message,
                     () => {
-                      console.log(e.message);
+                      console.log(e);
                     },
                     'Dismiss',
                   );
@@ -142,7 +154,6 @@ export default function Home() {
           >
             {!isTracking ? 'Start' : 'Stop'}Tracking
           </Button>
-          <Button onPress={() => router.replace('/(app)/(onboarding)/2')}>onboarding</Button>
           {isTracking && (
             <TouchableOpacity style={styles.locateBtn} onPress={onLocateMe}>
               <Ionicons name="navigate" size={24} color={mondayColors.mondayDark} />
