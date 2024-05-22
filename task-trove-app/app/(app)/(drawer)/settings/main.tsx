@@ -35,10 +35,7 @@ export default function Settings() {
             </XStack>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            disabled
-            onPress={() => router.push('/(app)/(drawer)/settings/notifications')}
-          >
+          <TouchableOpacity onPress={() => router.push('/(app)/(drawer)/settings/notifications')}>
             <XStack
               borderRadius={10}
               margin={10}

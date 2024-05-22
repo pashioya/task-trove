@@ -12,6 +12,7 @@ import { changeMultipleColumnValuesMutation } from '~/lib/monday/queries';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import lightStyle from '~/assets/map/lightStyle.json';
 import { useSettingsStore } from '~/store';
+import { INITIAL_REGION } from '~/config/map-config';
 
 const showAlert = (error: string, onPress: () => void, buttonText: string) => {
   Alert.alert('Error', error, [
@@ -21,13 +22,6 @@ const showAlert = (error: string, onPress: () => void, buttonText: string) => {
     },
     { text: 'Dismiss' },
   ]);
-};
-
-const INITIAL_REGION = {
-  latitude: 51.1475192,
-  longitude: 4.4338499,
-  latitudeDelta: 0.0922,
-  longitudeDelta: 0.0421,
 };
 
 export default function Home() {
@@ -85,7 +79,7 @@ export default function Home() {
         showAlert(
           'Location Column Not Correctly Setup',
           () => {
-            router.replace('/(app)/(drawer)/settings/main');
+            router.replace('/(app)/(drawer)/settings/location');
           },
           'Go to Settings',
         );
@@ -138,6 +132,7 @@ export default function Home() {
             onPress={async () => {
               try {
                 await toggleShareLocation();
+                onLocateMe();
               } catch (e) {
                 if (e instanceof Error) {
                   setError(e);
