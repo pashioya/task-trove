@@ -15,6 +15,8 @@
     "@react-navigation/bottom-tabs": "^6.5.8",
     "@react-navigation/drawer": "^6.6.15",
     "@react-navigation/native": "^6.1.7",
+    "@react-native-community/datetimepicker": "7.6.1",
+    "@react-native-async-storage/async-storage": "^1.15.9",
     "@tamagui/babel-plugin": "^1.98.1",
     "@tamagui/config": "^1.98.1",
     "@tamagui/font-inter": "^1.98.1",
@@ -53,8 +55,7 @@
     "react-native-web": "~0.19.10",
     "tamagui": "^1.98.1",
     "zod": "^3.23.8",
-    "zustand": "^4.5.2",
-    "@react-native-community/datetimepicker": "7.6.1"
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@0no-co/graphqlsp": "^1.12.3",
