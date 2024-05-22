@@ -3,6 +3,7 @@ import { z } from 'zod'
 import axios from 'axios'
 import { env } from '@/env'
 import { ResponseStatus } from '@/enums/api'
+import { logger } from '@/lib/logger'
 
 const AccessTokenRequestBodySchema = z.object({
   code: z.string().min(1),
@@ -15,8 +16,9 @@ const AccessTokenController = async (req: Request, res: Response) => {
   const parsedBody = AccessTokenRequestBodySchema.safeParse(req.body)
 
   if (!parsedBody.success) {
-    // TODO: Implement logging
-    console.error('Invalid query parameters:', parsedBody.error.issues.map((issue) => issue.message).join(', '))
+    logger.error('Invalid query parameters', {
+      issues: parsedBody.error.issues.map((issue) => issue.message).join(', ')
+    })
 
     return res.status(400).json({
       message: 'Invalid query parameters',
@@ -39,8 +41,10 @@ const AccessTokenController = async (req: Request, res: Response) => {
 
     return res.status(ResponseStatus.OK).json(response.data)
   } catch (error) {
-    // TODO: Implement logging & improve error handling
-    console.error('Failed to obtain access token:', error)
+    // TODO: improve error handling
+    logger.error('Failed to obtain access token', {
+      error
+    })
     return res.status(ResponseStatus.INTERNAL_SERVER_ERROR).json({
       message: 'Failed to obtain access token'
     })
