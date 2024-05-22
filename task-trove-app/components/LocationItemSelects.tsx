@@ -21,7 +21,7 @@ export default function LocationItemSelects() {
   const columnSelectItemsRef = useRef<{ label: string; value: string }[]>([]);
   const itemSelectItemsRef = useRef<{ label: string; value: string }[]>([]);
 
-  const { setBoard, setColumn, setItem } = useContext(SettingsContext);
+  const { setBoard, setColumn, setItem, board, column, item } = useContext(SettingsContext);
 
   useEffect(() => {
     fetchBoards()
@@ -39,6 +39,18 @@ export default function LocationItemSelects() {
       value: board.id,
     }));
   }, [boards]);
+
+  useEffect(() => {
+    if (board.id) {
+      setSelectedBoard(board);
+    }
+    if (column.id) {
+      setSelectedColumn(column);
+    }
+    if (item.id) {
+      setSelectedItem(item);
+    }
+  }, [board, column, item]);
 
   useEffect(() => {
     columnSelectItemsRef.current = columns.map(column => ({
@@ -74,8 +86,8 @@ export default function LocationItemSelects() {
   };
 
   return (
-    <YStack gap="$4" alignItems="center">
-      <KeyboardAvoidingView>
+    <YStack alignItems="center">
+      <KeyboardAvoidingView style={{ gap: 10 }}>
         <CustomAutomateSelect
           options={boardSelectItemsRef.current}
           placeholder="Board Select"
