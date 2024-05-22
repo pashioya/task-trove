@@ -1,4 +1,4 @@
-import { expoSecureStorage } from '../lib/storage';
+import { asyncSecureStorage } from '../lib/storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import type { Board, Column, Item } from '../model/types';
@@ -32,7 +32,7 @@ const useSettingsStore = create<SettingsState>()(
     }),
     {
       name: 'settings-storage',
-      storage: createJSONStorage(() => expoSecureStorage),
+      storage: createJSONStorage(() => asyncSecureStorage),
     },
   ),
 );
