@@ -30,26 +30,19 @@ export default function LocationItemSelects() {
     fetchBoards()
       .then(data => {
         setBoards(data);
-        boardSelectItemsRef.current = data.map(board => ({
-          label: board.name,
-          value: board.id,
-        }));
-      })
-      .catch(error => {
-        console.error('Error fetching boards:', error);
-      });
-  }, []);
-
-  useEffect(() => {
-    fetchBoards()
-      .then(data => {
-        setBoards(data);
         if (data.length === 1) {
           setSelectedBoard(data[0]);
         }
+        if (data.length === 0) {
+          Burnt.alert({
+            title: 'No boards found',
+            message: 'Please create a board in Monday.com to continue',
+            preset: 'error',
+          });
+        }
       })
       .catch(error => {
-        console.error('Error fetching boards:', error);
+        Burnt.alert({ title: 'Error fetching boards', message: error, preset: 'error' });
       });
     boardSelectItemsRef.current = boards.map(board => ({
       label: board.name,
