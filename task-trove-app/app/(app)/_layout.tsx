@@ -29,7 +29,7 @@ export default function AppLayout() {
   return (
     <TamaguiProvider config={config}>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <PortalProvider>
+        <PortalProvider shouldAddRootHost>
           <SettingsContextProvider>
             <Stack>
               <Stack.Screen name="(authentication)" options={{ headerShown: false }} />
