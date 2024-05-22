@@ -5,9 +5,11 @@ import { Drawer } from 'expo-router/drawer';
 import { useSession } from '~/contexts/session-provider';
 import { Text } from 'tamagui';
 import { useSettingsStore } from '~/store';
+import { useToggleShareLocation } from '~/hooks';
 
 export default function DrawerLayout() {
-  const { isTracking, isError } = useSettingsStore();
+  const { isError } = useSettingsStore();
+  const { isTracking } = useToggleShareLocation();
   const { session, isLoading } = useSession();
 
   if (isLoading) {

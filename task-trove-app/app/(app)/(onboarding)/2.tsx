@@ -1,5 +1,4 @@
 import { router, Stack } from 'expo-router';
-import { useContext, useEffect, useRef, useState } from 'react';
 import { Button, Text, View, XStack, YStack } from 'tamagui';
 
 import { Container } from '~/components/Container';
@@ -25,9 +24,9 @@ export default function Two() {
           <XStack marginTop={20} gap="$4" justifyContent="center">
             <Button onPress={() => router.push('/(app)/(onboarding)/1')}>Back</Button>
             <Button
-              backgroundColor={!item.id ? 'gray' : 'black'}
+              backgroundColor={!item ? 'gray' : 'black'}
               onPress={() => router.replace('/')}
-              disabled={!item.id}
+              disabled={!item}
             >
               Finish
             </Button>
