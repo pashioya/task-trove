@@ -19,10 +19,6 @@ export async function updateLocation(
     throw new Error('Monday API token not found');
   }
 
-  console.log('boardId', boardId);
-  console.log('itemId', itemId);
-  console.log('columnId', columnId);
-
   const query = /* GraphQL */ `
     mutation ($boardId: ID!, $itemId: ID!, $columnValues: JSON!) {
       change_multiple_column_values(
@@ -56,7 +52,6 @@ export async function updateLocation(
   };
 
   const response = await monday.api(query, { variables });
-  console.log('response', response);
 
   if ('error_message' in response && typeof response.error_message === 'string') {
     throw new Error(response.error_message);
@@ -133,9 +128,6 @@ export async function fetchLocationColumns(boardId: string): Promise<Column[]> {
     boards: columnsType[];
   }>(query, { variables });
 
-  console.log('response', response.data.boards);
-  console.log(response.data.boards[0].columns);
-
   const { data = null } = response;
   if (!data) {
     throw new Error('Error fetching columns');
@@ -177,7 +169,6 @@ export async function fetchItems(boardId: string): Promise<Item[]> {
   const response = await monday.api<{
     boards: itemsPageType[];
   }>(query, { variables });
-  console.log('response', response.data.boards[0]);
 
   const { data = null } = response;
   if (!data) {

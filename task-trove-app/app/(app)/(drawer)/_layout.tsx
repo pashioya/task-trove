@@ -4,11 +4,10 @@ import { Redirect } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
 import { useSession } from '~/contexts/session-provider';
 import { Text } from 'tamagui';
-import { useContext } from 'react';
-import SettingsContext from '~/contexts/SettingsContext';
+import { useSettingsStore } from '~/store';
 
 export default function DrawerLayout() {
-  const { isTracking, isError } = useContext(SettingsContext);
+  const { isTracking, isError } = useSettingsStore();
   const { session, isLoading } = useSession();
 
   if (isLoading) {

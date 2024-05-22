@@ -1,10 +1,10 @@
-import { router } from 'expo-router';
-import { useContext, useEffect, useRef, useState } from 'react';
-import SettingsContext from '~/contexts/SettingsContext';
+import { useEffect, useRef, useState } from 'react';
 import type { Board, Column, Item } from '~/model/types';
 import { fetchBoards, fetchItems, fetchLocationColumns } from '~/utils/MondayAPI';
 
 import { Button, YStack } from 'tamagui';
+import { useSettingsStore } from '~/store';
+import { useToggleShareLocation } from '~/hooks';
 import { CustomAutomateSelect } from './CustomAutomateSelect';
 import { KeyboardAvoidingView } from 'react-native';
 
@@ -21,15 +21,28 @@ export default function LocationItemSelects() {
   const columnSelectItemsRef = useRef<{ label: string; value: string }[]>([]);
   const itemSelectItemsRef = useRef<{ label: string; value: string }[]>([]);
 
-  const { setBoard, setColumn, setItem, board, column, item } = useContext(SettingsContext);
+  const { setBoard, setColumn, setItem } = useSettingsStore();
+
+  const { toggleShareLocation, isTracking } = useToggleShareLocation();
 
   useEffect(() => {
     fetchBoards()
       .then(data => {
         setBoards(data);
-        if (data.length === 1) {
-          setSelectedBoard(data[0]);
-        }
+        boardSelectItemsRef.current = data.map(board => ({
+          name: board.name,
+          value: board.id,
+        }));
+      })
+      .catch(error => {
+        console.error('Error fetching boards:', error);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchBoards()
+      .then(data => {
+        setBoards(data);
       })
       .catch(error => {
         console.error('Error fetching boards:', error);
@@ -78,6 +91,18 @@ export default function LocationItemSelects() {
   };
 
   const saveChanges = () => {
+    if (isTracking) {
+      toggleShareLocation();
+      setBoard(selectedBoard);
+      setColumn(selectedColumn);
+      setItem(selectedItem);
+      toggleShareLocation();
+    } else {
+      setBoard(selectedBoard);
+      setColumn(selectedColumn);
+      setItem(selectedItem);
+    }
+    console.log('Changes saved!');
     setBoard(selectedBoard);
     setColumn(selectedColumn);
     setItem(selectedItem);
