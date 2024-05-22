@@ -1,10 +1,10 @@
-import { router } from 'expo-router';
-import { useContext, useEffect, useRef, useState } from 'react';
-import SettingsContext from '~/contexts/SettingsContext';
+import { useEffect, useRef, useState } from 'react';
 import type { Board, Column, Item } from '~/model/types';
 import { fetchBoards, fetchItems, fetchLocationColumns } from '~/utils/MondayAPI';
 import { SelectBottomDrawer } from './SelectBottomDrawer';
 import { Button, YStack } from 'tamagui';
+import { useSettingsStore } from '~/store';
+import { useToggleShareLocation } from '~/hooks';
 
 export default function LocationItemSelects() {
   const [boards, setBoards] = useState<Board[]>([]);
@@ -19,7 +19,9 @@ export default function LocationItemSelects() {
   const columnSelectItemsRef = useRef<{ name: string; value: string }[]>([]);
   const itemSelectItemsRef = useRef<{ name: string; value: string }[]>([]);
 
-  const { setBoard, setColumn, setItem, board, column, item } = useContext(SettingsContext);
+  const { setBoard, setColumn, setItem } = useSettingsStore();
+
+  const { toggleShareLocation, isTracking } = useToggleShareLocation();
 
   useEffect(() => {
     fetchBoards()
@@ -69,15 +71,18 @@ export default function LocationItemSelects() {
   };
 
   const saveChanges = () => {
-    setBoard(selectedBoard);
-    setColumn(selectedColumn);
-    setItem(selectedItem);
-
-    console.log('board:', board);
-    console.log('column:', column);
-    console.log('item', item);
+    if (isTracking) {
+      toggleShareLocation();
+      setBoard(selectedBoard);
+      setColumn(selectedColumn);
+      setItem(selectedItem);
+      toggleShareLocation();
+    } else {
+      setBoard(selectedBoard);
+      setColumn(selectedColumn);
+      setItem(selectedItem);
+    }
     console.log('Changes saved!');
-    router.replace('/');
   };
 
   return (
