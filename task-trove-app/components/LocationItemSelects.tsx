@@ -7,21 +7,22 @@ import { useSettingsStore } from '~/store';
 import { useToggleShareLocation } from '~/hooks';
 import { CustomAutomateSelect } from './CustomAutomateSelect';
 import { KeyboardAvoidingView } from 'react-native';
+import * as Burnt from 'burnt';
 
 export default function LocationItemSelects() {
   const [boards, setBoards] = useState<Board[]>([]);
   const [columns, setColumns] = useState<Column[]>([]);
   const [items, setItems] = useState<Item[]>([]);
 
-  const [selectedBoard, setSelectedBoard] = useState<Board>({} as Board);
-  const [selectedColumn, setSelectedColumn] = useState<Column>({} as Column);
-  const [selectedItem, setSelectedItem] = useState<Item>({} as Item);
+  const [selectedBoard, setSelectedBoard] = useState<Board | null>(null);
+  const [selectedColumn, setSelectedColumn] = useState<Column | null>(null);
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
 
   const boardSelectItemsRef = useRef<{ label: string; value: string }[]>([]);
   const columnSelectItemsRef = useRef<{ label: string; value: string }[]>([]);
   const itemSelectItemsRef = useRef<{ label: string; value: string }[]>([]);
 
-  const { setBoard, setColumn, setItem } = useSettingsStore();
+  const { setBoard, setColumn, setItem, board, column, item } = useSettingsStore();
 
   const { toggleShareLocation, isTracking } = useToggleShareLocation();
 
@@ -30,7 +31,7 @@ export default function LocationItemSelects() {
       .then(data => {
         setBoards(data);
         boardSelectItemsRef.current = data.map(board => ({
-          name: board.name,
+          label: board.name,
           value: board.id,
         }));
       })
@@ -43,6 +44,9 @@ export default function LocationItemSelects() {
     fetchBoards()
       .then(data => {
         setBoards(data);
+        if (data.length === 1) {
+          setSelectedBoard(data[0]);
+        }
       })
       .catch(error => {
         console.error('Error fetching boards:', error);
@@ -54,13 +58,13 @@ export default function LocationItemSelects() {
   }, [boards]);
 
   useEffect(() => {
-    if (board.id) {
+    if (board) {
       setSelectedBoard(board);
     }
-    if (column.id) {
+    if (column) {
       setSelectedColumn(column);
     }
-    if (item.id) {
+    if (item) {
       setSelectedItem(item);
     }
   }, [board, column, item]);
@@ -91,23 +95,30 @@ export default function LocationItemSelects() {
   };
 
   const saveChanges = () => {
-    if (isTracking) {
-      toggleShareLocation();
-      setBoard(selectedBoard);
-      setColumn(selectedColumn);
-      setItem(selectedItem);
-      toggleShareLocation();
-    } else {
-      setBoard(selectedBoard);
-      setColumn(selectedColumn);
-      setItem(selectedItem);
+    if (selectedBoard && selectedColumn && selectedItem) {
+      if (isTracking) {
+        toggleShareLocation();
+        setBoard(selectedBoard);
+        setColumn(selectedColumn);
+        setItem(selectedItem);
+        toggleShareLocation();
+      } else {
+        setBoard(selectedBoard);
+        setColumn(selectedColumn);
+        setItem(selectedItem);
+      }
+      Burnt.toast({
+        title: 'Location Item Changed!',
+        message: "You've successfully changed the location item.",
+        preset: 'done',
+        layout: {
+          iconSize: {
+            width: 25,
+            height: 25,
+          },
+        },
+      });
     }
-    console.log('Changes saved!');
-    setBoard(selectedBoard);
-    setColumn(selectedColumn);
-    setItem(selectedItem);
-
-    router.replace('/');
   };
 
   return (
@@ -117,7 +128,7 @@ export default function LocationItemSelects() {
           options={boardSelectItemsRef.current}
           placeholder="Board Select"
           selectedValue={
-            selectedBoard.id ? { label: selectedBoard.name, value: selectedBoard.id } : null
+            selectedBoard ? { label: selectedBoard.name, value: selectedBoard.id } : null
           }
           disabled={false}
           onValueChange={async boardId => {
@@ -129,9 +140,9 @@ export default function LocationItemSelects() {
         <CustomAutomateSelect
           options={columnSelectItemsRef.current}
           placeholder="Column Select"
-          disabled={!selectedBoard.id}
+          disabled={!selectedBoard}
           selectedValue={
-            selectedColumn.id ? { label: selectedColumn.title, value: selectedColumn.id } : null
+            selectedColumn ? { label: selectedColumn.title, value: selectedColumn.id } : null
           }
           onValueChange={newColumn => {
             setSelectedColumn(
@@ -143,18 +154,16 @@ export default function LocationItemSelects() {
         <CustomAutomateSelect
           options={itemSelectItemsRef.current}
           placeholder="Item Select"
-          selectedValue={
-            selectedItem.id ? { label: selectedItem.name, value: selectedItem.id } : null
-          }
-          disabled={!selectedColumn.id}
+          selectedValue={selectedItem ? { label: selectedItem.name, value: selectedItem.id } : null}
+          disabled={!selectedColumn}
           onValueChange={newItem => {
             setSelectedItem(items.find(item => item.id === newItem?.value) || ({} as Item));
           }}
         />
         <Button
-          backgroundColor={!selectedItem.id ? 'gray' : 'black'}
+          backgroundColor={!selectedItem ? 'gray' : 'black'}
           onPress={saveChanges}
-          disabled={!selectedItem.id}
+          disabled={!selectedItem}
         >
           Save
         </Button>
