@@ -21,7 +21,7 @@ export default function Two() {
             <Text color="black">Where would you like to save your location</Text>
           </YStack>
           <LocationItemSelects />
-          <XStack marginTop={20} gap="$4" justifyContent="center">
+          <XStack zIndex={-1} marginTop={20} gap="$4" justifyContent="center">
             <Button onPress={() => router.push('/(app)/(onboarding)/1')}>Back</Button>
             <Button
               backgroundColor={!item ? 'gray' : 'black'}

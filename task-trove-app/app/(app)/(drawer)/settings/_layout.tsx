@@ -12,7 +12,10 @@ export default function SettingsLayout() {
           headerBackVisible: true,
         }}
       />
-      <Stack.Screen name="notifications" options={{ title: 'NotificationSettings' }} />
+      <Stack.Screen
+        name="notifications"
+        options={{ title: 'NotificationSettings', headerTitle: '', headerBackVisible: true }}
+      />
     </Stack>
   );
 }
