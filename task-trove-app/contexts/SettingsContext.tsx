@@ -7,10 +7,10 @@ import type { Board, Column, Item } from '~/model/types';
 export type SettingsContextType = {
   isTracking: boolean;
   isError: boolean;
-  error: Error;
-  board: Board;
-  column: Column;
-  item: Item;
+  error: Error | null;
+  board: Board | null;
+  column: Column | null;
+  item: Item | null;
   setIsError: (isError: boolean) => void;
   setError: (error: Error) => void;
   setIsTracking: (isTracking: boolean) => void;
@@ -22,10 +22,10 @@ export type SettingsContextType = {
 const SettingsContext = createContext<SettingsContextType>({
   isTracking: false,
   isError: false,
-  error: {} as Error,
-  board: {} as Board,
-  column: {} as Column,
-  item: {} as Item,
+  error: null,
+  board: null,
+  column: null,
+  item: null,
   setIsError: () => {},
   setError: () => {},
   setIsTracking: () => {},

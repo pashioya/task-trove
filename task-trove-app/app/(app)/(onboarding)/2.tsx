@@ -1,5 +1,6 @@
 import { router, Stack } from 'expo-router';
 import { useContext, useEffect, useRef, useState } from 'react';
+import { Alert } from 'react-native';
 import { Button, Text, View, XStack, YStack } from 'tamagui';
 
 import { Container } from '~/components/Container';
@@ -13,7 +14,6 @@ export default function Two() {
   const [boards, setBoards] = useState<Board[]>([]);
   const [columns, setColumns] = useState<Column[]>([]);
   const [items, setItems] = useState<Item[]>([]);
-
   const [selectedBoard, setSelectedBoard] = useState<Board>({} as Board);
   const [selectedColumn, setSelectedColumn] = useState<Column>({} as Column);
   const [selectedItem, setSelectedItem] = useState<Item>({} as Item);
@@ -24,13 +24,19 @@ export default function Two() {
 
   const { setBoard, setColumn, setItem } = useContext(SettingsContext);
 
+  const showErrorAlert = (error: Error) => {
+    Alert.alert('Error fetching boards: ', error.message, [{ text: 'OK' }]);
+  };
+
   useEffect(() => {
     fetchBoards()
       .then(data => {
         setBoards(data);
       })
       .catch(error => {
-        console.error('Error fetching boards:', error);
+        if (error instanceof Error) {
+          showErrorAlert(error);
+        }
       });
     boardSelectItemsRef.current = boards.map(board => ({
       name: board.name,
@@ -58,11 +64,14 @@ export default function Two() {
   };
 
   const saveChanges = () => {
-    setBoard(selectedBoard);
-    setColumn(selectedColumn);
-    setItem(selectedItem);
-    console.log('Changes saved!');
-    router.replace('/');
+    if (selectedBoard.id === '' || selectedColumn.id === '' || selectedItem.id === '') {
+      showErrorAlert(new Error('Please select a board, column, and item to save'));
+    } else {
+      setBoard(selectedBoard);
+      setColumn(selectedColumn);
+      setItem(selectedItem);
+      router.replace('/');
+    }
   };
 
   return (
