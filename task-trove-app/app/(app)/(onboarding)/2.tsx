@@ -14,11 +14,7 @@ export default function Two() {
   const [boards, setBoards] = useState<Board[]>([]);
   const [columns, setColumns] = useState<Column[]>([]);
   const [items, setItems] = useState<Item[]>([]);
-  
-  board.id
-
   const [selectedBoard, setSelectedBoard] = useState<Board>({} as Board);
-  
   const [selectedColumn, setSelectedColumn] = useState<Column>({} as Column);
   const [selectedItem, setSelectedItem] = useState<Item>({} as Item);
 
