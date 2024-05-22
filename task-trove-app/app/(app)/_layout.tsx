@@ -3,7 +3,6 @@ import { Stack, SplashScreen } from 'expo-router';
 import React, { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { PortalProvider, TamaguiProvider } from 'tamagui';
-import SettingsContextProvider from '~/contexts/SettingsContextProvider';
 import config from '../../tamagui.config';
 
 SplashScreen.preventAutoHideAsync();
@@ -30,18 +29,16 @@ export default function AppLayout() {
     <TamaguiProvider config={config}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <PortalProvider shouldAddRootHost>
-          <SettingsContextProvider>
-            <Stack>
-              <Stack.Screen name="(authentication)" options={{ headerShown: false }} />
-              <Stack.Screen
-                name="(drawer)"
-                options={{
-                  headerShown: false,
-                }}
-              />
-              <Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
-            </Stack>
-          </SettingsContextProvider>
+          <Stack>
+            <Stack.Screen name="(authentication)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="(drawer)"
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
+          </Stack>
         </PortalProvider>
       </GestureHandlerRootView>
     </TamaguiProvider>

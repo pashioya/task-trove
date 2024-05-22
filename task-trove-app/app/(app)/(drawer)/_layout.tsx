@@ -4,11 +4,12 @@ import { Redirect } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
 import { useSession } from '~/contexts/session-provider';
 import { Text } from 'tamagui';
-import { useContext } from 'react';
-import SettingsContext from '~/contexts/SettingsContext';
+import { useSettingsStore } from '~/store';
+import { useToggleShareLocation } from '~/hooks';
 
 export default function DrawerLayout() {
-  const { isTracking, isError } = useContext(SettingsContext);
+  const { isError } = useSettingsStore();
+  const { isTracking } = useToggleShareLocation();
   const { session, isLoading } = useSession();
 
   if (isLoading) {
@@ -30,7 +31,7 @@ export default function DrawerLayout() {
             color={isError ? 'red' : isTracking ? 'blue' : 'gray'}
           />
         ),
-        drawerHideStatusBarOnOpen: true,
+        drawerType: 'slide',
         drawerActiveBackgroundColor: colorTokens.light.blue.blue4,
         headerTitleAlign: 'center',
         headerRightContainerStyle: {
