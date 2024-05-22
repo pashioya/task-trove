@@ -79,7 +79,7 @@ export default function Home() {
         showAlert(
           'Location Column Not Correctly Setup',
           () => {
-            router.replace('/(app)/(drawer)/settings/main');
+            router.replace('/(app)/(drawer)/settings/location');
           },
           'Go to Settings',
         );

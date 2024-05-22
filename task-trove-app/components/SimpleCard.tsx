@@ -1,10 +1,8 @@
 import { Button, type CardProps, Card, H2, Paragraph, XStack, Image } from 'tamagui';
-import { useToggleShareLocation } from '~/hooks';
-import * as Burnt from 'burnt';
+
+import { router } from 'expo-router';
 
 export function SimpleCard(props: CardProps) {
-  const { toggleShareLocation } = useToggleShareLocation();
-
   return (
     <Card elevate size="$4" bordered {...props} height="60%">
       <Card.Header padded>
@@ -15,29 +13,12 @@ export function SimpleCard(props: CardProps) {
         <XStack flex={1} />
         {/* //TODO: Fix this button so they can use the map imidietly */}
         <Button
-          disabled
-          onPress={() => {
-            toggleShareLocation()
-              .then(() => {
-                Burnt.toast({
-                  title: 'Location enabled',
-                  message: 'Location Tracking Enabled',
-                  preset: 'done',
-                });
-              })
-              .catch(error => {
-                Burnt.toast({
-                  title: 'Error Enabling Tracking',
-                  message: error,
-                  preset: 'error',
-                });
-              });
-          }}
+          onPress={() => router.replace('/(app)/(drawer)/settings/location')}
           marginBottom={20}
           marginRight={20}
           borderRadius="$10"
         >
-          Enable
+          Location Settings
         </Button>
       </Card.Footer>
       <Card.Background>
