@@ -16,6 +16,7 @@
     "@react-navigation/bottom-tabs": "^6.5.8",
     "@react-navigation/drawer": "^6.6.15",
     "@react-navigation/native": "^6.1.7",
+    "@react-native-async-storage/async-storage": "^1.23.1",
     "@t3-oss/env-core": "^0.10.1",
     "@tamagui/babel-plugin": "^1.98.1",
     "@tamagui/config": "^1.98.1",
@@ -54,7 +55,7 @@
     "react-native-screens": "~3.29.0",
     "react-native-svg": "14.1.0",
     "react-native-web": "~0.19.10",
-    "tamagui": "^1.98.0",
+    "tamagui": "^1.98.1",
     "zod": "^3.23.8",
     "zustand": "^4.5.2"
   },

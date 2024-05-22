@@ -1,5 +1,6 @@
+import { asyncSecureStorage } from '../lib/storage';
 import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 import type { Board, Column, Item } from '../model/types';
 
 type SettingsState = {
@@ -16,18 +17,24 @@ type SettingsState = {
 };
 
 const useSettingsStore = create<SettingsState>()(
-  devtools(set => ({
-    isError: false,
-    error: null,
-    board: null,
-    column: null,
-    item: null,
-    setIsError: isError => set({ isError }),
-    setError: error => set({ error }),
-    setBoard: board => set({ board }),
-    setColumn: column => set({ column }),
-    setItem: item => set({ item }),
-  })),
+  persist(
+    set => ({
+      isError: false,
+      error: null,
+      board: null,
+      column: null,
+      item: null,
+      setIsError: isError => set({ isError }),
+      setError: error => set({ error }),
+      setBoard: board => set({ board }),
+      setColumn: column => set({ column }),
+      setItem: item => set({ item }),
+    }),
+    {
+      name: 'settings-storage',
+      storage: createJSONStorage(() => asyncSecureStorage),
+    },
+  ),
 );
 
 export default useSettingsStore;
