@@ -16,10 +16,7 @@ export default function Settings() {
 
       <Container>
         <YStack height="95%">
-          <TouchableOpacity
-            disabled
-            onPress={() => router.push('/(app)/(drawer)/settings/location')}
-          >
+          <TouchableOpacity onPress={() => router.push('/(app)/(drawer)/settings/location')}>
             <XStack
               borderRadius={10}
               margin={10}

@@ -2,16 +2,16 @@ import * as Linking from 'expo-linking';
 import { Stack, useRouter } from 'expo-router';
 import { Button, View } from 'tamagui';
 import { Container, mondayColors } from '~/tamagui.config';
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
+import * as ExpoLocation from 'expo-location';
 import { TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import SettingsContext from '~/contexts/SettingsContext';
 import { useToggleShareLocation, useLocationPermissions } from '~/hooks';
 import { useMondayMutation } from '~/lib/monday/api';
 import { changeMultipleColumnValuesMutation } from '~/lib/monday/queries';
-import * as ExpoLocation from 'expo-location';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import lightStyle from '~/assets/map/lightStyle.json';
+import { useSettingsStore } from '~/store';
 
 const showAlert = (error: string, onPress: () => void, buttonText: string) => {
   Alert.alert('Error', error, [
@@ -33,9 +33,10 @@ const INITIAL_REGION = {
 export default function Home() {
   const { toggleShareLocation, isTracking, region, setRegion } = useToggleShareLocation();
   const { foregroundStatus, backgroundStatus } = useLocationPermissions();
-  const { board, column, item, error, setError } = useContext(SettingsContext);
   const router = useRouter();
+
   const mapRef = useRef<MapView>(null);
+  const { board, column, item, error, setError } = useSettingsStore();
 
   const { mutate: updateLocation, error: updateLocationError } = useMondayMutation({
     mutation: changeMultipleColumnValuesMutation,
