@@ -43,6 +43,7 @@ export default function Home() {
   });
 
   useEffect(() => {
+    console.log(board, column, item);
     if (isTracking && region && board && column && item) {
       updateLocation({
         boardId: board.id,

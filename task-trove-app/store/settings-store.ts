@@ -1,6 +1,6 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { expoSecureStorage } from '../lib/storage';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 import type { Board, Column, Item } from '../model/types';
 
 type SettingsState = {
@@ -32,7 +32,7 @@ const useSettingsStore = create<SettingsState>()(
     }),
     {
       name: 'settings-storage',
-      getStorage: () => AsyncStorage,
+      storage: createJSONStorage(() => expoSecureStorage),
     },
   ),
 );
