@@ -1,5 +1,5 @@
 import { router, Stack } from 'expo-router';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { Alert } from 'react-native';
 import { Button, Text, View, XStack, YStack } from 'tamagui';
 
@@ -14,10 +14,17 @@ export default function Two() {
   const [boards, setBoards] = useState<Board[]>([]);
   const [columns, setColumns] = useState<Column[]>([]);
   const [items, setItems] = useState<Item[]>([]);
+  
+  board.id
 
   const [selectedBoard, setSelectedBoard] = useState<Board>({} as Board);
+  
   const [selectedColumn, setSelectedColumn] = useState<Column>({} as Column);
   const [selectedItem, setSelectedItem] = useState<Item>({} as Item);
+
+  const boardSelectItemsRef = useRef<{ name: string; value: string }[]>([]);
+  const columnSelectItemsRef = useRef<{ name: string; value: string }[]>([]);
+  const itemSelectItemsRef = useRef<{ name: string; value: string }[]>([]);
 
   const { setBoard, setColumn, setItem } = useContext(SettingsContext);
 
@@ -35,29 +42,28 @@ export default function Two() {
           showErrorAlert(error);
         }
       });
-  }, []);
+    boardSelectItemsRef.current = boards.map(board => ({
+      name: board.name,
+      value: board.id,
+    }));
+  }, [boards]);
+
+  useEffect(() => {
+    columnSelectItemsRef.current = columns.map(column => ({
+      name: column.title,
+      value: column.id,
+    }));
+    itemSelectItemsRef.current = items.map(item => ({
+      name: item.name,
+      value: item.id,
+    }));
+  }, [columns, items]);
 
   const handleBoardChange = async (board: Board) => {
     setSelectedBoard(board);
-
     const retrievedColumns = await fetchLocationColumns(board.id);
     const retrievedItems = await fetchItems(board.id);
-
-    if (retrievedColumns.length === 1) {
-      setSelectedColumn(retrievedColumns[0]);
-    }
     setColumns(retrievedColumns);
-
-    if (retrievedItems.length === 1) {
-      setSelectedItem(retrievedItems[0]);
-    }
-
-    if (retrievedColumns.length === 0) {
-      console.log('No columns found');
-    }
-    if (retrievedItems.length === 0) {
-      console.log('No items found');
-    }
     setItems(retrievedItems);
   };
 
@@ -72,18 +78,6 @@ export default function Two() {
     }
   };
 
-  const boardSelectItems = boards.map(board => ({
-    name: board.name,
-    value: board.id,
-  }));
-  const columnSelectItems = columns.map(column => ({
-    name: column.title,
-    value: column.id,
-  }));
-  const itemSelectItems = items.map(item => ({
-    name: item.name,
-    value: item.id,
-  }));
   return (
     <>
       <Stack.Screen options={{ title: 'Onboarding Two', headerShown: false }} />
@@ -97,27 +91,30 @@ export default function Two() {
           </YStack>
           <YStack gap="$4" alignItems="center">
             <SelectBottomDrawer
-              items={boardSelectItems}
+              items={boardSelectItemsRef.current}
               placeholder="Board Select"
               selectedValue={selectedBoard.name}
               onValueChange={boardId => {
                 handleBoardChange(boards.find(board => board.id === boardId) || ({} as Board));
+                setSelectedColumn({} as Column);
+                setSelectedItem({} as Item);
               }}
             />
             {/* if selected board isnt set dont show  */}
 
             <SelectBottomDrawer
-              items={columnSelectItems}
+              items={columnSelectItemsRef.current}
               placeholder="Column Select"
               selectedValue={selectedColumn.title}
               disabled={!selectedBoard.id}
               onValueChange={columnID => {
                 setSelectedColumn(columns.find(column => column.id === columnID) || ({} as Column));
+                setSelectedItem({} as Item);
               }}
             />
 
             <SelectBottomDrawer
-              items={itemSelectItems}
+              items={itemSelectItemsRef.current}
               disabled={!selectedColumn.id}
               placeholder="Item Select"
               selectedValue={selectedItem.name}
