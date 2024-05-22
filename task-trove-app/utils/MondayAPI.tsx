@@ -1,6 +1,6 @@
 import mondaySdk from 'monday-sdk-js';
-import { Alert } from 'react-native';
 import type { Board, Column, Item } from '~/model/types';
+import { handleMondayErrorCode, handleMondayErrorStatusCode } from './MondayErrorHandling';
 
 export async function updateLocation(
   boardId: string,
@@ -45,23 +45,24 @@ export async function updateLocation(
     columnValues: JSON.stringify({ ...columnValues }),
   };
 
-  const showTrackingErrorAlert = () => {
-    Alert.alert('Location Tracking Error', 'There was an error starting location tracking', [
-      { text: 'OK' },
-    ]);
-  };
-
   const response = await monday.api(query, { variables });
 
-  if ('error_message' in response && typeof response.error_message === 'string') {
-    throw new Error(response.error_message);
+  if ('error_code' in response && typeof response.error_code === 'string') {
+    handleMondayErrorCode(response.error_code);
+  } else if (
+    'error_message' in response &&
+    typeof response.error_message === 'string' &&
+    'status_code' in response &&
+    typeof response.status_code === 'number'
+  ) {
+    handleMondayErrorStatusCode(response.status_code);
+  } else if ('errors' in response) {
+    throw new Error('hello');
   }
 
   const { data = null } = response;
 
   if (!data) {
-    console.error('Error updating location');
-    showTrackingErrorAlert();
     throw new Error('Error updating location');
   }
 }
@@ -88,6 +89,19 @@ export async function fetchBoards(): Promise<Board[]> {
   const response = await monday.api<{
     boards: Board[];
   }>(query);
+
+  if ('error_code' in response && typeof response.error_code === 'string') {
+    handleMondayErrorCode(response.error_code);
+  } else if (
+    'error_message' in response &&
+    typeof response.error_message === 'string' &&
+    'status_code' in response &&
+    typeof response.status_code === 'number'
+  ) {
+    handleMondayErrorStatusCode(response.status_code);
+  } else if ('errors' in response) {
+    throw new Error('hello');
+  }
 
   const { data = null } = response;
   if (!data) {
@@ -127,6 +141,19 @@ export async function fetchLocationColumns(boardId: string): Promise<Column[]> {
   const response = await monday.api<{
     boards: columnsType[];
   }>(query, { variables });
+
+  if ('error_code' in response && typeof response.error_code === 'string') {
+    handleMondayErrorCode(response.error_code);
+  } else if (
+    'error_message' in response &&
+    typeof response.error_message === 'string' &&
+    'status_code' in response &&
+    typeof response.status_code === 'number'
+  ) {
+    handleMondayErrorStatusCode(response.status_code);
+  } else if ('errors' in response) {
+    throw new Error('hello');
+  }
 
   const { data = null } = response;
   if (!data) {
@@ -169,6 +196,19 @@ export async function fetchItems(boardId: string): Promise<Item[]> {
   const response = await monday.api<{
     boards: itemsPageType[];
   }>(query, { variables });
+
+  if ('error_code' in response && typeof response.error_code === 'string') {
+    handleMondayErrorCode(response.error_code);
+  } else if (
+    'error_message' in response &&
+    typeof response.error_message === 'string' &&
+    'status_code' in response &&
+    typeof response.status_code === 'number'
+  ) {
+    handleMondayErrorStatusCode(response.status_code);
+  } else if ('errors' in response) {
+    throw new Error('hello');
+  }
 
   const { data = null } = response;
   if (!data) {

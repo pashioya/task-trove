@@ -1,10 +1,11 @@
 import { router, Stack } from 'expo-router';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { Button, Text, View, XStack, YStack } from 'tamagui';
 
 import { Container } from '~/components/Container';
 import LocationItemSelects from '~/components/LocationItemSelects';
-import { useSettingsStore } from '~/store';
 
+import { useSettingsStore } from '~/store';
 import { mondayColors } from '~/tamagui.config';
 
 export default function Two() {

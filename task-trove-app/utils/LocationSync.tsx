@@ -3,7 +3,7 @@ import * as TaskManager from 'expo-task-manager';
 import type React from 'react';
 import { updateLocation } from './MondayAPI';
 
-const LOCATION_TASK_NAME = 'background-location-task';
+const TASK_FETCH_LOCATION = 'background-location-task';
 
 export const toggleShareLocation = async (
   isTracking: boolean,
@@ -12,9 +12,10 @@ export const toggleShareLocation = async (
   boardId: string,
   columnId: string,
   itemId: string,
+  updateError: (message: string) => void,
 ) => {
   const startLocationUpdates = async () => {
-    await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+    Location.startLocationUpdatesAsync(TASK_FETCH_LOCATION, {
       accuracy: Location.Accuracy.Highest,
       timeInterval: 10000,
       distanceInterval: 10,
@@ -25,7 +26,7 @@ export const toggleShareLocation = async (
       },
     });
 
-    const hasStarted = await Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME);
+    const hasStarted = await Location.hasStartedLocationUpdatesAsync(TASK_FETCH_LOCATION);
     console.log('Tracking started', hasStarted);
   };
 
@@ -33,10 +34,10 @@ export const toggleShareLocation = async (
     console.log('Tracking stopped');
 
     try {
-      const tracking = await Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME);
+      const tracking = await Location.hasStartedLocationUpdatesAsync(TASK_FETCH_LOCATION);
 
       if (tracking) {
-        await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
+        await Location.stopLocationUpdatesAsync(TASK_FETCH_LOCATION);
       }
     } catch (error) {
       console.error('Error stopping location updates', error);
@@ -45,7 +46,7 @@ export const toggleShareLocation = async (
 
   TaskManager.defineTask<{
     locations?: { coords: { latitude: number; longitude: number; speed: number } }[];
-  }>(LOCATION_TASK_NAME, async ({ data, error }) => {
+  }>(TASK_FETCH_LOCATION, async ({ data, error }) => {
     if (error) {
       console.log('LOCATION_TRACKING task ERROR:', error);
       return;
@@ -57,13 +58,14 @@ export const toggleShareLocation = async (
       const speed = locations[0].coords.speed;
 
       setRegion({ lat, long, speed });
-
       try {
         await updateLocation(boardId, columnId, itemId, lat, long, 'realtime location');
-        console.log(`${new Date(Date.now()).toLocaleString()}: ${lat},${long} - Speed ${speed}`);
       } catch (error) {
-        console.error('Error updating location', error);
+        if (error instanceof Error) {
+          updateError(error.message);
+        }
       }
+      console.log(`${new Date(Date.now()).toLocaleString()}: ${lat},${long} - Speed ${speed}`);
     }
   });
 
