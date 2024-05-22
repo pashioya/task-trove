@@ -1,16 +1,17 @@
 import { Button, Input, ListItem, ScrollView, XGroup, YGroup, YStack } from 'tamagui';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
+import { Check } from '@tamagui/lucide-icons';
 import { mondayColors } from '~/tamagui.config';
 
 type Option = { label: string; value: string };
 
 type CustomAutomateSelectProps = {
   options: Option[];
-  disabled?: boolean;
-  selectedValue?: Option | null;
+  disabled: boolean;
+  selectedValue: Option | null;
   onValueChange: (v: null | Option) => void;
-  placeholder?: string;
+  placeholder: string;
 };
 
 export function CustomAutomateSelect({
@@ -20,12 +21,16 @@ export function CustomAutomateSelect({
   onValueChange,
   placeholder,
 }: CustomAutomateSelectProps) {
-  const [selection, setSelection] = useState<Option | null>(selectedValue ?? null);
+  const [selection, setSelection] = useState<Option | null>(selectedValue);
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
+  useEffect(() => {
+    setSelection(selectedValue);
+  }, [selectedValue]);
+
   const filteredOptions = searchTerm
-    ? options.filter(i => i.label.toLowerCase().includes(searchTerm.toLowerCase()))
+    ? options.filter(option => option.label.toLowerCase().includes(searchTerm.toLowerCase()))
     : options;
 
   const handleSelect = (item: Option) => {
@@ -33,13 +38,10 @@ export function CustomAutomateSelect({
     setSelection(newVal);
     onValueChange(newVal);
     setPopoverOpen(false);
+    setSearchTerm(''); // Reset search term on select
   };
 
-  const inputPlaceholder = disabled
-    ? placeholder
-    : selection?.label
-      ? selection.label
-      : placeholder;
+  const inputPlaceholder = selection?.label || placeholder;
 
   return (
     <YStack alignItems="center">
@@ -53,8 +55,9 @@ export function CustomAutomateSelect({
             width={240}
             borderRadius={0}
             onFocus={() => setPopoverOpen(true)}
-            onChangeText={searchTerm => setSearchTerm(searchTerm.toLowerCase())}
-            placeholder={inputPlaceholder}
+            onChangeText={text => setSearchTerm(text)}
+            value={popoverOpen ? searchTerm : inputPlaceholder}
+            placeholder={placeholder}
           />
         </XGroup.Item>
         <XGroup.Item>
@@ -75,18 +78,19 @@ export function CustomAutomateSelect({
               backgroundColor={mondayColors.mondayDark}
             >
               <ScrollView>
-                {filteredOptions.map(item => (
-                  <YGroup.Item key={item.value}>
+                {filteredOptions.map(option => (
+                  <YGroup.Item key={option.value}>
                     <ListItem
                       style={{ borderRadius: 0 }}
                       hoverTheme
-                      title={item.label}
-                      subTitle={item.value}
+                      title={option.label}
+                      subTitle={option.value}
                       icon={<Ionicons name="folder-outline" size={24} />}
+                      iconAfter={selection?.label === option.label ? <Check size={24} /> : null}
                       pressTheme
                       focusTheme
                       cursor="pointer"
-                      onPress={() => handleSelect(item)}
+                      onPress={() => handleSelect(option)}
                     />
                   </YGroup.Item>
                 ))}
