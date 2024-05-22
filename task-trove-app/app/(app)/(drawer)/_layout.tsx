@@ -31,7 +31,7 @@ export default function DrawerLayout() {
             color={isError ? 'red' : isTracking ? 'blue' : 'gray'}
           />
         ),
-        drawerHideStatusBarOnOpen: true,
+        drawerType: 'slide',
         drawerActiveBackgroundColor: colorTokens.light.blue.blue4,
         headerTitleAlign: 'center',
         headerRightContainerStyle: {
