@@ -1,10 +1,10 @@
 import React, { createContext, useContext, useEffect, useCallback, useRef, useState } from 'react';
 import * as WebBrowser from 'expo-web-browser';
 import { useAuthParams } from '~/hooks/useAuthParams';
-import { CLIENT_ID, REDIRECT_URI, SCOPES, AUTHORIZATION_ENDPOINT } from '~/config/auth-config';
 import { useStorageState } from '~/hooks/useStorageState';
 import { fetchAccessToken, fetchUserData } from '~/lib/session';
 import type { Session, SessionContextType } from '~/lib/session/types';
+import { env } from '~/lib/env';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -19,12 +19,15 @@ const SessionProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const signIn = useCallback(async () => {
     setIsLoading(true);
     const params = new URLSearchParams({
-      client_id: CLIENT_ID,
-      redirect_uri: REDIRECT_URI,
-      scope: SCOPES.join(' '),
+      client_id: env.EXPO_PUBLIC_CLIENT_ID,
+      redirect_uri: env.EXPO_PUBLIC_REDIRECT_URI,
+      scope: env.EXPO_PUBLIC_SCOPES,
     }).toString();
 
-    await WebBrowser.openAuthSessionAsync(`${AUTHORIZATION_ENDPOINT}?${params}`, REDIRECT_URI);
+    await WebBrowser.openAuthSessionAsync(
+      `${env.EXPO_PUBLIC_AUTHORIZATION_ENDPOINT}?${params}`,
+      env.EXPO_PUBLIC_REDIRECT_URI,
+    );
 
     setIsLoading(false);
   }, []);
