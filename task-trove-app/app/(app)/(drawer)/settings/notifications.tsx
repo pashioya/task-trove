@@ -1,6 +1,7 @@
 import { ChevronRight } from '@tamagui/lucide-icons';
 import { Stack } from 'expo-router';
 import { TouchableOpacity } from 'react-native';
+
 import { Label, Switch, Text, XStack, YStack } from 'tamagui';
 
 import { Container } from '~/components/Container';
