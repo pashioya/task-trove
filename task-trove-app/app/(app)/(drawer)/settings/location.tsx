@@ -17,11 +17,12 @@ import { ChevronDown, ChevronRight } from '@tamagui/lucide-icons';
 import DateTimePickerAndroid from '@react-native-community/datetimepicker';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useState } from 'react';
-import { DialogInstance } from '~/components/Dialog';
 import LocationItemSelects from '~/components/LocationItemSelects';
+import { SimpleSheet } from '~/components/SimpleSheet';
 
 export default function LocationSettings() {
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   return (
     <>
@@ -46,30 +47,33 @@ export default function LocationSettings() {
               <Switch.Thumb backgroundColor="white" animation="lazy" />
             </Switch>
           </XStack>
-
-          <DialogInstance
-            title="Location Save Item"
-            trigger={
-              <TouchableOpacity>
-                <XStack
-                  borderRadius={10}
-                  borderWidth={1}
-                  margin={10}
-                  alignItems="center"
-                  padding={20}
-                  backgroundColor="white"
-                  justifyContent="space-between"
-                >
-                  <XStack width="100%" gap={15}>
-                    <Text fontSize={24} color="black">
-                      Location Save Item
-                    </Text>
-                  </XStack>
-                  <ChevronRight marginTop={2} color="black" size={24} />
-                </XStack>
-              </TouchableOpacity>
-            }
-            description="Change where location is saved"
+          <TouchableOpacity
+            onPress={() => {
+              setOpenModal(true);
+            }}
+          >
+            <XStack
+              borderRadius={10}
+              borderWidth={1}
+              margin={10}
+              alignItems="center"
+              padding={20}
+              backgroundColor="white"
+              justifyContent="space-between"
+            >
+              <XStack width="100%" gap={15}>
+                <Text fontSize={24} color="black">
+                  Location Save Item
+                </Text>
+              </XStack>
+              <ChevronRight marginTop={2} color="black" size={24} />
+            </XStack>
+          </TouchableOpacity>
+          <SimpleSheet
+            open={openModal}
+            modal
+            snapPointsMode="fit"
+            position={0}
             content={<LocationItemSelects />}
           />
           <TouchableOpacity onPress={() => setShowTimePicker(!showTimePicker)}>

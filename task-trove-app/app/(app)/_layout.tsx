@@ -4,6 +4,8 @@ import React, { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { PortalProvider, TamaguiProvider } from 'tamagui';
 import config from '../../tamagui.config';
+import Toast, { BaseToast, type BaseToastProps, ErrorToast } from 'react-native-toast-message';
+import { Check } from '@tamagui/lucide-icons';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -25,6 +27,32 @@ export default function AppLayout() {
 
   if (!loaded) return null;
 
+  const toastConfig = {
+    success: (props: React.JSX.IntrinsicAttributes & BaseToastProps) => (
+      <BaseToast
+        {...props}
+        style={{ borderLeftColor: 'green' }}
+        contentContainerStyle={{ paddingHorizontal: 15 }}
+        renderTrailingIcon={() => <Check />}
+        text1Style={{
+          fontSize: 15,
+          fontWeight: '400',
+        }}
+      />
+    ),
+    error: (props: React.JSX.IntrinsicAttributes & BaseToastProps) => (
+      <ErrorToast
+        {...props}
+        text1Style={{
+          fontSize: 17,
+        }}
+        text2Style={{
+          fontSize: 15,
+        }}
+      />
+    ),
+  };
+
   return (
     <TamaguiProvider config={config}>
       <GestureHandlerRootView style={{ flex: 1 }}>
@@ -39,6 +67,7 @@ export default function AppLayout() {
             />
             <Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
           </Stack>
+          <Toast config={toastConfig} />
         </PortalProvider>
       </GestureHandlerRootView>
     </TamaguiProvider>

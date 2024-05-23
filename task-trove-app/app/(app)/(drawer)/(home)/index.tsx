@@ -115,6 +115,7 @@ export default function Home() {
           <MapView
             provider={PROVIDER_GOOGLE}
             showsUserLocation={isTracking}
+            showsMyLocationButton={false}
             style={styles.map}
             userInterfaceStyle="dark"
             initialRegion={INITIAL_REGION}

@@ -1,14 +1,16 @@
 import { ChevronRight } from '@tamagui/lucide-icons';
 import { Stack } from 'expo-router';
+import { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 
 import { Label, Switch, Text, XStack, YStack } from 'tamagui';
 
 import { Container } from '~/components/Container';
-import { DialogInstance } from '~/components/Dialog';
 import { NotificationRangeSelector } from '~/components/NotificationRangeSelector';
+import { SimpleSheet } from '~/components/SimpleSheet';
 
 export default function NotificationSettings() {
+  const [openModal, setOpenModal] = useState(false);
   return (
     <>
       <Stack.Screen options={{ title: 'NotificationSettings' }} />
@@ -32,29 +34,29 @@ export default function NotificationSettings() {
               <Switch.Thumb backgroundColor="white" animation="lazy" />
             </Switch>
           </XStack>
-          <DialogInstance
-            title="Notification Range Selector"
-            trigger={
-              <TouchableOpacity>
-                <XStack
-                  borderRadius={10}
-                  borderWidth={1}
-                  margin={10}
-                  alignItems="center"
-                  padding={20}
-                  backgroundColor="white"
-                  justifyContent="space-between"
-                >
-                  <XStack width="100%" gap={15}>
-                    <Text fontSize={24} color="black">
-                      Notification Range Selector
-                    </Text>
-                  </XStack>
-                  <ChevronRight marginTop={2} color="black" size={24} />
-                </XStack>
-              </TouchableOpacity>
-            }
-            description="Select the range before you receive a notification."
+          <TouchableOpacity onPress={() => setOpenModal(true)}>
+            <XStack
+              borderRadius={10}
+              borderWidth={1}
+              margin={10}
+              alignItems="center"
+              padding={20}
+              backgroundColor="white"
+              justifyContent="space-between"
+            >
+              <XStack width="100%" gap={15}>
+                <Text fontSize={24} color="black">
+                  Notification Range Selector
+                </Text>
+              </XStack>
+              <ChevronRight marginTop={2} color="black" size={24} />
+            </XStack>
+          </TouchableOpacity>
+          <SimpleSheet
+            open={openModal}
+            modal
+            snapPointsMode="fit"
+            position={0}
             content={<NotificationRangeSelector />}
           />
         </YStack>

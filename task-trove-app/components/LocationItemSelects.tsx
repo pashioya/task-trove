@@ -7,7 +7,7 @@ import { useSettingsStore } from '~/store';
 import { useToggleShareLocation } from '~/hooks';
 import { CustomAutomateSelect } from './CustomAutomateSelect';
 import { KeyboardAvoidingView } from 'react-native';
-import * as Burnt from 'burnt';
+import Toast from 'react-native-toast-message';
 
 export default function LocationItemSelects() {
   const [boards, setBoards] = useState<Board[]>([]);
@@ -34,15 +34,19 @@ export default function LocationItemSelects() {
           setSelectedBoard(data[0]);
         }
         if (data.length === 0) {
-          Burnt.alert({
-            title: 'No boards found',
-            message: 'Please create a board in Monday.com to continue',
-            preset: 'error',
+          Toast.show({
+            type: 'error',
+            text1: 'No boards found',
+            text2: 'Please create a board in Monday.com to continue',
           });
         }
       })
       .catch(error => {
-        Burnt.alert({ title: 'Error fetching boards', message: error, preset: 'error' });
+        Toast.show({
+          type: 'error',
+          text1: 'Error fetching boards',
+          text2: error,
+        });
       });
     boardSelectItemsRef.current = boards.map(board => ({
       label: board.name,
@@ -51,9 +55,14 @@ export default function LocationItemSelects() {
   }, [boards]);
 
   useEffect(() => {
-    if (board) {
-      setSelectedBoard(board);
+    async function fetchColumnsAndItems() {
+      if (board) {
+        setSelectedBoard(board);
+        setColumns(await fetchLocationColumns(board.id));
+        setItems(await fetchItems(board.id));
+      }
     }
+    fetchColumnsAndItems();
     if (column) {
       setSelectedColumn(column);
     }
@@ -83,8 +92,8 @@ export default function LocationItemSelects() {
     setSelectedBoard(board);
     setColumns(await fetchLocationColumns(board.id));
     setItems(await fetchItems(board.id));
-    setSelectedColumn({} as Column);
-    setSelectedItem({} as Item);
+    setSelectedColumn(null);
+    setSelectedItem(null);
   };
 
   const saveChanges = () => {
@@ -100,16 +109,10 @@ export default function LocationItemSelects() {
         setColumn(selectedColumn);
         setItem(selectedItem);
       }
-      Burnt.toast({
-        title: 'Location Item Changed!',
-        message: "You've successfully changed the location item.",
-        preset: 'done',
-        layout: {
-          iconSize: {
-            width: 25,
-            height: 25,
-          },
-        },
+      Toast.show({
+        type: 'success',
+        text1: 'Location saved',
+        text2: 'You can now share your location',
       });
     }
   };
