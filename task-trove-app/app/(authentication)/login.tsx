@@ -1,4 +1,4 @@
-import { Stack, router } from 'expo-router';
+import { Stack } from 'expo-router';
 import { useSession } from '~/contexts/session-provider';
 import { View, SafeAreaView } from 'react-native';
 import { Text } from '~/components/ui/text';
@@ -17,9 +17,6 @@ export default function Login() {
         <View className="gap-5">
           <Button onPress={signIn}>
             <Text className="">Sign in with Monday</Text>
-          </Button>
-          <Button className="my-pill-button" onPress={() => router.push('/test')}>
-            <Text>Test Page</Text>
           </Button>
         </View>
       </SafeAreaView>

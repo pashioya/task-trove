@@ -9,7 +9,7 @@ import { Platform } from 'react-native';
 import { NAV_THEME } from '~/lib/constants';
 import { useColorScheme } from '~/lib/useColorScheme';
 import { PortalHost } from '~/components/primitives/portal';
-import { ThemeToggle } from '~/components/ThemeToggle';
+
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SessionProvider } from '~/contexts/session-provider';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -60,7 +60,9 @@ export default function RootLayout() {
         SplashScreen.hideAsync();
       })
       .catch(console.error);
-  }, [colorScheme, setColorScheme]);
+    // ! Ignored since this changes the color scheme twice per click
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (!isColorSchemeLoaded) {
     return null;
@@ -83,13 +85,6 @@ export default function RootLayout() {
                 }}
               />
               <Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
-              <Stack.Screen
-                name="test"
-                options={{
-                  title: 'Starter Base',
-                  headerRight: () => <ThemeToggle />,
-                }}
-              />
             </Stack>
             <PortalHost />
           </GestureHandlerRootView>
