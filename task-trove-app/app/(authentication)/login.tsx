@@ -1,6 +1,6 @@
 import { Stack, router } from 'expo-router';
 import { useSession } from '~/contexts/session-provider';
-import { View, Image, SafeAreaView } from 'react-native';
+import { View, SafeAreaView } from 'react-native';
 import { Text } from '~/components/ui/text';
 import { Button } from '~/components/ui/button';
 
@@ -10,7 +10,7 @@ export default function Login() {
   return (
     <>
       <Stack.Screen options={{ title: 'login' }} />
-      <SafeAreaView className="my-container justify-between">
+      <SafeAreaView>
         <View>
           <Text className="header pt-20">Task-Trove</Text>
         </View>

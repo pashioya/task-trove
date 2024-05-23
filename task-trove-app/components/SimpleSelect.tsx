@@ -49,12 +49,19 @@ export function SimpleSelect({
       </SelectTrigger>
       <SelectContent insets={contentInsets} className="w-[250px]">
         <SelectGroup>
-          <SelectLabel>Options</SelectLabel>
-          {options.map(option => (
-            <SelectItem key={option.value} label={option.label} value={option.value}>
-              {option.label}
-            </SelectItem>
-          ))}
+          <SelectLabel>{placeholder}</SelectLabel>
+          <ScrollView>
+            {options.map(option => (
+              <SelectItem
+                delayLongPress={1000}
+                key={option.value}
+                label={option.label}
+                value={option.value}
+              >
+                {option.label}
+              </SelectItem>
+            ))}
+          </ScrollView>
         </SelectGroup>
       </SelectContent>
     </Select>

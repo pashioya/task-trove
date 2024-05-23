@@ -1,10 +1,10 @@
-import { Link, Stack, router } from 'expo-router';
-import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { Stack, router } from 'expo-router';
+import { View, TouchableOpacity, Image } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSession } from '~/contexts/session-provider';
 import { Text } from '~/components/ui/text';
-import { ChevronRight, Edit3, Mail, Moon, Navigation } from 'lucide-react-native';
+import { ChevronRight, Moon, Navigation } from 'lucide-react-native';
 import { useColorScheme } from '~/lib/useColorScheme';
 import { Switch } from '~/components/ui/switch';
 import colors from 'tailwindcss/colors';
