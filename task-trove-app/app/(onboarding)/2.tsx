@@ -1,36 +1,44 @@
-import { router, Stack } from 'expo-router';
+import { View, ImageBackground } from 'react-native';
+import React from 'react';
 
-import { useSettingsStore } from '~/store';
-import { View } from 'react-native';
-import { Text } from '~/components/ui/text';
 import { Button } from '~/components/ui/button';
-import LocationItemSelects from '~/components/LocationItemSelects';
+import { Text } from '~/components/ui/text';
+import { router } from 'expo-router';
 
 export default function Two() {
-  const { item } = useSettingsStore();
-
   return (
-    <>
-      <Stack.Screen options={{ title: 'Onboarding Two', headerShown: false }} />
+    <ImageBackground
+      className="justify-center flex-1 "
+      resizeMode="cover"
+      source={require('~/assets/images/tryve/head-shot.png')}
+    >
+      <View
+        style={{
+          paddingHorizontal: 22,
+          position: 'absolute',
+          top: 550,
+          width: '100%',
+        }}
+      >
+        <Text className="font-extrabold text-5xl text-white text-justify">
+          Lets Get {'\n'}Started
+        </Text>
 
-      <View className="my-container justify-between">
-        <View className="align-center">
-          <Text className="my-header pt-20">Location Board Selection</Text>
-          <Text className="my-text">Where would you like to save your location</Text>
-        </View>
-        <View>
-          <LocationItemSelects />
+        <View style={{ marginVertical: 22 }}>
+          <Text className="text-2xl text-white">Connect with each other with chatting</Text>
+          <Text className="text-white">Calling, Enjoy Safe and private texting</Text>
         </View>
 
-        <View>
-          <Button onPress={() => router.push('/(onboarding)/1')}>
-            <Text>Back</Text>
-          </Button>
-          <Button className="bg-black" onPress={() => router.replace('/')} disabled={!item}>
-            <Text>Finish</Text>
-          </Button>
-        </View>
+        <Button
+          onPress={() => router.push('/(onboarding)/3')}
+          style={{
+            marginTop: 22,
+            width: '100%',
+          }}
+        >
+          <Text>Next</Text>
+        </Button>
       </View>
-    </>
+    </ImageBackground>
   );
 }
