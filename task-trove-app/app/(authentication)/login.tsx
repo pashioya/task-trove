@@ -10,7 +10,7 @@ export default function Login() {
   return (
     <>
       <Stack.Screen options={{ title: 'login' }} />
-      <View className="my-container justify-between">
+      <SafeAreaView className="my-container justify-between">
         <View>
           <Text className="header pt-20">Task-Trove</Text>
         </View>
@@ -22,7 +22,7 @@ export default function Login() {
             <Text>Test Page</Text>
           </Button>
         </View>
-      </View>
+      </SafeAreaView>
     </>
   );
 }

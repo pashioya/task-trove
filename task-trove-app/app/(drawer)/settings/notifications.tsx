@@ -1,19 +1,14 @@
-import { Stack } from "expo-router";
-import { View } from "lucide-react-native";
-import { useState } from "react";
-import { TouchableOpacity } from "react-native";
+import { Stack } from 'expo-router';
+import { View } from 'lucide-react-native';
+import { useState } from 'react';
 
-import { Container } from "~/components/Container";
-import { NotificationRangeSelector } from "~/components/NotificationRangeSelector";
-import { SimpleSheet } from "~/components/SimpleSheet";
-
-import { Text } from "react-native";
+import { Text } from 'react-native';
 
 export default function NotificationSettings() {
   const [openModal, setOpenModal] = useState(false);
   return (
     <>
-      <Stack.Screen options={{ title: "NotificationSettings" }} />
+      <Stack.Screen options={{ title: 'NotificationSettings' }} />
       <View>
         <Text>NotificationSettings</Text>
       </View>

@@ -1,84 +1,98 @@
-import { Stack, router } from 'expo-router';
-import { View } from 'lucide-react-native';
-import { Touchable, TouchableOpacity } from 'react-native';
+import { Link, Stack, router } from 'expo-router';
+import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSession } from '~/contexts/session-provider';
-import {Text} from '~/components/ui/text';
-import { Ionicons } from '@expo/vector-icons';
+import { Text } from '~/components/ui/text';
+import { ChevronRight, Edit3, Mail, Moon, Navigation } from 'lucide-react-native';
+import { useColorScheme } from '~/lib/useColorScheme';
+import { Switch } from '~/components/ui/switch';
+import colors from 'tailwindcss/colors';
 
 export default function Settings() {
-  const { signOut } = useSession();
+  const { session } = useSession();
+  const { isDarkColorScheme, setColorScheme } = useColorScheme();
+  const newTheme = isDarkColorScheme ? 'light' : 'dark';
+
+  const rowColor = isDarkColorScheme ? colors.gray[900] : colors.gray[100];
+
   return (
     <>
-      <Stack.Screen options={{ title: 'Settings' }} />
-      <View className='my-container'>
-        <TouchableOpacity onPress={() => router.push('/(drawer)/settings/location')}>
-          <View className='rounded m-10 p-10 w-100'>
-            <View className='flex-row '>
-              <Ionicons name="compass-outline" size={24} />
-              <Text >Location</Text>
+      <Stack.Screen options={{ title: 'Boards' }} />
+      <SafeAreaView style={{ flex: 1 }}>
+        <View className="flex-1">
+          <View className="p-6 items-center justify-center">
+            <View className="relative">
+              <Image
+                alt=""
+                source={{
+                  uri: session?.user?.thumbnail,
+                }}
+                style={{ width: 72, height: 72, borderRadius: 9999 }}
+              />
             </View>
-            <View className='m-2'><View className='chevron-right'></View></View>
+
+            <View>
+              <Text className="mt-5 text-lg font-semibold text-center">{session?.user?.name}</Text>
+              <Text className="mt-1 text-base text-center">{session?.user?.email}</Text>
+            </View>
           </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push('/(drawer)/settings/notifications')}>
-          <View className='rounded m-10 p-10 justify-between items-center'>
-            <View className='flex-row w-100'>
-              <Ionicons name="notifications-outline" size={24} />
-              <Text>Notifications</Text>
-            </View>
-            </View>
-            </TouchableOpacity>
-      </View>
-      {/* <Container>
-        <YStack height="95%">
-          <TouchableOpacity onPress={() => router.push('/(app)/(drawer)/settings/location')}>
-            <XStack
-              borderRadius={10}
-              margin={10}
-              alignItems="center"
-              padding={10}
-              backgroundColor="white"
-              justifyContent="space-between"
-            >
-              <XStack gap={15}>
-                <Ionicons marginTop={2} name="compass-outline" size={24} />
-                <Text fontSize={24} color="black">
-                  Location
-                </Text>
-              </XStack>
-              <ChevronRight marginTop={2} color="black" size={24} />
-            </XStack>
-          </TouchableOpacity>
+          <ScrollView>
+            <View className="px-6">
+              <Text className="py-3 text-xs font-semibold tracking-wider">PREFERENCES</Text>
+              <View
+                style={{ backgroundColor: rowColor }}
+                className="flex-row items-center justify-start h-12 bg-gray-100 rounded-lg mb-3 px-3"
+              >
+                <View
+                  className="w-8 h-8 rounded-full mr-3 flex items-center justify-center bg-blue-500"
+                  style={[{ backgroundColor: '#007afe' }]}
+                >
+                  <Moon color="#fff" size={20} />
+                </View>
+                <Text className="text-lg font-normal ">Dark Mode</Text>
+                <View className="flex-grow" />
+                <Switch
+                  checked={isDarkColorScheme}
+                  onCheckedChange={() => setColorScheme(newTheme)}
+                />
+              </View>
+              <TouchableOpacity
+                onPress={() => {
+                  router.push('/settings/location');
+                }}
+                style={{ backgroundColor: rowColor }}
+                className="flex-row items-center justify-start h-12  rounded-lg mb-3 px-3"
+              >
+                <View className="w-8 h-8 rounded-full mr-3 flex items-center justify-center bg-green-500">
+                  <Navigation color="#fff" size={20} />
+                </View>
+                <Text className="text-lg font-normal ">Location</Text>
+                <View className="flex-grow" />
+                <ChevronRight color="#C6C6C6" size={20} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  router.push('/settings/notifications');
+                }}
+                style={{ backgroundColor: rowColor }}
+                className="flex-row items-center justify-start h-12  rounded-lg mb-3 px-3"
+              >
+                <View
+                  className="w-8 h-8 rounded-full mr-3 flex items-center justify-center bg-green-500"
+                  style={[{ backgroundColor: '#32c759' }]}
+                >
+                  <Navigation color="#fff" size={20} />
+                </View>
+                <Text className="text-lg font-normal ">Notifications</Text>
+                <View className="flex-grow" />
 
-          <TouchableOpacity onPress={() => router.push('/(app)/(drawer)/settings/notifications')}>
-            <XStack
-              borderRadius={10}
-              margin={10}
-              alignItems="center"
-              padding={10}
-              backgroundColor="white"
-              justifyContent="space-between"
-            >
-              <XStack gap={15}>
-                <Ionicons marginTop={2} name="notifications-outline" size={24} />
-                <Text fontSize={24} color="black">
-                  Notifications
-                </Text>
-              </XStack>
-              <ChevronRight marginTop={2} color="black" size={24} />
-            </XStack>
-          </TouchableOpacity>
-        </YStack>
-
-        <Button
-          animation="lazy"
-          enterStyle={{ opacity: 0 }}
-          backgroundColor="red"
-          onPress={() => signOut}
-        >
-          Logout
-        </Button>
-      </Container> */}
+                <ChevronRight color="#C6C6C6" size={20} />
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </View>
+      </SafeAreaView>
     </>
   );
 }
