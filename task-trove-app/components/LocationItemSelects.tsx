@@ -2,12 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import type { Board, Column, Item } from '~/model/types';
 import { fetchBoards, fetchItems, fetchLocationColumns } from '~/utils/MondayAPI';
 
-import { Button, YStack } from 'tamagui';
 import { useSettingsStore } from '~/store';
 import { useToggleShareLocation } from '~/hooks';
-import { CustomAutomateSelect } from './CustomAutomateSelect';
-import { KeyboardAvoidingView } from 'react-native';
-import Toast from 'react-native-toast-message';
+import { KeyboardAvoidingView, View } from 'react-native';
+import { SimpleSelect } from './SimpleSelect';
+import { Button } from './ui/button';
+import { Text } from './ui/text';
 
 export default function LocationItemSelects() {
   const [boards, setBoards] = useState<Board[]>([]);
@@ -34,19 +34,11 @@ export default function LocationItemSelects() {
           setSelectedBoard(data[0]);
         }
         if (data.length === 0) {
-          Toast.show({
-            type: 'error',
-            text1: 'No boards found',
-            text2: 'Please create a board in Monday.com to continue',
-          });
+          console.log('No boards found');
         }
       })
       .catch(error => {
-        Toast.show({
-          type: 'error',
-          text1: 'Error fetching boards',
-          text2: error,
-        });
+        console.log('Error fetching boards', error);
       });
     boardSelectItemsRef.current = boards.map(board => ({
       label: board.name,
@@ -109,18 +101,13 @@ export default function LocationItemSelects() {
         setColumn(selectedColumn);
         setItem(selectedItem);
       }
-      Toast.show({
-        type: 'success',
-        text1: 'Location saved',
-        text2: 'You can now share your location',
-      });
     }
   };
 
   return (
-    <YStack alignItems="center">
+    <View className="align-middle justify-center">
       <KeyboardAvoidingView style={{ gap: 10 }}>
-        <CustomAutomateSelect
+        <SimpleSelect
           options={boardSelectItemsRef.current}
           placeholder="Board Select"
           selectedValue={
@@ -133,7 +120,7 @@ export default function LocationItemSelects() {
             );
           }}
         />
-        <CustomAutomateSelect
+        <SimpleSelect
           options={columnSelectItemsRef.current}
           placeholder="Column Select"
           disabled={!selectedBoard}
@@ -147,7 +134,7 @@ export default function LocationItemSelects() {
           }}
         />
 
-        <CustomAutomateSelect
+        <SimpleSelect
           options={itemSelectItemsRef.current}
           placeholder="Item Select"
           selectedValue={selectedItem ? { label: selectedItem.name, value: selectedItem.id } : null}
@@ -156,14 +143,10 @@ export default function LocationItemSelects() {
             setSelectedItem(items.find(item => item.id === newItem?.value) || ({} as Item));
           }}
         />
-        <Button
-          backgroundColor={!selectedItem ? 'gray' : 'black'}
-          onPress={saveChanges}
-          disabled={!selectedItem}
-        >
-          Save
+        <Button onPress={saveChanges} disabled={!selectedItem}>
+          <Text>Save</Text>
         </Button>
       </KeyboardAvoidingView>
-    </YStack>
+    </View>
   );
 }
