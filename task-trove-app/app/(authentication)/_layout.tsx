@@ -1,15 +1,20 @@
 import { Stack, Redirect } from 'expo-router';
 import { useSession } from '~/contexts/session-provider';
-import { Pressable, Text } from 'react-native';
+import { ActivityIndicator, Pressable, View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import { useSettingsStore } from '~/store';
+import React from 'react';
 
 export default function AuthenticationLayout() {
   const { session, isLoading } = useSession();
   const { onboardingCompleted } = useSettingsStore();
 
   if (isLoading) {
-    return <Text>Loading...</Text>;
+    return (
+      <View className="my-container justify-center align-center">
+        <ActivityIndicator size={45} />
+      </View>
+    );
   }
 
   if (session) {

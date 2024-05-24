@@ -7,8 +7,6 @@ export default function OnboardingLayout() {
     <Stack
       screenOptions={{
         headerShown: false,
-        statusBarStyle: 'dark',
-        statusBarColor: 'transparent',
       }}
     >
       <Stack.Screen name="1" options={{ title: 'Onboarding One' }} />

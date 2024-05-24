@@ -16,11 +16,17 @@ import { Text } from '~/components/ui/text';
 
 type AlertDialogScreenProps = {
   trigger: ReactNode;
+  actionIfConfirmed: () => void;
   title: string;
   description: string;
 };
 
-const SimpleAlertDialog: React.FC<AlertDialogScreenProps> = ({ trigger, title, description }) => {
+const SimpleAlertDialog: React.FC<AlertDialogScreenProps> = ({
+  trigger,
+  title,
+  description,
+  actionIfConfirmed,
+}) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
@@ -33,7 +39,7 @@ const SimpleAlertDialog: React.FC<AlertDialogScreenProps> = ({ trigger, title, d
           <AlertDialogCancel>
             <Text>Cancel</Text>
           </AlertDialogCancel>
-          <AlertDialogAction>
+          <AlertDialogAction onPress={actionIfConfirmed}>
             <Text>Continue</Text>
           </AlertDialogAction>
         </AlertDialogFooter>
@@ -45,6 +51,7 @@ SimpleAlertDialog.propTypes = {
   trigger: PropTypes.node.isRequired,
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
+  actionIfConfirmed: PropTypes.func.isRequired,
 };
 
 export default SimpleAlertDialog;

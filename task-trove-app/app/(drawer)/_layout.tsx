@@ -5,7 +5,7 @@ import { Drawer } from 'expo-router/drawer';
 import { useSession } from '~/contexts/session-provider';
 import { useSettingsStore } from '~/store';
 import { useToggleShareLocation } from '~/hooks';
-import { Text } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import colors from 'tailwindcss/colors';
 import { Menu } from 'lucide-react-native';
 import { useColorScheme } from '~/lib/useColorScheme';
@@ -19,7 +19,11 @@ export default function DrawerLayout() {
   const navigation = useNavigation();
 
   if (isLoading) {
-    return <Text>Loading...</Text>;
+    return (
+      <View className="my-container justify-center align-center">
+        <ActivityIndicator size={45} />
+      </View>
+    );
   }
 
   if (!session) {
@@ -28,6 +32,8 @@ export default function DrawerLayout() {
   const toggleDrawer = () => {
     navigation.dispatch(DrawerActions.openDrawer());
   };
+
+  const drawerActiveBackgroundColor = isDarkColorScheme ? colors.gray[600] : colors.blue[300];
 
   return (
     <Drawer
@@ -49,7 +55,7 @@ export default function DrawerLayout() {
           />
         ),
         drawerType: 'slide',
-        drawerActiveBackgroundColor: colors.blue[300],
+        drawerActiveBackgroundColor,
         headerTitleAlign: 'center',
         headerRightContainerStyle: {
           paddingRight: 15,

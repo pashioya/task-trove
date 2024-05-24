@@ -128,10 +128,8 @@ export default function Home() {
             longitudeDelta: 0.0421,
           }}
         />
-        <Button onPress={() => router.push('/login')}>
-          <Text>Login</Text>
-        </Button>
         <Button
+          className="mt-5 "
           onPress={async () => {
             try {
               await toggleShareLocation();

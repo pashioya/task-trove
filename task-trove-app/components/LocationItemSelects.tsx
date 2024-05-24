@@ -4,7 +4,7 @@ import { fetchBoards, fetchItems, fetchLocationColumns } from '~/utils/MondayAPI
 
 import { useSettingsStore } from '~/store';
 import { useToggleShareLocation } from '~/hooks';
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView, ToastAndroid } from 'react-native';
 import { SimpleSelect } from './SimpleSelect';
 import { Button } from './ui/button';
 import { Text } from './ui/text';
@@ -102,6 +102,7 @@ export default function LocationItemSelects() {
         setColumn(selectedColumn);
         setItem(selectedItem);
       }
+      ToastAndroid.show('Location saved!', ToastAndroid.SHORT);
     }
   };
 
@@ -146,10 +147,11 @@ export default function LocationItemSelects() {
 
       <SimpleAlertDialog
         trigger={
-          <Button onPress={saveChanges} disabled={!selectedItem}>
+          <Button disabled={!selectedItem}>
             <Text>Save</Text>
           </Button>
         }
+        actionIfConfirmed={saveChanges}
         title="Are you sure sure?"
         description="Check if the selected item is correct. you may update the wrong item if you continue."
       />
