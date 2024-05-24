@@ -59,7 +59,7 @@ export default function LocationItemSelects() {
     isLoading: itemIsLoading,
     isError: itemsIsError,
     error: itemsError,
-    //refetch: refetchItems,
+    refetch: refetchItems,
   } = useMondayQuery({
     query: fetchItemsQuery,
     variables: { boardId: selectedBoard?.id || '' },
@@ -71,42 +71,69 @@ export default function LocationItemSelects() {
       if (boardsIsError) {
         showAlert(boardsError);
       }
-      const boards = boardsData?.boards as Board[];
-      setBoards(boards);
+      const refactoredBoards = boardsData?.boards as Board[];
+      setBoards(refactoredBoards);
 
-      if (boards.length === 1) {
-        setSelectedBoard(boards[0]);
+      if (refactoredBoards.length === 1) {
+        setSelectedBoard(refactoredBoards[0]);
       }
-      boardSelectItemsRef.current = boards.map(board => ({
+      boardSelectItemsRef.current = refactoredBoards.map(board => ({
         label: board.name,
         value: board.id,
       }));
     }
-  }, [boardsIsLoading]);
+  }, [boardsData?.boards, boardsError, boardsIsError, boardsIsLoading]);
 
   useEffect(() => {
     if (!columnsIsLoading && !itemIsLoading) {
       if (columnsIsError) {
         showAlert(columnsError);
-      } else if (itemsIsError) {
+      }
+
+      if (itemsIsError) {
         showAlert(itemsError);
       }
 
       if (columnsData && columnsData.boards && columnsData.boards[0]) {
         const columns = columnsData.boards[0].columns as Column[];
+        setColumns(columns);
       }
-      const column = column?.boards as Board[];
-      setBoards(boards);
 
-      if (boards.length === 1) {
-        setSelectedBoard(boards[0]);
+      if (itemsData && itemsData.boards && itemsData.boards[0]) {
+        const items = itemsData.boards[0].items_page.items as Item[];
+        setItems(items);
       }
-      boardSelectItemsRef.current = boards.map(board => ({
-        label: board.name,
-        value: board.id,
+
+      if (columns.length === 1) {
+        setSelectedColumn(columns[0]);
+      }
+
+      if (items.length === 1) {
+        setSelectedItem(items[0]);
+      }
+
+      columnSelectItemsRef.current = columns.map(column => ({
+        label: column.title,
+        value: column.id,
+      }));
+
+      itemSelectItemsRef.current = items.map(item => ({
+        label: item.name,
+        value: item.id,
       }));
     }
-  }, [columnsIsLoading, itemIsLoading]);
+  }, [
+    columns,
+    columnsData,
+    columnsError,
+    columnsIsError,
+    columnsIsLoading,
+    itemIsLoading,
+    items,
+    itemsData,
+    itemsError,
+    itemsIsError,
+  ]);
 
   useEffect(() => {
     if (board) {
@@ -143,29 +170,7 @@ export default function LocationItemSelects() {
     setSelectedItem({} as Item);
 
     refetchColumns();
-
-    console.log(columns, items);
-    if (!columnsIsLoading && !itemIsLoading) {
-      //refetch the columns data here
-
-      if (columnsIsError) {
-        showAlert(columnsError);
-      }
-
-      if (itemsIsError) {
-        showAlert(itemsError);
-      }
-
-      if (columnsData && columnsData.boards && columnsData.boards[0]) {
-        const columns = columnsData.boards[0].columns as Column[];
-        setColumns(columns);
-      }
-
-      if (itemsData && itemsData.boards && itemsData.boards[0]) {
-        const items = itemsData.boards[0].items_page.items as Item[];
-        setItems(items);
-      }
-    }
+    refetchItems();
   };
 
   const saveChanges = () => {
@@ -183,7 +188,7 @@ export default function LocationItemSelects() {
       }
       Burnt.toast({
         title: 'Location Item Changed!',
-        message: "You've successfully changed the location item.",
+        message: 'You\'ve successfully changed the location item.',
         preset: 'done',
         layout: {
           iconSize: {
