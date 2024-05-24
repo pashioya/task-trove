@@ -67,11 +67,11 @@ export default function LocationItemSelects() {
   });
 
   useEffect(() => {
-    if (!boardsIsLoading) {
+    if (!boardsIsLoading && boardsData) {
       if (boardsIsError) {
         showAlert(boardsError);
       }
-      const refactoredBoards = boardsData?.boards as Board[];
+      const refactoredBoards = boardsData.boards as Board[];
       setBoards(refactoredBoards);
 
       if (refactoredBoards.length === 1) {
@@ -82,7 +82,7 @@ export default function LocationItemSelects() {
         value: board.id,
       }));
     }
-  }, [boardsData?.boards, boardsError, boardsIsError, boardsIsLoading]);
+  }, [boardsData, boardsData?.boards, boardsError, boardsIsError, boardsIsLoading]);
 
   useEffect(() => {
     if (!columnsIsLoading && !itemIsLoading) {
@@ -97,43 +97,32 @@ export default function LocationItemSelects() {
       if (columnsData && columnsData.boards && columnsData.boards[0]) {
         const columns = columnsData.boards[0].columns as Column[];
         setColumns(columns);
+
+        columnSelectItemsRef.current = columns.map(column => ({
+          label: column.title,
+          value: column.id,
+        }));
+
+        if (columns.length === 1) {
+          setSelectedColumn(columns[0]);
+        }
       }
 
       if (itemsData && itemsData.boards && itemsData.boards[0]) {
         const items = itemsData.boards[0].items_page.items as Item[];
         setItems(items);
+
+        itemSelectItemsRef.current = items.map(item => ({
+          label: item.name,
+          value: item.id,
+        }));
+
+        if (items.length === 1) {
+          setSelectedItem(items[0]);
+        }
       }
-
-      if (columns.length === 1) {
-        setSelectedColumn(columns[0]);
-      }
-
-      if (items.length === 1) {
-        setSelectedItem(items[0]);
-      }
-
-      columnSelectItemsRef.current = columns.map(column => ({
-        label: column.title,
-        value: column.id,
-      }));
-
-      itemSelectItemsRef.current = items.map(item => ({
-        label: item.name,
-        value: item.id,
-      }));
     }
-  }, [
-    columns,
-    columnsData,
-    columnsError,
-    columnsIsError,
-    columnsIsLoading,
-    itemIsLoading,
-    items,
-    itemsData,
-    itemsError,
-    itemsIsError,
-  ]);
+  }, [columnsIsLoading, itemIsLoading]);
 
   useEffect(() => {
     if (board) {
@@ -174,7 +163,8 @@ export default function LocationItemSelects() {
   };
 
   const saveChanges = () => {
-    if (selectedBoard && selectedColumn && selectedItem) {
+    console.log(selectedBoard, selectedColumn, selectedItem);
+    if (selectedBoard?.id && selectedColumn?.id && selectedItem?.id) {
       if (isTracking) {
         toggleShareLocation();
         setBoard(selectedBoard);
@@ -188,7 +178,7 @@ export default function LocationItemSelects() {
       }
       Burnt.toast({
         title: 'Location Item Changed!',
-        message: 'You\'ve successfully changed the location item.',
+        message: "You've successfully changed the location item.",
         preset: 'done',
         layout: {
           iconSize: {
