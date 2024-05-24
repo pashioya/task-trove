@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from '~/components/ui/select';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ScrollView } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 
 type Option = { label: string; value: string };
 
@@ -48,7 +48,7 @@ export function SimpleSelect({
         <SelectValue className="text-foreground text-sm native:text-lg" placeholder={placeholder} />
       </SelectTrigger>
 
-      <SelectContent insets={contentInsets} className="w-[250px]">
+      <SelectContent insets={contentInsets} className="w-[250px] max-h-[400px] overflow-y-auto">
         <SelectLabel>{placeholder}</SelectLabel>
         <SelectGroup>
           <ScrollView>
