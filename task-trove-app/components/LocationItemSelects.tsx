@@ -139,7 +139,7 @@ export default function LocationItemSelects() {
         options={itemSelectItemsRef.current}
         placeholder="Item Select"
         selectedValue={selectedItem ? { label: selectedItem.name, value: selectedItem.id } : null}
-        disabled={!selectedColumn}
+        disabled={!selectedColumn || !selectedBoard}
         onValueChange={newItem => {
           setSelectedItem(items.find(item => item.id === newItem?.value) || ({} as Item));
         }}

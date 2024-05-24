@@ -16,6 +16,9 @@ export default function OnboardingLayout() {
           headerBackground: () => (
             <LinearGradient colors={[colors.white, colors.blue[50]]} style={{ flex: 1 }} />
           ),
+          headerTintColor: colors.blue[50],
+          headerBackVisible: true,
+          headerShown: false,
           headerTitle: '',
         }}
       />
@@ -27,9 +30,6 @@ export default function OnboardingLayout() {
             <LinearGradient colors={[colors.blue[950], colors.blue[900]]} style={{ flex: 1 }} />
           ),
 
-          headerTintColor: colors.white,
-          headerBackVisible: true,
-          headerShown: true,
           headerTitle: '',
         }}
       />

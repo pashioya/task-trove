@@ -44,7 +44,7 @@ export function SimpleSelect({
       }}
       disabled={disabled}
     >
-      <SelectTrigger className="w-[250px]">
+      <SelectTrigger disabled={disabled} className="w-[250px]">
         <SelectValue className="text-foreground text-sm native:text-lg" placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent insets={contentInsets} className="w-[250px]">
