@@ -5,15 +5,15 @@ import { Button } from '~/components/ui/button';
 
 export default function One() {
   return (
-    <SafeAreaView className="flex-1 pt-34">
-      <View className="bg-blue-500 m-6 rounded-2xl p-8">
+    <SafeAreaView className="flex-1 pt-20">
+      <View className="bg-blue-500 m-6 rounded-2xl p-4">
         <Image
           source={require('~/assets/images/tryve/general.jpg')}
-          style={{ width: '100%', height: 600 }}
+          style={{ width: '100%', height: 600, borderRadius: 20 }}
         />
       </View>
-      <View className="flex-1 justify-between py-6 px-6">
-        <View className="px-6">
+      <View className="flex-1 justify-between py-8 px-9">
+        <View>
           <Text className="text-2xl font-medium text-purple-900 text-center mb-3 leading-10">
             Track your location{'\n'}with{' '}
             <View className="bg-blue-200" style={{ transform: [{ rotate: '-5deg' }] }}>

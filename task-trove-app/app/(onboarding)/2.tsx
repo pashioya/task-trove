@@ -100,7 +100,7 @@ export default function Three() {
             <Button
               onPress={() => router.push('/(onboarding)/3')}
               style={{
-                marginTop: 22,
+                marginTop: 10,
                 width: '100%',
               }}
             >

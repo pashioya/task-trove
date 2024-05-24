@@ -20,7 +20,7 @@ export default function Login() {
           style={styles.video}
         />
         <View className="mt-20 ml-4">
-          <Text className="my-header pt-10 leading-relaxed text-white ">
+          <Text className="my-header pt-30 leading-relaxed text-white">
             Enhance your Monday Experience
           </Text>
         </View>

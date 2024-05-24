@@ -4,13 +4,13 @@
     "slug": "task-trove-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/tryve/tryve-logo-square.jpg",
     "scheme": "task-trove-app",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/tryve/tryve-darkblue-social.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#F0F3FF"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -28,8 +28,8 @@
         }
       },
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/images/tryve/tryve-logo-square.jpg",
+        "backgroundColor": "#F0F3FF"
       },
       "permissions": [
         "ACCESS_BACKGROUND_LOCATION",
@@ -40,7 +40,7 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/tryve/tryve-logo-square.jpg"
     },
     "plugins": [
       "expo-router",
