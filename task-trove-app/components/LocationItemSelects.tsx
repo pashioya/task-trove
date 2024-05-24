@@ -152,7 +152,7 @@ export default function LocationItemSelects() {
           </Button>
         }
         actionIfConfirmed={saveChanges}
-        title="Are you sure sure?"
+        title="Are you sure?"
         description="Check if the selected item is correct. you may update the wrong item if you continue."
       />
     </SafeAreaView>

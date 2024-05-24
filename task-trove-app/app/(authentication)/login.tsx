@@ -1,6 +1,6 @@
 import { Stack } from 'expo-router';
 import { useSession } from '~/contexts/session-provider';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, SafeAreaView } from 'react-native';
 import { Text } from '~/components/ui/text';
 import LottieView from 'lottie-react-native';
 import { Button } from '~/components/ui/button';
@@ -11,7 +11,7 @@ export default function Login() {
   return (
     <>
       <Stack.Screen options={{ title: 'login' }} />
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <LottieView
           resizeMode="cover"
           loop
@@ -30,7 +30,7 @@ export default function Login() {
             <Text>Sign in with Monday</Text>
           </Button>
         </View>
-      </View>
+      </SafeAreaView>
     </>
   );
 }

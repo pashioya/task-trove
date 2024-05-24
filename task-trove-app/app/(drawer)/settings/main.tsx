@@ -10,6 +10,7 @@ import { Switch } from '~/components/ui/switch';
 import colors from 'tailwindcss/colors';
 import { Button } from '~/components/ui/button';
 import SimpleAlertDialog from '~/components/SimpleAlertDialog';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function Settings() {
   const { session, signOut } = useSession();
@@ -82,10 +83,10 @@ export default function Settings() {
                 className="flex-row items-center justify-start h-12  rounded-lg mb-3 px-3"
               >
                 <View
-                  className="w-8 h-8 rounded-full mr-3 flex items-center justify-center bg-green-500"
+                  className="w-8 h-8 rounded-full mr-3 flex items-center justify-center bg-yellow-500"
                   style={[{ backgroundColor: '#32c759' }]}
                 >
-                  <Navigation color="#fff" size={20} />
+                  <Ionicons name="notifications-outline" size={20} color="#fff" />
                 </View>
                 <Text className="text-lg font-normal ">Notifications</Text>
                 <View className="flex-grow" />

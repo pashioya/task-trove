@@ -2,7 +2,7 @@ import * as Linking from 'expo-linking';
 import { Stack, useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
 import * as ExpoLocation from 'expo-location';
-import { TouchableOpacity, Alert, StyleSheet, View } from 'react-native';
+import { TouchableOpacity, Alert, StyleSheet, SafeAreaView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useToggleShareLocation, useLocationPermissions } from '~/hooks';
 import { useMondayMutation } from '~/lib/monday/api';
@@ -109,7 +109,7 @@ export default function Home() {
   return (
     <>
       <Stack.Screen options={{ title: 'Home', headerShown: false }} />
-      <View className="my-container">
+      <SafeAreaView className="my-container">
         <MapView
           className="border-2 border-black rounded-lg"
           provider={PROVIDER_GOOGLE}
@@ -154,7 +154,7 @@ export default function Home() {
             <Ionicons name="navigate" size={24} />
           </TouchableOpacity>
         )}
-      </View>
+      </SafeAreaView>
     </>
   );
 }

@@ -1,15 +1,14 @@
 import { Stack } from 'expo-router';
-import { View } from 'lucide-react-native';
 
-import { Text } from 'react-native';
+import { SafeAreaView, Text } from 'react-native';
 
 export default function NotificationSettings() {
   return (
     <>
       <Stack.Screen options={{ title: 'NotificationSettings' }} />
-      <View>
+      <SafeAreaView>
         <Text>NotificationSettings</Text>
-      </View>
+      </SafeAreaView>
     </>
   );
 }
