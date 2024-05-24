@@ -11,3 +11,36 @@ export const changeMultipleColumnValuesMutation = graphql(`
     }
   }
 `);
+
+export const fetchBoardsQuery = graphql(`
+  query fetchBoards {
+    boards(limit: 100, order_by: used_at) {
+      id
+      name
+    }
+  }
+`);
+
+export const fetchColumnsQuery = graphql(`
+  query fetchColumns($boardId: ID!) {
+    boards(ids: [$boardId]) {
+      columns(types: location) {
+        id
+        title
+      }
+    }
+  }
+`);
+
+export const fetchItemsQuery = graphql(`
+  query fetchItems($boardId: ID!) {
+    boards(ids: [$boardId]) {
+      items_page(limit: 100) {
+        items {
+          id
+          name
+        }
+      }
+    }
+  }
+`);

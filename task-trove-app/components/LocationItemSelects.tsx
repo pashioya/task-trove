@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Board, Column, Item } from '~/model/types';
-import { fetchBoards, fetchItems, fetchLocationColumns } from '~/utils/MondayAPI';
 
 import { Button, YStack } from 'tamagui';
 import { useSettingsStore } from '~/store';
 import { useToggleShareLocation } from '~/hooks';
 import { CustomAutomateSelect } from './CustomAutomateSelect';
-import { KeyboardAvoidingView } from 'react-native';
+import { Alert, KeyboardAvoidingView } from 'react-native';
 import * as Burnt from 'burnt';
+import { useMondayQuery } from '~/lib/monday/api';
+import { fetchBoardsQuery, fetchColumnsQuery, fetchItemsQuery } from '~/lib/monday/queries';
+import type { MondayAPIError } from '~/lib/monday/error';
 
 export default function LocationItemSelects() {
   const [boards, setBoards] = useState<Board[]>([]);
@@ -26,36 +28,85 @@ export default function LocationItemSelects() {
 
   const { toggleShareLocation, isTracking } = useToggleShareLocation();
 
-  useEffect(() => {
-    fetchBoards()
-      .then(data => {
-        setBoards(data);
-        boardSelectItemsRef.current = data.map(board => ({
-          label: board.name,
-          value: board.id,
-        }));
-      })
-      .catch(error => {
-        console.error('Error fetching boards:', error);
-      });
-  }, []);
+  const showAlert = (error: MondayAPIError) => {
+    Alert.alert('Error', error.message, [{ text: 'Dismiss' }]);
+  };
+
+  const {
+    data: boardsData,
+    isLoading: boardsIsLoading,
+    isError: boardsIsError,
+    error: boardsError,
+  } = useMondayQuery({
+    query: fetchBoardsQuery,
+    variables: {},
+  });
+
+  const {
+    data: columnsData,
+    isLoading: columnsIsLoading,
+    isError: columnsIsError,
+    error: columnsError,
+    refetch: refetchColumns,
+  } = useMondayQuery({
+    query: fetchColumnsQuery,
+    variables: { boardId: selectedBoard?.id || '' },
+    enabled: !!selectedBoard?.id,
+  });
+
+  const {
+    data: itemsData,
+    isLoading: itemIsLoading,
+    isError: itemsIsError,
+    error: itemsError,
+    //refetch: refetchItems,
+  } = useMondayQuery({
+    query: fetchItemsQuery,
+    variables: { boardId: selectedBoard?.id || '' },
+    enabled: !!selectedBoard?.id,
+  });
 
   useEffect(() => {
-    fetchBoards()
-      .then(data => {
-        setBoards(data);
-        if (data.length === 1) {
-          setSelectedBoard(data[0]);
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching boards:', error);
-      });
-    boardSelectItemsRef.current = boards.map(board => ({
-      label: board.name,
-      value: board.id,
-    }));
-  }, [boards]);
+    if (!boardsIsLoading) {
+      if (boardsIsError) {
+        showAlert(boardsError);
+      }
+      const boards = boardsData?.boards as Board[];
+      setBoards(boards);
+
+      if (boards.length === 1) {
+        setSelectedBoard(boards[0]);
+      }
+      boardSelectItemsRef.current = boards.map(board => ({
+        label: board.name,
+        value: board.id,
+      }));
+    }
+  }, [boardsIsLoading]);
+
+  useEffect(() => {
+    if (!columnsIsLoading && !itemIsLoading) {
+      if (columnsIsError) {
+        showAlert(columnsError);
+      } else if (itemsIsError) {
+        showAlert(itemsError);
+      }
+
+      if (columnsData && columnsData.boards && columnsData.boards[0]) {
+        const columns = columnsData.boards[0].columns as Column[];
+      }
+      const column = column?.boards as Board[];
+      setBoards(boards);
+
+      if (boards.length === 1) {
+        setSelectedBoard(boards[0]);
+      }
+      boardSelectItemsRef.current = boards.map(board => ({
+        label: board.name,
+        value: board.id,
+      }));
+    }
+  }, [columnsIsLoading, itemIsLoading]);
 
   useEffect(() => {
     if (board) {
@@ -86,12 +137,35 @@ export default function LocationItemSelects() {
     }
   }, [columns, items]);
 
-  const handleBoardChange = async (board: Board) => {
+  const handleBoardChange = (board: Board) => {
     setSelectedBoard(board);
-    setColumns(await fetchLocationColumns(board.id));
-    setItems(await fetchItems(board.id));
     setSelectedColumn({} as Column);
     setSelectedItem({} as Item);
+
+    refetchColumns();
+
+    console.log(columns, items);
+    if (!columnsIsLoading && !itemIsLoading) {
+      //refetch the columns data here
+
+      if (columnsIsError) {
+        showAlert(columnsError);
+      }
+
+      if (itemsIsError) {
+        showAlert(itemsError);
+      }
+
+      if (columnsData && columnsData.boards && columnsData.boards[0]) {
+        const columns = columnsData.boards[0].columns as Column[];
+        setColumns(columns);
+      }
+
+      if (itemsData && itemsData.boards && itemsData.boards[0]) {
+        const items = itemsData.boards[0].items_page.items as Item[];
+        setItems(items);
+      }
+    }
   };
 
   const saveChanges = () => {
@@ -131,10 +205,8 @@ export default function LocationItemSelects() {
             selectedBoard ? { label: selectedBoard.name, value: selectedBoard.id } : null
           }
           disabled={false}
-          onValueChange={async boardId => {
-            await handleBoardChange(
-              boards.find(board => board.id === boardId?.value) || ({} as Board),
-            );
+          onValueChange={boardId => {
+            handleBoardChange(boards.find(board => board.id === boardId?.value) || ({} as Board));
           }}
         />
         <CustomAutomateSelect
