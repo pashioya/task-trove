@@ -19,13 +19,13 @@ export default function Login() {
           source={require('~/assets/lottie/blue-animation.json')}
           style={styles.video}
         />
-        <View className="mt-20">
+        <View className="mt-20 ml-4">
           <Text className="my-header pt-10 leading-relaxed text-white ">
             Enhance your Monday Experience
           </Text>
         </View>
 
-        <View style={styles.buttons}>
+        <View className="flex-row justify-center gap-20 mb-60 px-20">
           <Button onPress={signIn}>
             <Text>Sign in with Monday</Text>
           </Button>
@@ -44,12 +44,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     position: 'absolute',
-  },
-  header: {
-    fontSize: 36,
-    fontWeight: '900',
-    textTransform: 'uppercase',
-    color: 'white',
   },
   buttons: {
     flexDirection: 'row',

@@ -9,6 +9,7 @@ import { useColorScheme } from '~/lib/useColorScheme';
 import { Switch } from '~/components/ui/switch';
 import colors from 'tailwindcss/colors';
 import { Button } from '~/components/ui/button';
+import SimpleAlertDialog from '~/components/SimpleAlertDialog';
 
 export default function Settings() {
   const { session, signOut } = useSession();
@@ -90,9 +91,17 @@ export default function Settings() {
 
                 <ChevronRight color="#C6C6C6" size={20} />
               </TouchableOpacity>
-              <Button onPress={signOut} variant="outline" className="mt-96 border-red-600 ">
-                <Text className="text-red-600">Logout</Text>
-              </Button>
+
+              <SimpleAlertDialog
+                trigger={
+                  <Button variant="outline" className="mt-96 border-red-600 ">
+                    <Text className="text-red-600">Logout</Text>
+                  </Button>
+                }
+                actionIfConfirmed={signOut}
+                title="Are you sure you want to logout?"
+                description="Do you want to logout from your account? You can always login back."
+              />
             </View>
           </ScrollView>
         </View>
