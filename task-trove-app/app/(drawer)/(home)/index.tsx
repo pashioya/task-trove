@@ -8,7 +8,6 @@ import { useToggleShareLocation, useLocationPermissions } from '~/hooks';
 import { useMondayMutation } from '~/lib/monday/api';
 import { changeMultipleColumnValuesMutation } from '~/lib/monday/queries';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
-import lightStyle from '~/assets/map/lightStyle.json';
 import { useSettingsStore } from '~/store';
 import { INITIAL_REGION } from '~/config/map-config';
 import { Button } from '~/components/ui/button';
@@ -120,7 +119,7 @@ export default function Home() {
           userInterfaceStyle="dark"
           initialRegion={INITIAL_REGION}
           ref={mapRef}
-          customMapStyle={lightStyle}
+          googleMapId="53fd8982b9591e20"
           region={{
             latitude: region?.latitude || INITIAL_REGION.latitude,
             longitude: region?.longitude || INITIAL_REGION.longitude,
