@@ -12,23 +12,24 @@ export default function Two() {
       resizeMode="cover"
       source={require('~/assets/images/tryve/head-shot.png')}
     >
+      <View className="absolute" style={{ top: 398, left: 60 }}>
+        <Text className="font-bold text-5xl text-white text-right rounded-2xl bg-black p-3 w-70">
+          Know where your team is:
+        </Text>
+        <View>
+          <Text className="text-xl text-white text-right">
+            See coworker locations on monday.com, fostering transparency and collaboration.
+          </Text>
+        </View>
+      </View>
       <View
         style={{
           paddingHorizontal: 22,
           position: 'absolute',
-          top: 550,
+          top: 750,
           width: '100%',
         }}
       >
-        <Text className="font-extrabold text-5xl text-white text-justify">
-          Lets Get {'\n'}Started
-        </Text>
-
-        <View style={{ marginVertical: 22 }}>
-          <Text className="text-2xl text-white">Connect with each other with chatting</Text>
-          <Text className="text-white">Calling, Enjoy Safe and private texting</Text>
-        </View>
-
         <Button
           onPress={() => router.push('/(onboarding)/3')}
           style={{

@@ -8,9 +8,10 @@ import { ChevronRight, Moon, Navigation } from 'lucide-react-native';
 import { useColorScheme } from '~/lib/useColorScheme';
 import { Switch } from '~/components/ui/switch';
 import colors from 'tailwindcss/colors';
+import { Button } from '~/components/ui/button';
 
 export default function Settings() {
-  const { session } = useSession();
+  const { session, signOut } = useSession();
   const { isDarkColorScheme, setColorScheme } = useColorScheme();
   const newTheme = isDarkColorScheme ? 'light' : 'dark';
 
@@ -89,6 +90,9 @@ export default function Settings() {
 
                 <ChevronRight color="#C6C6C6" size={20} />
               </TouchableOpacity>
+              <Button onPress={signOut} variant="outline" className="mt-96 border-red-600 ">
+                <Text className="text-red-600">Logout</Text>
+              </Button>
             </View>
           </ScrollView>
         </View>

@@ -7,7 +7,7 @@ import { Button } from '~/components/ui/button';
 import LocationItemSelects from '~/components/LocationItemSelects';
 
 export default function Four() {
-  const { item } = useSettingsStore();
+  const { item, setOnboardingCompleted } = useSettingsStore();
 
   return (
     <>
@@ -22,7 +22,14 @@ export default function Four() {
         </View>
 
         <View>
-          <Button className="bg-black" onPress={() => router.replace('/')} disabled={!item}>
+          <Button
+            className="bg-black"
+            onPress={() => {
+              setOnboardingCompleted(true);
+              router.replace('/');
+            }}
+            disabled={!item}
+          >
             <Text>Finish</Text>
           </Button>
         </View>

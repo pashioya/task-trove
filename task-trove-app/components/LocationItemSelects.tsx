@@ -4,10 +4,11 @@ import { fetchBoards, fetchItems, fetchLocationColumns } from '~/utils/MondayAPI
 
 import { useSettingsStore } from '~/store';
 import { useToggleShareLocation } from '~/hooks';
-import { KeyboardAvoidingView, View } from 'react-native';
+import { SafeAreaView } from 'react-native';
 import { SimpleSelect } from './SimpleSelect';
 import { Button } from './ui/button';
 import { Text } from './ui/text';
+import SimpleAlertDialog from './SimpleAlertDialog';
 
 export default function LocationItemSelects() {
   const [boards, setBoards] = useState<Board[]>([]);
@@ -105,48 +106,53 @@ export default function LocationItemSelects() {
   };
 
   return (
-    <View className="align-middle justify-center">
-      <KeyboardAvoidingView style={{ gap: 10 }}>
-        <SimpleSelect
-          options={boardSelectItemsRef.current}
-          placeholder="Board Select"
-          selectedValue={
-            selectedBoard ? { label: selectedBoard.name, value: selectedBoard.id } : null
-          }
-          disabled={false}
-          onValueChange={async boardId => {
-            await handleBoardChange(
-              boards.find(board => board.id === boardId?.value) || ({} as Board),
-            );
-          }}
-        />
-        <SimpleSelect
-          options={columnSelectItemsRef.current}
-          placeholder="Column Select"
-          disabled={!selectedBoard}
-          selectedValue={
-            selectedColumn ? { label: selectedColumn.title, value: selectedColumn.id } : null
-          }
-          onValueChange={newColumn => {
-            setSelectedColumn(
-              columns.find(column => column.id === newColumn?.value) || ({} as Column),
-            );
-          }}
-        />
+    <SafeAreaView className="align-middle justify-center gap-7 items-center">
+      <SimpleSelect
+        options={boardSelectItemsRef.current}
+        placeholder="Board Select"
+        selectedValue={
+          selectedBoard ? { label: selectedBoard.name, value: selectedBoard.id } : null
+        }
+        disabled={false}
+        onValueChange={async boardId => {
+          await handleBoardChange(
+            boards.find(board => board.id === boardId?.value) || ({} as Board),
+          );
+        }}
+      />
+      <SimpleSelect
+        options={columnSelectItemsRef.current}
+        placeholder="Column Select"
+        disabled={!selectedBoard}
+        selectedValue={
+          selectedColumn ? { label: selectedColumn.title, value: selectedColumn.id } : null
+        }
+        onValueChange={newColumn => {
+          setSelectedColumn(
+            columns.find(column => column.id === newColumn?.value) || ({} as Column),
+          );
+        }}
+      />
 
-        <SimpleSelect
-          options={itemSelectItemsRef.current}
-          placeholder="Item Select"
-          selectedValue={selectedItem ? { label: selectedItem.name, value: selectedItem.id } : null}
-          disabled={!selectedColumn}
-          onValueChange={newItem => {
-            setSelectedItem(items.find(item => item.id === newItem?.value) || ({} as Item));
-          }}
-        />
-        <Button onPress={saveChanges} disabled={!selectedItem}>
-          <Text>Save</Text>
-        </Button>
-      </KeyboardAvoidingView>
-    </View>
+      <SimpleSelect
+        options={itemSelectItemsRef.current}
+        placeholder="Item Select"
+        selectedValue={selectedItem ? { label: selectedItem.name, value: selectedItem.id } : null}
+        disabled={!selectedColumn}
+        onValueChange={newItem => {
+          setSelectedItem(items.find(item => item.id === newItem?.value) || ({} as Item));
+        }}
+      />
+
+      <SimpleAlertDialog
+        trigger={
+          <Button onPress={saveChanges} disabled={!selectedItem}>
+            <Text>Save</Text>
+          </Button>
+        }
+        title="Are you sure sure?"
+        description="Check if the selected item is correct. you may update the wrong item if you continue."
+      />
+    </SafeAreaView>
   );
 }

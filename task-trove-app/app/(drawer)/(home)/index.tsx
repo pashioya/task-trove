@@ -152,10 +152,6 @@ export default function Home() {
         >
           {isTracking ? <Text>Stop Tracking</Text> : <Text>Start Tracking</Text>}
         </Button>
-        <Button onPress={() => router.push('/test')}>
-          <Text>test</Text>
-        </Button>
-
         {isTracking && (
           <TouchableOpacity style={styles.locateBtn} onPress={onLocateMe}>
             <Ionicons name="navigate" size={24} />
