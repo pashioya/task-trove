@@ -1,7 +1,6 @@
 import { Stack, Redirect } from 'expo-router';
 import { useSession } from '~/contexts/session-provider';
-import { ActivityIndicator, Pressable, View } from 'react-native';
-import { ArrowLeft } from 'lucide-react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { useSettingsStore } from '~/store';
 import React from 'react';
 
@@ -37,15 +36,6 @@ export default function AuthenticationLayout() {
           title: '',
           headerBackTitle: '',
           headerShadowVisible: false,
-          headerLeft: () => (
-            <Pressable
-              onPress={() => {
-                console.log('Back');
-              }}
-            >
-              <ArrowLeft />
-            </Pressable>
-          ),
         }}
       />
     </Stack>
