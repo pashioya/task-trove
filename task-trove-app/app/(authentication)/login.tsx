@@ -1,9 +1,10 @@
 import { Stack } from 'expo-router';
 import { useSession } from '~/contexts/session-provider';
-import { View, StyleSheet, SafeAreaView } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Text } from '~/components/ui/text';
 import LottieView from 'lottie-react-native';
 import { Button } from '~/components/ui/button';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Login() {
   const { signIn } = useSession();
@@ -20,13 +21,13 @@ export default function Login() {
           style={styles.video}
         />
         <View className="mt-20 ml-4">
-          <Text className="my-header pt-30 leading-relaxed text-white">
+          <Text className="my-header pt-30 text-center leading-relaxed text-white">
             Enhance your Monday Experience
           </Text>
         </View>
 
-        <View className="flex-row justify-center gap-20 mb-60 px-20">
-          <Button onPress={signIn}>
+        <View className=" flex-row justify-center pb-20">
+          <Button className="rounded-md" onPress={signIn}>
             <Text>Sign in with Monday</Text>
           </Button>
         </View>
@@ -42,7 +43,7 @@ const styles = StyleSheet.create({
   },
   video: {
     width: '100%',
-    height: '100%',
+    height: '130%',
     position: 'absolute',
   },
   buttons: {

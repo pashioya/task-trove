@@ -2,7 +2,7 @@ import * as Linking from 'expo-linking';
 import { Stack, useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
 import * as ExpoLocation from 'expo-location';
-import { TouchableOpacity, Alert, StyleSheet, SafeAreaView } from 'react-native';
+import { TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useToggleShareLocation, useLocationPermissions } from '~/hooks';
 import { useMondayMutation } from '~/lib/monday/api';
@@ -12,6 +12,7 @@ import { useSettingsStore } from '~/store';
 import { INITIAL_REGION } from '~/config/map-config';
 import { Button } from '~/components/ui/button';
 import { Text } from '~/components/ui/text';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const showAlert = (error: string, onPress: () => void, buttonText: string) => {
   Alert.alert('Error', error, [
@@ -128,7 +129,7 @@ export default function Home() {
           }}
         />
         <Button
-          className="mt-5 "
+          className="mt-5 w-[50%] self-center"
           onPress={async () => {
             try {
               await toggleShareLocation();
@@ -149,6 +150,9 @@ export default function Home() {
         >
           {isTracking ? <Text>Stop Tracking</Text> : <Text>Start Tracking</Text>}
         </Button>
+        {/* <Button onPress={() => router.replace('/(onboarding)/1')}>
+          <Text>onb</Text>
+        </Button> */}
         {isTracking && (
           <TouchableOpacity style={styles.locateBtn} onPress={onLocateMe}>
             <Ionicons name="navigate" size={24} />

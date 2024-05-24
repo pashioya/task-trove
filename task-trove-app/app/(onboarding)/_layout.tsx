@@ -19,21 +19,11 @@ export default function OnboardingLayout() {
           headerTintColor: colors.blue[50],
           headerBackVisible: true,
           headerShown: false,
+          headerShadowVisible: false,
           headerTitle: '',
         }}
       />
-      <Stack.Screen
-        name="2"
-        options={{
-          title: 'Onboarding Two',
-          headerBackground: () => (
-            <LinearGradient colors={[colors.blue[950], colors.blue[900]]} style={{ flex: 1 }} />
-          ),
-
-          headerTitle: '',
-        }}
-      />
-      <Stack.Screen name="3" options={{ title: 'Onboarding Three' }} />
+      <Stack.Screen name="2" options={{ title: 'Onboarding Two', headerShadowVisible: false }} />
     </Stack>
   );
 }

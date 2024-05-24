@@ -1,7 +1,8 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import React from 'react';
-import { SafeAreaView, View, Image, Text, ScrollView } from 'react-native';
+import { View, Image, Text, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import colors from 'tailwindcss/colors';
 import { Button } from '~/components/ui/button';
 
@@ -39,7 +40,7 @@ export default function One() {
                 Get a clear view of your assigned tasks based on your location
               </Text>
             </View>
-            <Button onPress={() => router.push('/(onboarding)/3')} className="bg-blue-700">
+            <Button onPress={() => router.push('/(onboarding)/2')} className="bg-blue-700">
               <Text className="font-semibold text-white">Lets go</Text>
             </Button>
           </View>
