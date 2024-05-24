@@ -163,8 +163,8 @@ export default function Home() {
 const styles = StyleSheet.create({
   locateBtn: {
     position: 'absolute',
-    top: 550,
-    right: 10,
+    top: 60,
+    right: 50,
     backgroundColor: '#fff',
     padding: 10,
     borderRadius: 10,
