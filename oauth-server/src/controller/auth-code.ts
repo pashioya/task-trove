@@ -1,6 +1,7 @@
 import { Response } from 'express'
 import { Request } from 'express'
 import { z } from 'zod'
+import { logger } from '@/lib/logger'
 
 const AuthCodeRequestQuerySchema = z.object({
   code: z.string().min(1),
@@ -17,8 +18,9 @@ const AuthCodeController = async (req: Request, res: Response) => {
   const parsedQuery = AuthCodeRequestQuerySchema.safeParse(req.query)
 
   if (!parsedQuery.success) {
-    // TODO: Implement logging
-    console.error('Invalid query parameters:', parsedQuery.error.issues.map((issue) => issue.message).join(', '))
+    logger.error('Invalid query parameters:', {
+      issues: parsedQuery.error.issues.map((issue) => issue.message).join(', ')
+    })
 
     return res.redirect('task-trove-app://login?error=invalid_query_parameters')
   }
