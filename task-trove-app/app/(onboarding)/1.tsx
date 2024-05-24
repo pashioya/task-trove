@@ -2,13 +2,12 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import React from 'react';
 import { View, Image, Text, ScrollView } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import colors from 'tailwindcss/colors';
 import { Button } from '~/components/ui/button';
 
 export default function One() {
   return (
-    <SafeAreaView className="flex-1 ">
+    <View className="flex-1 ">
       <LinearGradient
         style={{
           flex: 1,
@@ -46,6 +45,6 @@ export default function One() {
           </View>
         </ScrollView>
       </LinearGradient>
-    </SafeAreaView>
+    </View>
   );
 }

@@ -56,7 +56,6 @@ export default function Settings() {
                 <Text className="text-lg font-normal ">Dark Mode</Text>
                 <View className="flex-grow" />
                 <Switch
-                  disabled
                   checked={isDarkColorScheme}
                   onCheckedChange={() => setColorScheme(newTheme)}
                 />

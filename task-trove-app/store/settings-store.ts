@@ -6,11 +6,13 @@ import type { Board, Column, Item } from '../model/types';
 type SettingsState = {
   onboardingCompleted: boolean;
   isError: boolean;
+  isTracking: boolean;
   error: Error | null;
   board: Board | null;
   column: Column | null;
   item: Item | null;
   setOnboardingCompleted: (onboardingCompleted: boolean) => void;
+  setIsTracking: (isTracking: boolean) => void;
   setIsError: (isError: boolean) => void;
   setError: (error: Error) => void;
   setBoard: (board: Board) => void;
@@ -22,12 +24,14 @@ const useSettingsStore = create<SettingsState>()(
   persist(
     set => ({
       onboardingCompleted: false,
+      isTracking: false,
       isError: false,
       error: null,
       board: null,
       column: null,
       item: null,
       setOnboardingCompleted: onboardingCompleted => set({ onboardingCompleted }),
+      setIsTracking: isTracking => set({ isTracking }),
       setIsError: isError => set({ isError }),
       setError: error => set({ error }),
       setBoard: board => set({ board }),

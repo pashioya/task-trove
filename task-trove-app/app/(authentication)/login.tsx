@@ -26,8 +26,8 @@ export default function Login() {
           </Text>
         </View>
 
-        <View className=" flex-row justify-center pb-20">
-          <Button className="rounded-md" onPress={signIn}>
+        <View className=" flex-row justify-center">
+          <Button className="rounded-md pb-20" onPress={signIn}>
             <Text>Sign in with Monday</Text>
           </Button>
         </View>

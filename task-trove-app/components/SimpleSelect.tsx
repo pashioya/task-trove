@@ -48,17 +48,17 @@ export function SimpleSelect({
         <SelectValue className="text-foreground text-sm native:text-lg" placeholder={placeholder} />
       </SelectTrigger>
 
-      <SelectContent insets={contentInsets} className="w-[250px] max-h-[400px] overflow-y-auto">
+      <SelectContent insets={contentInsets} className="w-[250px] max-h-[250px] overflow-y-auto">
         <SelectLabel>{placeholder}</SelectLabel>
-        <SelectGroup>
-          <ScrollView>
+        <ScrollView>
+          <SelectGroup>
             {options.map(option => (
               <SelectItem key={option.value} label={option.label} value={option.value}>
                 {option.label}
               </SelectItem>
             ))}
-          </ScrollView>
-        </SelectGroup>
+          </SelectGroup>
+        </ScrollView>
       </SelectContent>
     </Select>
   );

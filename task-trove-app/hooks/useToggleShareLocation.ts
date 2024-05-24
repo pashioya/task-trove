@@ -1,7 +1,8 @@
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
-import { useRegionStore } from '~/store';
+import { useRegionStore, useSettingsStore } from '~/store';
+import { Alert } from 'react-native';
 
 type TaskData = {
   locations?: Location.LocationObject[];
@@ -30,8 +31,8 @@ TaskManager.defineTask<TaskData>(TASK_FETCH_LOCATION, ({ data, error }) => {
 });
 
 const useToggleShareLocation = () => {
-  const [isTracking, setIsTracking] = useState(false);
   const [region, setRegion] = useRegionStore(state => [state.region, state.setRegion]);
+  const { isTracking, setIsTracking, item } = useSettingsStore();
 
   const startLocationUpdates = async () => {
     await Location.startLocationUpdatesAsync(TASK_FETCH_LOCATION, {
@@ -60,13 +61,20 @@ const useToggleShareLocation = () => {
   };
 
   const toggleShareLocation = useCallback(async () => {
+    if (!item) {
+      Alert.alert('Location Column Not Correctly Setup', 'Please go to settings and set it up', [
+        { text: 'Dismiss' },
+      ]);
+      return;
+    }
+
     if (isTracking) {
       await stopLocationUpdates();
     } else {
       await startLocationUpdates();
     }
-    setIsTracking(prevIsTracking => !prevIsTracking);
-  }, [isTracking]);
+    setIsTracking(!isTracking);
+  }, [isTracking, item, setIsTracking]);
 
   return {
     isTracking,

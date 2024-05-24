@@ -2,8 +2,7 @@ import * as Linking from 'expo-linking';
 import { Stack, useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
 import * as ExpoLocation from 'expo-location';
-import { TouchableOpacity, Alert, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Alert } from 'react-native';
 import { useToggleShareLocation, useLocationPermissions } from '~/hooks';
 import { useMondayMutation } from '~/lib/monday/api';
 import { changeMultipleColumnValuesMutation } from '~/lib/monday/queries';
@@ -13,6 +12,9 @@ import { INITIAL_REGION } from '~/config/map-config';
 import { Button } from '~/components/ui/button';
 import { Text } from '~/components/ui/text';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import lightStyle from '~/assets/map/lightStyle.json';
+import darkStyle from '~/assets/map/darkStyle.json';
+import { useColorScheme } from '~/lib/useColorScheme';
 
 const showAlert = (error: string, onPress: () => void, buttonText: string) => {
   Alert.alert('Error', error, [
@@ -27,6 +29,7 @@ const showAlert = (error: string, onPress: () => void, buttonText: string) => {
 export default function Home() {
   const { toggleShareLocation, isTracking, region, setRegion } = useToggleShareLocation();
   const { foregroundStatus, backgroundStatus } = useLocationPermissions();
+  const { isDarkColorScheme } = useColorScheme();
   const router = useRouter();
 
   const mapRef = useRef<MapView>(null);
@@ -55,7 +58,6 @@ export default function Home() {
   useEffect(() => {
     if (updateLocationError) {
       if (updateLocationError.errors) {
-        /* Handle specific errors here */
         console.log(updateLocationError.errors.map(e => e.message));
       }
 
@@ -110,17 +112,16 @@ export default function Home() {
   return (
     <>
       <Stack.Screen options={{ title: 'Home', headerShown: false }} />
-      <SafeAreaView className="my-container">
+      <SafeAreaView className="my-container justify-center">
         <MapView
-          className="border-2 border-black rounded-lg"
           provider={PROVIDER_GOOGLE}
           showsUserLocation={isTracking}
           showsMyLocationButton={false}
-          style={styles.map}
-          userInterfaceStyle="dark"
+          style={{ width: '100%', height: '85%' }}
+          customMapStyle={isDarkColorScheme ? darkStyle : lightStyle}
+          loadingEnabled
           initialRegion={INITIAL_REGION}
           ref={mapRef}
-          googleMapId="53fd8982b9591e20"
           region={{
             latitude: region?.latitude || INITIAL_REGION.latitude,
             longitude: region?.longitude || INITIAL_REGION.longitude,
@@ -150,38 +151,7 @@ export default function Home() {
         >
           {isTracking ? <Text>Stop Tracking</Text> : <Text>Start Tracking</Text>}
         </Button>
-        {/* <Button onPress={() => router.replace('/(onboarding)/1')}>
-          <Text>onb</Text>
-        </Button> */}
-        {isTracking && (
-          <TouchableOpacity style={styles.locateBtn} onPress={onLocateMe}>
-            <Ionicons name="navigate" size={24} />
-          </TouchableOpacity>
-        )}
       </SafeAreaView>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  locateBtn: {
-    position: 'absolute',
-    top: 60,
-    right: 50,
-    backgroundColor: '#fff',
-    padding: 10,
-    borderRadius: 10,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    shadowOffset: {
-      width: 1,
-      height: 10,
-    },
-  },
-  map: {
-    width: '100%',
-    height: '85%',
-  },
-});
