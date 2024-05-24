@@ -47,17 +47,13 @@ export function SimpleSelect({
       <SelectTrigger disabled={disabled} className="w-[250px]">
         <SelectValue className="text-foreground text-sm native:text-lg" placeholder={placeholder} />
       </SelectTrigger>
+
       <SelectContent insets={contentInsets} className="w-[250px]">
+        <SelectLabel>{placeholder}</SelectLabel>
         <SelectGroup>
-          <SelectLabel>{placeholder}</SelectLabel>
           <ScrollView>
             {options.map(option => (
-              <SelectItem
-                delayLongPress={1000}
-                key={option.value}
-                label={option.label}
-                value={option.value}
-              >
+              <SelectItem key={option.value} label={option.label} value={option.value}>
                 {option.label}
               </SelectItem>
             ))}

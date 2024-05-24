@@ -4,11 +4,11 @@ import { fetchBoards, fetchItems, fetchLocationColumns } from '~/utils/MondayAPI
 
 import { useSettingsStore } from '~/store';
 import { useToggleShareLocation } from '~/hooks';
-import { SafeAreaView, ToastAndroid } from 'react-native';
 import { SimpleSelect } from './SimpleSelect';
 import { Button } from './ui/button';
 import { Text } from './ui/text';
 import SimpleAlertDialog from './SimpleAlertDialog';
+import { ToastAndroid, View } from 'react-native';
 
 export default function LocationItemSelects() {
   const [boards, setBoards] = useState<Board[]>([]);
@@ -107,7 +107,7 @@ export default function LocationItemSelects() {
   };
 
   return (
-    <SafeAreaView className="align-middle justify-center gap-7 items-center">
+    <View className="justify-center gap-7 items-center m-10">
       <SimpleSelect
         options={boardSelectItemsRef.current}
         placeholder="Board Select"
@@ -147,7 +147,7 @@ export default function LocationItemSelects() {
 
       <SimpleAlertDialog
         trigger={
-          <Button disabled={!selectedItem}>
+          <Button className="m-3" disabled={!selectedItem}>
             <Text>Save</Text>
           </Button>
         }
@@ -155,6 +155,6 @@ export default function LocationItemSelects() {
         title="Are you sure?"
         description="Check if the selected item is correct. you may update the wrong item if you continue."
       />
-    </SafeAreaView>
+    </View>
   );
 }

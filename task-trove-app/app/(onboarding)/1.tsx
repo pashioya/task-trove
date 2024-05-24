@@ -7,7 +7,7 @@ import { Button } from '~/components/ui/button';
 
 export default function One() {
   return (
-    <SafeAreaView className="flex-1 h-full">
+    <SafeAreaView className="flex-1 ">
       <LinearGradient
         style={{
           flex: 1,
@@ -21,7 +21,7 @@ export default function One() {
               style={{ width: '100%', height: 500, borderRadius: 20 }}
             />
           </View>
-          <View className="flex-1 justify-between py-11 px-9">
+          <View className="flex-1 space-x-4 py-11 px-9">
             <View>
               <Text className="text-2xl font-medium text-purple-900 text-center mb-3 leading-10">
                 Track your location{'\n'}with{' '}

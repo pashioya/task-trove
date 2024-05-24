@@ -6,7 +6,7 @@ import colors from 'tailwindcss/colors';
 import { Text } from '~/components/ui/text';
 import { router } from 'expo-router';
 
-export default function Three() {
+export default function Two() {
   return (
     <LinearGradient
       style={{
