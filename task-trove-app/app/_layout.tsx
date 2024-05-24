@@ -13,6 +13,7 @@ import { PortalHost } from '~/components/primitives/portal';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SessionProvider } from '~/contexts/session-provider';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const LIGHT_THEME: Theme = {
   dark: false,
@@ -74,20 +75,22 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <SessionProvider>
         <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
-            <Stack>
-              <Stack.Screen name="(authentication)" options={{ headerShown: false }} />
-              <Stack.Screen
-                name="(drawer)"
-                options={{
-                  headerShown: false,
-                }}
-              />
-              <Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
-            </Stack>
-            <PortalHost />
-          </GestureHandlerRootView>
+          <SafeAreaProvider>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
+              <Stack>
+                <Stack.Screen name="(authentication)" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="(drawer)"
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
+              </Stack>
+              <PortalHost />
+            </GestureHandlerRootView>
+          </SafeAreaProvider>
         </ThemeProvider>
       </SessionProvider>
     </QueryClientProvider>

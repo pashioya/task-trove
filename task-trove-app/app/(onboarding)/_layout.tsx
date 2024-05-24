@@ -9,7 +9,16 @@ export default function OnboardingLayout() {
         headerShown: false,
       }}
     >
-      <Stack.Screen name="1" options={{ title: 'Onboarding One' }} />
+      <Stack.Screen
+        name="1"
+        options={{
+          title: 'Onboarding One',
+          headerBackground: () => (
+            <LinearGradient colors={[colors.white, colors.blue[50]]} style={{ flex: 1 }} />
+          ),
+          headerTitle: '',
+        }}
+      />
       <Stack.Screen
         name="2"
         options={{
@@ -24,7 +33,7 @@ export default function OnboardingLayout() {
           headerTitle: '',
         }}
       />
-      <Stack.Screen name="3" options={{ title: 'Onboarding Four' }} />
+      <Stack.Screen name="3" options={{ title: 'Onboarding Three' }} />
     </Stack>
   );
 }

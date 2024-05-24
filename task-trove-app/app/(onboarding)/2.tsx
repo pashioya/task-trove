@@ -25,7 +25,6 @@ export default function Three() {
                 width: 100,
                 borderRadius: 20,
                 position: 'absolute',
-                top: 10,
                 transform: [{ translateX: 20 }, { translateY: 50 }, { rotate: '-15deg' }],
               }}
             />
