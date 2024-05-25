@@ -65,7 +65,7 @@ export default function DrawerLayout() {
       <Drawer.Screen
         name="(home)"
         options={{
-          headerTitle: 'Home',
+          headerTitle: 'Task Trove',
           drawerLabel: 'Home',
           drawerIcon: ({ size, color }) => (
             <Ionicons name="home-outline" size={size} color={color} />

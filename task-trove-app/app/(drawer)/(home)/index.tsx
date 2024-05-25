@@ -2,19 +2,18 @@ import * as Linking from 'expo-linking';
 import { Stack, useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
 import * as ExpoLocation from 'expo-location';
-import { Alert } from 'react-native';
+import { Alert, SafeAreaView, StyleSheet, View } from 'react-native';
 import { useToggleShareLocation, useLocationPermissions } from '~/hooks';
 import { useMondayMutation } from '~/lib/monday/api';
 import { changeMultipleColumnValuesMutation } from '~/lib/monday/queries';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { useSettingsStore } from '~/store';
 import { INITIAL_REGION } from '~/config/map-config';
 import { Button } from '~/components/ui/button';
 import { Text } from '~/components/ui/text';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import lightStyle from '~/assets/map/lightStyle.json';
 import darkStyle from '~/assets/map/darkStyle.json';
 import { useColorScheme } from '~/lib/useColorScheme';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
 const showAlert = (error: string, onPress: () => void, buttonText: string) => {
   Alert.alert('Error', error, [
@@ -33,7 +32,7 @@ export default function Home() {
   const router = useRouter();
 
   const mapRef = useRef<MapView>(null);
-  const { board, column, item, error, setError } = useSettingsStore();
+  const { board, column, item, error, setError, setIsError } = useSettingsStore();
 
   const { mutate: updateLocation, error: updateLocationError } = useMondayMutation({
     mutation: changeMultipleColumnValuesMutation,
@@ -78,10 +77,11 @@ export default function Home() {
         return;
       }
       if (!item) {
+        setIsError(true);
         showAlert(
           'Location Column Not Correctly Setup',
           () => {
-            router.replace('/(drawer)/settings/location');
+            router.replace('/settings/location');
           },
           'Go to Settings',
         );
@@ -112,12 +112,12 @@ export default function Home() {
   return (
     <>
       <Stack.Screen options={{ title: 'Home', headerShown: false }} />
-      <SafeAreaView className="my-container justify-center">
+      <SafeAreaView className="flex-1">
         <MapView
           provider={PROVIDER_GOOGLE}
           showsUserLocation={isTracking}
           showsMyLocationButton={false}
-          style={{ width: '100%', height: '85%' }}
+          style={StyleSheet.absoluteFillObject}
           customMapStyle={isDarkColorScheme ? darkStyle : lightStyle}
           loadingEnabled
           initialRegion={INITIAL_REGION}
@@ -129,28 +129,31 @@ export default function Home() {
             longitudeDelta: 0.0421,
           }}
         />
-        <Button
-          className="mt-5 w-[50%] self-center"
-          onPress={async () => {
-            try {
-              await toggleShareLocation();
-              onLocateMe();
-            } catch (e) {
-              if (e instanceof Error) {
-                setError(e);
-                showAlert(
-                  e.message,
-                  () => {
-                    console.log(e);
-                  },
-                  'Dismiss',
-                );
+        <View className="absolute bottom-20 left-0 right-0 items-center">
+          <Button
+            className="w-[50%] "
+            style={{ zIndex: 50 }}
+            onPress={async () => {
+              try {
+                await toggleShareLocation();
+                onLocateMe();
+              } catch (e) {
+                if (e instanceof Error) {
+                  setError(e);
+                  showAlert(
+                    e.message,
+                    () => {
+                      console.log(e);
+                    },
+                    'Dismiss',
+                  );
+                }
               }
-            }
-          }}
-        >
-          {isTracking ? <Text>Stop Tracking</Text> : <Text>Start Tracking</Text>}
-        </Button>
+            }}
+          >
+            {isTracking ? <Text>Stop Tracking</Text> : <Text>Start Tracking</Text>}
+          </Button>
+        </View>
       </SafeAreaView>
     </>
   );
