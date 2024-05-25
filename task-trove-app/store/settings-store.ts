@@ -11,6 +11,12 @@ type SettingsState = {
   board: Board | null;
   column: Column | null;
   item: Item | null;
+  startTime: string;
+  endTime: string;
+  activeDays: number[];
+  setActiveDays: (activeDays: number[]) => void;
+  setEndTime: (endTime: string) => void;
+  setStartTime: (startTime: string) => void;
   setOnboardingCompleted: (onboardingCompleted: boolean) => void;
   setIsTracking: (isTracking: boolean) => void;
   setIsError: (isError: boolean) => void;
@@ -30,6 +36,12 @@ const useSettingsStore = create<SettingsState>()(
       board: null,
       column: null,
       item: null,
+      startTime: '09:00',
+      endTime: '17:00',
+      activeDays: [],
+      setActiveDays: activeDays => set({ activeDays }),
+      setEndTime: endTime => set({ endTime }),
+      setStartTime: startTime => set({ startTime }),
       setOnboardingCompleted: onboardingCompleted => set({ onboardingCompleted }),
       setIsTracking: isTracking => set({ isTracking }),
       setIsError: isError => set({ isError }),
