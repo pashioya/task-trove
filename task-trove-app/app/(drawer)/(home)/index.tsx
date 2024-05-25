@@ -129,7 +129,7 @@ export default function Home() {
             longitudeDelta: 0.0421,
           }}
         />
-        <View className="absolute bottom-20 left-0 right-0 items-center">
+        <View className="absolute bottom-10 left-0 right-0 items-center">
           <Button
             className="w-[50%] "
             style={{ zIndex: 50 }}

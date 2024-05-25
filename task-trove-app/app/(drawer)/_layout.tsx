@@ -57,6 +57,7 @@ export default function DrawerLayout() {
         drawerType: 'slide',
         drawerActiveBackgroundColor,
         headerTitleAlign: 'center',
+        headerShadowVisible: false,
         headerRightContainerStyle: {
           paddingRight: 15,
         },
