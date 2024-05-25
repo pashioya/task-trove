@@ -14,31 +14,29 @@ export default function Two() {
     <>
       <Stack.Screen options={{ title: 'Onboarding Two', headerShown: true, headerTitle: '' }} />
       <SafeAreaView>
-        <View>
-          <ScrollView className="m-4 ">
-            <View>
-              <Text className="my-header leading-relaxed text-center">
-                Location Board Selection
-              </Text>
-              <Text className="my-text text-xl text-center mb-1">
-                Where would you like to save your location?
-              </Text>
-            </View>
-            <View>
-              <LocationItemSelects />
-              <Button
-                className="rounded-md w-[50%] mt-4 self-center "
-                onPress={() => {
-                  setOnboardingCompleted(true);
-                  router.replace('/');
-                }}
-                disabled={!item}
-              >
-                <Text>Finish</Text>
-              </Button>
-            </View>
-          </ScrollView>
-        </View>
+        <ScrollView className="m-4">
+          <View>
+            <Text className="text-2xl font-semibold leading-relaxed text-center">
+              Location Board Selection
+            </Text>
+            <Text className="my-text text-l text-center mb-1">
+              Where would you like to save your location?
+            </Text>
+          </View>
+          <View>
+            <LocationItemSelects />
+            <Button
+              className="rounded-md w-[50%] mt-4 self-center "
+              onPress={() => {
+                setOnboardingCompleted(true);
+                router.replace('/');
+              }}
+              disabled={!item}
+            >
+              <Text>Finish</Text>
+            </Button>
+          </View>
+        </ScrollView>
       </SafeAreaView>
     </>
   );
