@@ -10,6 +10,7 @@ import * as Burnt from 'burnt';
 import { useMondayQuery } from '~/lib/monday/api';
 import { fetchBoardsQuery, fetchColumnsQuery, fetchItemsQuery } from '~/lib/monday/queries';
 import type { MondayAPIError } from '~/lib/monday/error';
+import { handleMondayErrorCode, handleMondayErrorStatusCode } from '~/utils/MondayErrorHandling';
 
 export default function LocationItemSelects() {
   const [boards, setBoards] = useState<Board[]>([]);
@@ -29,7 +30,15 @@ export default function LocationItemSelects() {
   const { toggleShareLocation, isTracking } = useToggleShareLocation();
 
   const showAlert = (error: MondayAPIError) => {
-    Alert.alert('Error', error.message, [{ text: 'Dismiss' }]);
+    if (error.errors) {
+      Alert.alert('Error', error.errorMessage, [{ text: 'Dismiss' }]);
+    } else if (error.errorCode) {
+      const errorMessage = handleMondayErrorCode(error.errorCode);
+      Alert.alert('Error', error.errorMessage, [{ text: 'Dismiss' }]);
+    } else if (error.statusCode) {
+      const errorMessage = handleMondayErrorStatusCode(error.statusCode);
+      Alert.alert('Error', error.errorMessage, [{ text: 'Dismiss' }]);
+    }
   };
 
   const {
