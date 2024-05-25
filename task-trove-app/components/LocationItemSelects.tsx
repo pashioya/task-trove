@@ -23,7 +23,7 @@ export default function LocationItemSelects() {
   const boardSelectItemsRef = useRef<{ label: string; value: string }[]>([]);
   const columnSelectItemsRef = useRef<{ label: string; value: string }[]>([]);
   const itemSelectItemsRef = useRef<{ label: string; value: string }[]>([]);
-  
+
   const { setBoard, setColumn, setItem, board, column, item } = useSettingsStore();
 
   const { toggleShareLocation, isTracking } = useToggleShareLocation();
@@ -73,9 +73,7 @@ export default function LocationItemSelects() {
       }
       if (!boardsData.boards) return;
 
-      const boards: Board[] = boardsData.boards.filter(
-        (board): board is Board => board !== null,
-      );
+      const boards: Board[] = boardsData.boards.filter((board): board is Board => board !== null);
 
       setBoards(boards);
 
@@ -95,18 +93,18 @@ export default function LocationItemSelects() {
         showAlert(columnsError);
       }
 
-      if (columnsData && columnsData.boards && columnsData.boards[0]) {
-        const columns = columnsData.boards[0].columns as Column[];
-        setColumns(columns);
+      if (!columnsData || !columnsData.boards || !columnsData.boards[0]) return;
 
-        columnSelectItemsRef.current = columns.map(column => ({
-          label: column.title,
-          value: column.id,
-        }));
+      const columns = columnsData.boards[0].columns as Column[];
+      setColumns(columns);
 
-        if (columns.length === 1) {
-          setSelectedColumn(columns[0]);
-        }
+      columnSelectItemsRef.current = columns.map(column => ({
+        label: column.title,
+        value: column.id,
+      }));
+
+      if (columns.length === 1) {
+        setSelectedColumn(columns[0]);
       }
     }
   }, [columnsData, columnsError, columnsIsError, columnsIsLoading]);
@@ -117,18 +115,17 @@ export default function LocationItemSelects() {
         showAlert(itemsError);
       }
 
-      if (itemsData && itemsData.boards && itemsData.boards[0]) {
-        const items = itemsData.boards[0].items_page.items as Item[];
-        setItems(items);
+      if (!itemsData || !itemsData.boards || !itemsData.boards[0]) return;
+      const items = itemsData.boards[0].items_page.items as Item[];
+      setItems(items);
 
-        itemSelectItemsRef.current = items.map(item => ({
-          label: item.name,
-          value: item.id,
-        }));
+      itemSelectItemsRef.current = items.map(item => ({
+        label: item.name,
+        value: item.id,
+      }));
 
-        if (items.length === 1) {
-          setSelectedItem(items[0]);
-        }
+      if (items.length === 1) {
+        setSelectedItem(items[0]);
       }
     }
   }, [itemIsLoading, itemsData, itemsError, itemsIsError]);
