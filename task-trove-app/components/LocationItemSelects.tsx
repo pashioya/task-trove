@@ -71,27 +71,23 @@ export default function LocationItemSelects() {
       if (boardsIsError) {
         showAlert(boardsError);
       }
-      const refactoredBoards = boardsData.boards as Board[];
-      setBoards(refactoredBoards);
+      const boards = boardsData.boards as Board[];
+      setBoards(boards);
 
-      if (refactoredBoards.length === 1) {
-        setSelectedBoard(refactoredBoards[0]);
+      if (boards.length === 1) {
+        setSelectedBoard(boards[0]);
       }
-      boardSelectItemsRef.current = refactoredBoards.map(board => ({
+      boardSelectItemsRef.current = boards.map(board => ({
         label: board.name,
         value: board.id,
       }));
     }
-  }, [boardsData, boardsData?.boards, boardsError, boardsIsError, boardsIsLoading]);
+  }, [boardsData, boardsError, boardsIsError, boardsIsLoading]);
 
   useEffect(() => {
-    if (!columnsIsLoading && !itemIsLoading) {
+    if (!columnsIsLoading) {
       if (columnsIsError) {
         showAlert(columnsError);
-      }
-
-      if (itemsIsError) {
-        showAlert(itemsError);
       }
 
       if (columnsData && columnsData.boards && columnsData.boards[0]) {
@@ -106,6 +102,14 @@ export default function LocationItemSelects() {
         if (columns.length === 1) {
           setSelectedColumn(columns[0]);
         }
+      }
+    }
+  }, [columnsData, columnsError, columnsIsError, columnsIsLoading]);
+
+  useEffect(() => {
+    if (!itemIsLoading) {
+      if (itemsIsError) {
+        showAlert(itemsError);
       }
 
       if (itemsData && itemsData.boards && itemsData.boards[0]) {
@@ -122,7 +126,7 @@ export default function LocationItemSelects() {
         }
       }
     }
-  }, [columnsIsLoading, itemIsLoading]);
+  }, [itemIsLoading, itemsData, itemsError, itemsIsError]);
 
   useEffect(() => {
     if (board) {
@@ -153,17 +157,17 @@ export default function LocationItemSelects() {
     }
   }, [columns, items]);
 
-  const handleBoardChange = (board: Board) => {
+  const handleBoardChange = async (board: Board) => {
+    setSelectedBoard(null);
     setSelectedBoard(board);
     setSelectedColumn({} as Column);
     setSelectedItem({} as Item);
 
-    refetchColumns();
-    refetchItems();
+    await refetchColumns();
+    await refetchItems();
   };
 
   const saveChanges = () => {
-    console.log(selectedBoard, selectedColumn, selectedItem);
     if (selectedBoard?.id && selectedColumn?.id && selectedItem?.id) {
       if (isTracking) {
         toggleShareLocation();
