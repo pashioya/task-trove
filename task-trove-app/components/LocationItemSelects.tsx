@@ -93,9 +93,9 @@ export default function LocationItemSelects() {
         showAlert(columnsError);
       }
 
-      if (!columnsData || !columnsData.boards || !columnsData.boards[0]) return;
+      if (!columnsData || !columnsData.boards || !columnsData.boards[0] || !columnsData.boards[0].columns) return;
 
-      const columns = columnsData.boards[0].columns as Column[];
+      const columns: Column[] = columnsData.boards[0].columns.filter((column): column is Column => column !== null);
       setColumns(columns);
 
       columnSelectItemsRef.current = columns.map(column => ({
@@ -116,7 +116,7 @@ export default function LocationItemSelects() {
       }
 
       if (!itemsData || !itemsData.boards || !itemsData.boards[0]) return;
-      const items = itemsData.boards[0].items_page.items as Item[];
+      const items: Item[] = itemsData.boards[0].items_page.items.filter((item): item is Item => item !== null);
       setItems(items);
 
       itemSelectItemsRef.current = items.map(item => ({
