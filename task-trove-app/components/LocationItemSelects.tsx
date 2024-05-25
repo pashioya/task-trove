@@ -23,7 +23,7 @@ export default function LocationItemSelects() {
   const boardSelectItemsRef = useRef<{ label: string; value: string }[]>([]);
   const columnSelectItemsRef = useRef<{ label: string; value: string }[]>([]);
   const itemSelectItemsRef = useRef<{ label: string; value: string }[]>([]);
-
+  
   const { setBoard, setColumn, setItem, board, column, item } = useSettingsStore();
 
   const { toggleShareLocation, isTracking } = useToggleShareLocation();
@@ -71,7 +71,12 @@ export default function LocationItemSelects() {
       if (boardsIsError) {
         showAlert(boardsError);
       }
-      const boards = boardsData.boards as Board[];
+      if (!boardsData.boards) return;
+
+      const boards: Board[] = boardsData.boards.filter(
+        (board): board is Board => board !== null,
+      );
+
       setBoards(boards);
 
       if (boards.length === 1) {
