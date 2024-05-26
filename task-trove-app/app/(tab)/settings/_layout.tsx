@@ -8,14 +8,9 @@ export default function SettingsLayout() {
         name="location"
         options={{
           title: 'Location Settings',
-          headerTitle: '',
-          headerBackVisible: true,
         }}
       />
-      <Stack.Screen
-        name="notifications"
-        options={{ title: 'NotificationSettings', headerTitle: '', headerBackVisible: true }}
-      />
+      <Stack.Screen name="notifications" options={{ title: 'NotificationSettings' }} />
     </Stack>
   );
 }

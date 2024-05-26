@@ -1,9 +1,8 @@
-import { Link, Stack } from 'expo-router';
+import { Stack } from 'expo-router';
 import { View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
-import { Text } from '~/components/ui/text';
+import SimpleTable from '~/components/SimpleTable';
 
 export default function Boards() {
   return (
@@ -11,9 +10,8 @@ export default function Boards() {
       <Stack.Screen options={{ title: 'Boards' }} />
       <SafeAreaView>
         <ScrollView>
-          <View>
-            <Text className="my-header pt-10">Boards </Text>
-            <Link href="/">Home</Link>
+          <View className="pt-20">
+            <SimpleTable />
           </View>
         </ScrollView>
       </SafeAreaView>

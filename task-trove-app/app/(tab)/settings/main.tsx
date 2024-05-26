@@ -21,7 +21,7 @@ export default function Settings() {
 
   return (
     <>
-      <Stack.Screen options={{ title: 'Boards' }} />
+      <Stack.Screen options={{ title: 'Boards', headerShown: false }} />
       <SafeAreaView style={{ flex: 1 }}>
         <View className="flex-1">
           <View className="p-6 items-center justify-center">
@@ -95,7 +95,7 @@ export default function Settings() {
 
               <SimpleAlertDialog
                 trigger={
-                  <Button variant="outline" className="mt-96 border-red-600 ">
+                  <Button variant="outline" className=" mt-96 border-red-600 ">
                     <Text className="text-red-600">Logout</Text>
                   </Button>
                 }
