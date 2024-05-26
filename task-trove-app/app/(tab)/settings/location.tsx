@@ -66,11 +66,13 @@ export default function LocationSettings() {
   return (
     <>
       <Stack.Screen options={{ title: 'Boards' }} />
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1, marginTop: 50 }}>
         <View className="flex-1">
           <ScrollView>
             <View className="px-6">
-              <Text className="py-3 text-xs font-semibold uppercase tracking-wider">Tracking</Text>
+              <Text className="py-3 text-xs font-semibold uppercase tracking-wider mb-8">
+                Tracking
+              </Text>
               <View
                 style={{ backgroundColor: rowColor }}
                 className="flex-row items-center justify-start h-12 rounded-lg mb-3 px-3"
@@ -96,7 +98,7 @@ export default function LocationSettings() {
               />
             </View>
             <View className="px-6">
-              <Text className="py-3 text-xs font-semibold uppercase tracking-wider">
+              <Text className="py-3 text-xs font-semibold uppercase tracking-wider mb-8">
                 Tracking Times
               </Text>
               <TouchableOpacity

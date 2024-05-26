@@ -114,6 +114,7 @@ export default function LocationItemSelects() {
         selectedValue={
           selectedBoard ? { label: selectedBoard.name, value: selectedBoard.id } : null
         }
+        isLoading={boards.length === 0}
         disabled={false}
         onValueChange={async boardId => {
           await handleBoardChange(
@@ -125,6 +126,7 @@ export default function LocationItemSelects() {
         options={columnSelectItemsRef.current}
         placeholder="Column Select"
         disabled={!selectedBoard}
+        isLoading={columns.length === 0 && !!selectedBoard}
         selectedValue={
           selectedColumn ? { label: selectedColumn.title, value: selectedColumn.id } : null
         }
@@ -138,6 +140,7 @@ export default function LocationItemSelects() {
       <SimpleSelect
         options={itemSelectItemsRef.current}
         placeholder="Item Select"
+        isLoading={items.length === 0 && !!selectedColumn}
         selectedValue={selectedItem ? { label: selectedItem.name, value: selectedItem.id } : null}
         disabled={!selectedColumn || !selectedBoard}
         onValueChange={newItem => {

@@ -9,12 +9,14 @@ import {
 } from '~/components/ui/select';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-gesture-handler';
+import { ActivityIndicator } from 'react-native';
 
 type Option = { label: string; value: string };
 
 type CustomAutomateSelectProps = {
   options: Option[];
   disabled: boolean;
+  isLoading?: boolean;
   selectedValue: Option | null;
   onValueChange: (v: Option | null) => void;
   placeholder: string;
@@ -23,6 +25,7 @@ type CustomAutomateSelectProps = {
 export function SimpleSelect({
   options,
   disabled,
+  isLoading,
   selectedValue,
   onValueChange,
   placeholder,
@@ -45,7 +48,14 @@ export function SimpleSelect({
       disabled={disabled}
     >
       <SelectTrigger disabled={disabled} className="w-[250px]">
-        <SelectValue className="text-foreground text-sm native:text-lg" placeholder={placeholder} />
+        {isLoading ? (
+          <ActivityIndicator />
+        ) : (
+          <SelectValue
+            className="text-foreground text-sm native:text-lg"
+            placeholder={placeholder}
+          />
+        )}
       </SelectTrigger>
 
       <SelectContent insets={contentInsets} className="w-[250px] max-h-[250px] overflow-y-auto">

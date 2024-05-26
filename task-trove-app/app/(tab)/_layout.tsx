@@ -9,14 +9,12 @@ import {
   LocateFixedIcon,
 } from 'lucide-react-native';
 import { Ionicons } from '@expo/vector-icons';
-import SimplePopOver from '~/components/SimplePopover';
+
 import { Text } from '~/components/ui/text';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { useSettingsStore } from '~/store';
 import colors from 'tailwindcss/colors';
 import { useToggleShareLocation } from '~/hooks';
-
-import { Button } from '~/components/ui/button';
 
 export default function DrawerLayout() {
   const { session, isLoading } = useSession();
@@ -46,28 +44,58 @@ export default function DrawerLayout() {
           backgroundColor: 'white',
           padding: 7,
           borderRadius: 10,
+          elevation: 5,
+          shadowColor: 'black',
+          shadowOffset: {
+            width: 0,
+            height: 10,
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
         },
-        headerLeft: () => <LocateFixedIcon size={50} color={isTracking ? 'blue' : 'black'} />,
+        headerLeft: () => (
+          <View
+            className="bg-white rounded-full p-1"
+            style={{
+              elevation: 5,
+              shadowColor: 'black',
+              shadowOffset: {
+                width: 0,
+                height: 10,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+            }}
+          >
+            <LocateFixedIcon
+              size={50}
+              fill={isTracking ? colors.blue[300] : colors.black}
+              color={isTracking ? colors.blue[500] : colors.gray[300]}
+            />
+          </View>
+        ),
         headerRight: () => (
-          <SimplePopOver
-            trigger={
-              <Pressable onPress={() => router.push('/(tab)/settings/main')}>
-                <Avatar alt="profile-pic" className="w-[50] h-[50] ">
-                  <AvatarImage source={{ uri: session.user?.thumbnail }} />
-                  <AvatarFallback>
-                    <Text>TR</Text>
-                  </AvatarFallback>
-                </Avatar>
-              </Pressable>
-            }
-            content={
-              <View className="gap-5">
-                <Button className="w-full" variant="outline">
-                  <Text>Settings</Text>
-                </Button>
-              </View>
-            }
-          />
+          <Pressable onPress={() => router.push('/(tab)/settings/main')}>
+            <Avatar
+              alt="profile-pic"
+              className="w-[60] h-[60] mr-5"
+              style={{
+                elevation: 5,
+                shadowColor: 'black',
+                shadowOffset: {
+                  width: 0,
+                  height: 10,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+              }}
+            >
+              <AvatarImage source={{ uri: session.user?.thumbnail }} />
+              <AvatarFallback>
+                <Text>TR</Text>
+              </AvatarFallback>
+            </Avatar>
+          </Pressable>
         ),
         headerRightContainerStyle: {
           marginRight: 20,
@@ -140,7 +168,7 @@ export default function DrawerLayout() {
             ) : (
               <CirclePlayIcon
                 onPress={() => toggleShareLocation()}
-                fill={colors.blue[200]}
+                fill="white"
                 color={focused ? 'blue' : 'black'}
                 className="bg-white"
                 size={90}
