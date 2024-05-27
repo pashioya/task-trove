@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Board, Column, Item } from '~/model/types';
 import { fetchBoards, fetchItems, fetchLocationColumns } from '~/utils/MondayAPI';
 
@@ -19,12 +19,13 @@ export default function LocationItemSelects() {
   const [selectedColumn, setSelectedColumn] = useState<Column | null>(null);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
 
-  const boardSelectItemsRef = useRef<{ label: string; value: string }[]>([]);
-  const columnSelectItemsRef = useRef<{ label: string; value: string }[]>([]);
-  const itemSelectItemsRef = useRef<{ label: string; value: string }[]>([]);
+  const [boardSelectItems, setBoardSelectItems] = useState<{ label: string; value: string }[]>([]);
+  const [columnSelectItems, setColumnSelectItems] = useState<{ label: string; value: string }[]>(
+    [],
+  );
+  const [itemSelectItems, setItemSelectItems] = useState<{ label: string; value: string }[]>([]);
 
   const { setBoard, setColumn, setItem, board, column, item } = useSettingsStore();
-
   const { toggleShareLocation, isTracking } = useToggleShareLocation();
 
   useEffect(() => {
@@ -41,10 +42,12 @@ export default function LocationItemSelects() {
       .catch(error => {
         console.log('Error fetching boards', error);
       });
-    boardSelectItemsRef.current = boards.map(board => ({
-      label: board.name,
-      value: board.id,
-    }));
+    setBoardSelectItems(
+      boards.map(board => ({
+        label: board.name,
+        value: board.id,
+      })),
+    );
   }, [boards]);
 
   useEffect(() => {
@@ -65,14 +68,18 @@ export default function LocationItemSelects() {
   }, [board, column, item]);
 
   useEffect(() => {
-    columnSelectItemsRef.current = columns.map(column => ({
-      label: column.title,
-      value: column.id,
-    }));
-    itemSelectItemsRef.current = items.map(item => ({
-      label: item.name,
-      value: item.id,
-    }));
+    setColumnSelectItems(
+      columns.map(column => ({
+        label: column.title,
+        value: column.id,
+      })),
+    );
+    setItemSelectItems(
+      items.map(item => ({
+        label: item.name,
+        value: item.id,
+      })),
+    );
     if (columns.length === 1) {
       setSelectedColumn(columns[0]);
     }
@@ -109,7 +116,7 @@ export default function LocationItemSelects() {
   return (
     <View className="justify-center gap-7 items-center m-10">
       <SimpleSelect
-        options={boardSelectItemsRef.current}
+        options={boardSelectItems}
         placeholder="Board Select"
         selectedValue={
           selectedBoard ? { label: selectedBoard.name, value: selectedBoard.id } : null
@@ -123,7 +130,7 @@ export default function LocationItemSelects() {
         }}
       />
       <SimpleSelect
-        options={columnSelectItemsRef.current}
+        options={columnSelectItems}
         placeholder="Column Select"
         disabled={!selectedBoard}
         isLoading={columns.length === 0 && !!selectedBoard}
@@ -138,7 +145,7 @@ export default function LocationItemSelects() {
       />
 
       <SimpleSelect
-        options={itemSelectItemsRef.current}
+        options={itemSelectItems}
         placeholder="Item Select"
         isLoading={items.length === 0 && !!selectedColumn}
         selectedValue={selectedItem ? { label: selectedItem.name, value: selectedItem.id } : null}

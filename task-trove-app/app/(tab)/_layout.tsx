@@ -15,14 +15,11 @@ import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { useSettingsStore } from '~/store';
 import colors from 'tailwindcss/colors';
 import { useToggleShareLocation } from '~/hooks';
-import { useRef } from 'react';
-import type MapView from 'react-native-maps';
 
 export default function DrawerLayout() {
   const { session, isLoading } = useSession();
   const { isTracking } = useSettingsStore();
   const { toggleShareLocation } = useToggleShareLocation();
-  const mapRef = useRef<MapView>(null);
 
   if (isLoading) {
     return (
@@ -70,13 +67,7 @@ export default function DrawerLayout() {
               shadowRadius: 3.84,
             }}
             onPress={() => {
-              // TODO: Using forward refs to pass the ref down to the index page.
-              mapRef.current?.animateToRegion({
-                latitude: 37.78825,
-                longitude: -122.4324,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-              });
+              router.push('/');
             }}
           >
             <LocateFixedIcon
