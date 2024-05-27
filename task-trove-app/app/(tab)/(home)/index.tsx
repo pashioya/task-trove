@@ -32,7 +32,7 @@ export default function Home() {
   const router = useRouter();
 
   const mapRef = useRef<MapView>(null);
-  const { board, column, item, error, setError, setIsError } = useSettingsStore();
+  const { board, column, item, error, setError } = useSettingsStore();
 
   const { mutate: updateLocation, error: updateLocationError } = useMondayMutation({
     mutation: changeMultipleColumnValuesMutation,
