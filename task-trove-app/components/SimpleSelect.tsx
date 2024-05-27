@@ -66,7 +66,7 @@ export function SimpleSelect({
         <ScrollView>
           <SelectGroup>
             {options.length === 0 && (
-              <SelectItem disabled key="empty" label="No Items Found" value="" />
+              <SelectItem disabled key="empty" label="No Options Found" value="" />
             )}
             {options.map(option => (
               <SelectItem key={option.value} label={option.label} value={option.value}>

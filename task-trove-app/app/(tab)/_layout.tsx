@@ -156,7 +156,7 @@ export default function DrawerLayout() {
           tabBarStyle: {
             display: 'none',
           },
-          headerLeft: () => <ArrowLeft color="black" onPress={() => router.back()} size={40} />,
+          headerLeft: () => <ArrowLeft color="black" onPress={() => router.push('/')} size={40} />,
           headerRight: () => null,
           tabBarIcon: ({ focused }) =>
             isTracking ? (

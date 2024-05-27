@@ -1,4 +1,3 @@
-import * as Linking from 'expo-linking';
 import { Stack, useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
 import * as ExpoLocation from 'expo-location';
@@ -66,26 +65,27 @@ export default function Home() {
     }
   }, [updateLocationError]);
 
+  useEffect(() => {
+    if (!item) {
+      showAlert(
+        'Location Column Not Correctly Setup',
+        () => {
+          router.replace('/settings/location');
+        },
+        'Go to Settings',
+      );
+    }
+    if (foregroundStatus !== 'granted' || backgroundStatus !== 'granted') {
+      showAlert(
+        error ? error.message : 'Location permissions not granted',
+        () => router.push('/settings/location'),
+        'Open Settings',
+      );
+    }
+  }, [foregroundStatus, backgroundStatus, error, item, router]);
+
   const onLocateMe = async () => {
     try {
-      if (foregroundStatus !== 'granted' || backgroundStatus !== 'granted') {
-        showAlert(
-          error ? error.message : 'Location permissions not granted',
-          async () => await Linking.openSettings(),
-          'Open Settings',
-        );
-        return;
-      }
-      if (!item) {
-        showAlert(
-          'Location Column Not Correctly Setup',
-          () => {
-            router.replace('/settings/location');
-          },
-          'Go to Settings',
-        );
-        return;
-      }
       const location = await ExpoLocation.getCurrentPositionAsync();
       setRegion({
         latitude: location.coords.latitude,
@@ -96,8 +96,8 @@ export default function Home() {
         {
           latitude: location.coords.latitude,
           longitude: location.coords.longitude,
-          latitudeDelta: 0.9,
-          longitudeDelta: 0.9,
+          latitudeDelta: 0.7,
+          longitudeDelta: 0.7,
         },
         1000,
       );
