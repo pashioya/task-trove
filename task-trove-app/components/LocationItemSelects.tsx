@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
 import type { Board, Column, Item } from '~/model/types';
-import { fetchBoards, fetchItems, fetchLocationColumns } from '~/utils/MondayAPI';
 
 import { useSettingsStore } from '~/store';
 import { useToggleShareLocation } from '~/hooks';
+import { useMondayQuery } from '~/lib/monday/api';
+import { fetchBoardsQuery, fetchColumnsQuery, fetchItemsQuery } from '~/lib/monday/queries';
+import type { MondayAPIError } from '~/lib/monday/error';
+import { handleMondayErrorCode, handleMondayErrorStatusCode } from '~/utils/MondayErrorHandling';
 import { SimpleSelect } from './SimpleSelect';
 import { Button } from './ui/button';
 import { Text } from './ui/text';
@@ -28,50 +31,127 @@ export default function LocationItemSelects() {
   const { setBoard, setColumn, setItem, board, column, item } = useSettingsStore();
   const { toggleShareLocation, isTracking } = useToggleShareLocation();
 
-  useEffect(() => {
-    const fetchAndSetBoards = async () => {
-      try {
-        const data = await fetchBoards();
-        setBoards(data);
-        if (data.length === 1) {
-          setSelectedBoard(data[0]);
-        }
-        if (data.length === 0) {
-          Alert.alert('No boards found', 'Please create a board in Monday.com');
-        }
-      } catch (error) {
-        console.error('Error fetching boards: ', error);
-        Alert.alert('Error fetching boards', 'Please try again later');
-      }
-    };
-    fetchAndSetBoards();
+  const showAlert = (error: MondayAPIError) => {
+    if (error.errors) {
+      Alert.alert('Error', error.errorMessage, [{ text: 'Dismiss' }]);
+    } else if (error.errorCode) {
+      const errorMessage = handleMondayErrorCode(error.errorCode);
+      Alert.alert('Error', errorMessage, [{ text: 'Dismiss' }]);
+    } else if (error.statusCode) {
+      const errorMessage = handleMondayErrorStatusCode(error.statusCode);
+      Alert.alert('Error', errorMessage, [{ text: 'Dismiss' }]);
+    }
+  };
+
+  const {
+    data: boardsData,
+    isLoading: boardsIsLoading,
+    isError: boardsIsError,
+    error: boardsError,
+  } = useMondayQuery({
+    query: fetchBoardsQuery,
+    variables: {},
+  });
+
+  const {
+    data: columnsData,
+    isLoading: columnsIsLoading,
+    isError: columnsIsError,
+    error: columnsError,
+    refetch: refetchColumns,
+  } = useMondayQuery({
+    query: fetchColumnsQuery,
+    variables: { boardId: selectedBoard?.id || '' },
+    enabled: !!selectedBoard?.id,
+  });
+
+  const {
+    data: itemsData,
+    isLoading: itemIsLoading,
+    isError: itemsIsError,
+    error: itemsError,
+    refetch: refetchItems,
+  } = useMondayQuery({
+    query: fetchItemsQuery,
+    variables: { boardId: selectedBoard?.id || '' },
+    enabled: !!selectedBoard?.id,
   });
 
   useEffect(() => {
-    setBoardSelectItems(
-      boards.map(board => ({
-        label: board.name,
-        value: board.id,
-      })),
-    );
-  }, [boards]);
+    if (!boardsIsLoading && boardsData) {
+      if (boardsIsError) {
+        showAlert(boardsError);
+      }
+      if (!boardsData.boards) return;
+
+      const boards: Board[] = boardsData.boards.filter((board): board is Board => board !== null);
+
+      setBoards(boards);
+
+      if (boards.length === 1) {
+        setSelectedBoard(boards[0]);
+      }
+      setBoardSelectItems(
+        boards.map(board => ({
+          label: board.name,
+          value: board.id,
+        })),
+      );
+    }
+  }, [boardsData, boardsError, boardsIsError, boardsIsLoading]);
 
   useEffect(() => {
-    const fetchColumnsAndItems = async () => {
-      if (selectedBoard) {
-        try {
-          const columns = await fetchLocationColumns(selectedBoard.id);
-          const items = await fetchItems(selectedBoard.id);
-          setColumns(columns);
-          setItems(items);
-        } catch (error) {
-          console.log('Error fetching columns and items: ', error);
-          Alert.alert('Error fetching columns and items', 'Please try again later');
-        }
+    if (!columnsIsLoading) {
+      if (columnsIsError) {
+        showAlert(columnsError);
       }
-    };
-    fetchColumnsAndItems();
-  }, [selectedBoard]);
+
+      if (
+        !columnsData ||
+        !columnsData.boards ||
+        !columnsData.boards[0] ||
+        !columnsData.boards[0].columns
+      )
+        return;
+
+      const columns: Column[] = columnsData.boards[0].columns.filter(
+        (column): column is Column => column !== null,
+      );
+      setColumns(columns);
+
+      setColumnSelectItems(
+        columns.map(column => ({
+          label: column.title,
+          value: column.id,
+        })),
+      );
+      if (columns.length === 1) {
+        setSelectedColumn(columns[0]);
+      }
+    }
+  }, [columnsData, columnsError, columnsIsError, columnsIsLoading]);
+
+  useEffect(() => {
+    if (!itemIsLoading) {
+      if (itemsIsError) {
+        showAlert(itemsError);
+      }
+
+      if (!itemsData || !itemsData.boards || !itemsData.boards[0]) return;
+      const items = itemsData.boards[0].items_page.items as Item[];
+      setItems(items);
+
+      setItemSelectItems(
+        items.map(item => ({
+          label: item.name,
+          value: item.id,
+        })),
+      );
+      if (items.length === 1) {
+        setSelectedItem(items[0]);
+      }
+    }
+  }, [itemIsLoading, itemsData, itemsError, itemsIsError]);
 
   useEffect(() => {
     if (board) {
@@ -98,21 +178,36 @@ export default function LocationItemSelects() {
         value: item.id,
       })),
     );
+    if (columns.length === 1) {
+      setSelectedColumn(columns[0]);
+    }
+    if (items.length === 1) {
+      setSelectedItem(items[0]);
+    }
   }, [columns, items]);
 
-  const handleBoardChange = (board: Board) => {
+  const handleBoardChange = async (board: Board) => {
+    setSelectedBoard(null);
     setSelectedBoard(board);
     setSelectedColumn(null);
     setSelectedItem(null);
+
+    await refetchColumns();
+    await refetchItems();
   };
 
   const saveChanges = () => {
     if (selectedBoard && selectedColumn && selectedItem) {
-      setBoard(selectedBoard);
-      setColumn(selectedColumn);
-      setItem(selectedItem);
       if (isTracking) {
         toggleShareLocation();
+        setBoard(selectedBoard);
+        setColumn(selectedColumn);
+        setItem(selectedItem);
+        toggleShareLocation();
+      } else {
+        setBoard(selectedBoard);
+        setColumn(selectedColumn);
+        setItem(selectedItem);
       }
       ToastAndroid.show('Location saved!', ToastAndroid.SHORT);
     }
