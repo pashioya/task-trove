@@ -10,6 +10,9 @@ type TaskData = {
 
 const TASK_FETCH_LOCATION = 'background-location-task';
 
+const START_TRACKING_TIME = 540; // 9 AM
+const END_TRACKING_TIME = 1050; // 5.30 PM
+
 TaskManager.defineTask<TaskData>(TASK_FETCH_LOCATION, ({ data, error }) => {
   if (error) {
     console.log('LOCATION_TRACKING task ERROR:', error);
@@ -42,15 +45,13 @@ const useToggleShareLocation = () => {
 
       const totalMinutes = hour * 60 + minute;
 
-      if (totalMinutes >= 540 && hour <= 1050) {
+      if (totalMinutes >= START_TRACKING_TIME && hour <= END_TRACKING_TIME) {
         if (!isTracking) {
-          console.log('Automatically starting location tracking at 9 AM');
           await startLocationUpdates();
           setIsTracking(true);
         }
       } else {
         if (isTracking) {
-          console.log('Automatically starting location tracking at 5.30 PM');
           await stopLocationUpdates();
           setIsTracking(false);
         }
