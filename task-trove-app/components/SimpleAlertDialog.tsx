@@ -11,7 +11,6 @@ import {
   AlertDialogTrigger,
 } from '~/components/ui/alert-dialog';
 
-import PropTypes from 'prop-types';
 import { Text } from '~/components/ui/text';
 
 type AlertDialogScreenProps = {
@@ -46,12 +45,6 @@ const SimpleAlertDialog: React.FC<AlertDialogScreenProps> = ({
       </AlertDialogContent>
     </AlertDialog>
   );
-};
-SimpleAlertDialog.propTypes = {
-  trigger: PropTypes.node.isRequired,
-  title: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  actionIfConfirmed: PropTypes.func.isRequired,
 };
 
 export default SimpleAlertDialog;

@@ -8,7 +8,7 @@ import { SimpleSelect } from './SimpleSelect';
 import { Button } from './ui/button';
 import { Text } from './ui/text';
 import SimpleAlertDialog from './SimpleAlertDialog';
-import { ToastAndroid, View } from 'react-native';
+import { Alert, ToastAndroid, View } from 'react-native';
 
 export default function LocationItemSelects() {
   const [boards, setBoards] = useState<Board[]>([]);
@@ -29,19 +29,25 @@ export default function LocationItemSelects() {
   const { toggleShareLocation, isTracking } = useToggleShareLocation();
 
   useEffect(() => {
-    fetchBoards()
-      .then(data => {
+    const fetchAndSetBoards = async () => {
+      try {
+        const data = await fetchBoards();
         setBoards(data);
         if (data.length === 1) {
           setSelectedBoard(data[0]);
         }
         if (data.length === 0) {
-          console.log('No boards found');
+          Alert.alert('No boards found', 'Please create a board in Monday.com');
         }
-      })
-      .catch(error => {
-        console.log('Error fetching boards', error);
-      });
+      } catch (error) {
+        console.error('Error fetching boards: ', error);
+        Alert.alert('Error fetching boards', 'Please try again later');
+      }
+    };
+    fetchAndSetBoards();
+  });
+
+  useEffect(() => {
     setBoardSelectItems(
       boards.map(board => ({
         label: board.name,
@@ -51,14 +57,26 @@ export default function LocationItemSelects() {
   }, [boards]);
 
   useEffect(() => {
-    async function fetchColumnsAndItems() {
-      if (board) {
-        setSelectedBoard(board);
-        setColumns(await fetchLocationColumns(board.id));
-        setItems(await fetchItems(board.id));
+    const fetchColumnsAndItems = async () => {
+      if (selectedBoard) {
+        try {
+          const columns = await fetchLocationColumns(selectedBoard.id);
+          const items = await fetchItems(selectedBoard.id);
+          setColumns(columns);
+          setItems(items);
+        } catch (error) {
+          console.log('Error fetching columns and items: ', error);
+          Alert.alert('Error fetching columns and items', 'Please try again later');
+        }
       }
-    }
+    };
     fetchColumnsAndItems();
+  }, [selectedBoard]);
+
+  useEffect(() => {
+    if (board) {
+      setSelectedBoard(board);
+    }
     if (column) {
       setSelectedColumn(column);
     }
@@ -80,34 +98,21 @@ export default function LocationItemSelects() {
         value: item.id,
       })),
     );
-    if (columns.length === 1) {
-      setSelectedColumn(columns[0]);
-    }
-    if (items.length === 1) {
-      setSelectedItem(items[0]);
-    }
   }, [columns, items]);
 
-  const handleBoardChange = async (board: Board) => {
+  const handleBoardChange = (board: Board) => {
     setSelectedBoard(board);
-    setColumns(await fetchLocationColumns(board.id));
-    setItems(await fetchItems(board.id));
     setSelectedColumn(null);
     setSelectedItem(null);
   };
 
   const saveChanges = () => {
     if (selectedBoard && selectedColumn && selectedItem) {
+      setBoard(selectedBoard);
+      setColumn(selectedColumn);
+      setItem(selectedItem);
       if (isTracking) {
         toggleShareLocation();
-        setBoard(selectedBoard);
-        setColumn(selectedColumn);
-        setItem(selectedItem);
-        toggleShareLocation();
-      } else {
-        setBoard(selectedBoard);
-        setColumn(selectedColumn);
-        setItem(selectedItem);
       }
       ToastAndroid.show('Location saved!', ToastAndroid.SHORT);
     }
@@ -121,12 +126,11 @@ export default function LocationItemSelects() {
         selectedValue={
           selectedBoard ? { label: selectedBoard.name, value: selectedBoard.id } : null
         }
-        isLoading={boards.length === 0}
+        isLoading={boards.length === 0 || !selectedBoard}
         disabled={false}
-        onValueChange={async boardId => {
-          await handleBoardChange(
-            boards.find(board => board.id === boardId?.value) || ({} as Board),
-          );
+        onValueChange={newBoard => {
+          const board = boards.find(board => board.id === newBoard?.value) || null;
+          if (board) handleBoardChange(board);
         }}
       />
       <SimpleSelect
@@ -138,12 +142,9 @@ export default function LocationItemSelects() {
           selectedColumn ? { label: selectedColumn.title, value: selectedColumn.id } : null
         }
         onValueChange={newColumn => {
-          setSelectedColumn(
-            columns.find(column => column.id === newColumn?.value) || ({} as Column),
-          );
+          setSelectedColumn(columns.find(column => column.id === newColumn?.value) || null);
         }}
       />
-
       <SimpleSelect
         options={itemSelectItems}
         placeholder="Item Select"
@@ -151,10 +152,9 @@ export default function LocationItemSelects() {
         selectedValue={selectedItem ? { label: selectedItem.name, value: selectedItem.id } : null}
         disabled={!selectedColumn || !selectedBoard}
         onValueChange={newItem => {
-          setSelectedItem(items.find(item => item.id === newItem?.value) || ({} as Item));
+          setSelectedItem(items.find(item => item.id === newItem?.value) || null);
         }}
       />
-
       <SimpleAlertDialog
         trigger={
           <Button className="m-3" disabled={!selectedItem}>

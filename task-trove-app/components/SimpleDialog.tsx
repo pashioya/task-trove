@@ -12,19 +12,19 @@ import {
 } from '~/components/ui/dialog';
 import { Text } from '~/components/ui/text';
 
-type ExampleProps = {
+type SimpleDialogProps = {
   trigger: React.ReactNode;
   title: string;
   content: React.ReactNode;
 };
 
-export function SimpleDialog({ trigger, title, content }: ExampleProps) {
+export function SimpleDialog({ trigger, title, content }: SimpleDialogProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
         <TouchableOpacity>{trigger}</TouchableOpacity>
       </DialogTrigger>
-      <DialogContent className="">
+      <DialogContent className=" z-40">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>

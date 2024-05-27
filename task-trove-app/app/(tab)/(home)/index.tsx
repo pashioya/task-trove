@@ -2,18 +2,18 @@ import * as Linking from 'expo-linking';
 import { Stack, useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
 import * as ExpoLocation from 'expo-location';
-import { Alert, SafeAreaView, StyleSheet, View } from 'react-native';
+import { Alert, SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useToggleShareLocation, useLocationPermissions } from '~/hooks';
 import { useMondayMutation } from '~/lib/monday/api';
 import { changeMultipleColumnValuesMutation } from '~/lib/monday/queries';
 import { useSettingsStore } from '~/store';
 import { INITIAL_REGION } from '~/config/map-config';
-import { Button } from '~/components/ui/button';
-import { Text } from '~/components/ui/text';
 import lightStyle from '~/assets/map/lightStyle.json';
 import darkStyle from '~/assets/map/darkStyle.json';
 import { useColorScheme } from '~/lib/useColorScheme';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import { Ionicons } from '@expo/vector-icons';
+import colors from 'tailwindcss/colors';
 
 const showAlert = (error: string, onPress: () => void, buttonText: string) => {
   Alert.alert('Error', error, [
@@ -26,7 +26,7 @@ const showAlert = (error: string, onPress: () => void, buttonText: string) => {
 };
 
 export default function Home() {
-  const { toggleShareLocation, isTracking, region, setRegion } = useToggleShareLocation();
+  const { isTracking, region, setRegion } = useToggleShareLocation();
   const { foregroundStatus, backgroundStatus } = useLocationPermissions();
   const { isDarkColorScheme } = useColorScheme();
   const router = useRouter();
@@ -115,7 +115,6 @@ export default function Home() {
         <MapView
           provider={PROVIDER_GOOGLE}
           showsUserLocation={isTracking}
-          showsMyLocationButton={false}
           style={StyleSheet.absoluteFillObject}
           customMapStyle={isDarkColorScheme ? darkStyle : lightStyle}
           loadingEnabled
@@ -128,32 +127,32 @@ export default function Home() {
             longitudeDelta: 0.0421,
           }}
         />
-        <View className="absolute bottom-10 left-0 right-0 items-center">
-          <Button
-            className="w-[50%] "
-            style={{ zIndex: 50 }}
-            onPress={async () => {
-              try {
-                await toggleShareLocation();
-                onLocateMe();
-              } catch (e) {
-                if (e instanceof Error) {
-                  setError(e);
-                  showAlert(
-                    e.message,
-                    () => {
-                      console.log(e);
-                    },
-                    'Dismiss',
-                  );
-                }
-              }
-            }}
-          >
-            {isTracking ? <Text>Stop Tracking</Text> : <Text>Start Tracking</Text>}
-          </Button>
-        </View>
+        {isTracking && (
+          <View className="absolute left-80 right-0 items-center">
+            <TouchableOpacity style={styles.locateBtn} onPress={onLocateMe}>
+              <Ionicons name="navigate" size={24} color={colors.black} />
+            </TouchableOpacity>
+          </View>
+        )}
       </SafeAreaView>
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  locateBtn: {
+    position: 'absolute',
+    backgroundColor: '#fff',
+    padding: 10,
+    top: 650,
+    borderRadius: 10,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    shadowOffset: {
+      width: 1,
+      height: 10,
+    },
+  },
+});

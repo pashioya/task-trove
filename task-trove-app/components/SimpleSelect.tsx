@@ -58,10 +58,17 @@ export function SimpleSelect({
         )}
       </SelectTrigger>
 
-      <SelectContent insets={contentInsets} className="w-[250px] max-h-[250px] overflow-y-auto">
+      <SelectContent
+        insets={contentInsets}
+        className="w-[250px] max-h-[250px] overflow-y-auto z-50"
+      >
         <SelectLabel>{placeholder}</SelectLabel>
         <ScrollView>
           <SelectGroup>
+            {options.length === 0 && (
+              <SelectItem disabled key="empty" label="No Items Found" value="" />
+            )}
+            <ActivityIndicator />
             {options.map(option => (
               <SelectItem key={option.value} label={option.label} value={option.value}>
                 {option.label}
