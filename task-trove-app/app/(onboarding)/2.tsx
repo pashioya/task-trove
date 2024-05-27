@@ -12,7 +12,7 @@ export default function Two() {
 
   return (
     <>
-      <Stack.Screen options={{ title: 'Onboarding Two', headerShown: true, headerTitle: '' }} />
+      <Stack.Screen options={{ title: 'Onboarding Two', headerShown: false, headerTitle: '' }} />
       <SafeAreaView>
         <ScrollView className="m-4">
           <View>

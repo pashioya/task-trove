@@ -15,11 +15,14 @@ import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { useSettingsStore } from '~/store';
 import colors from 'tailwindcss/colors';
 import { useToggleShareLocation } from '~/hooks';
+import { useRef } from 'react';
+import type MapView from 'react-native-maps';
 
 export default function DrawerLayout() {
   const { session, isLoading } = useSession();
   const { isTracking } = useSettingsStore();
   const { toggleShareLocation } = useToggleShareLocation();
+  const mapRef = useRef<MapView>(null);
 
   if (isLoading) {
     return (
@@ -54,7 +57,7 @@ export default function DrawerLayout() {
           shadowRadius: 3.84,
         },
         headerLeft: () => (
-          <View
+          <Pressable
             className="bg-white rounded-full p-1"
             style={{
               elevation: 5,
@@ -66,13 +69,22 @@ export default function DrawerLayout() {
               shadowOpacity: 0.25,
               shadowRadius: 3.84,
             }}
+            onPress={() => {
+              // TODO: Using forward refs to pass the ref down to the index page.
+              mapRef.current?.animateToRegion({
+                latitude: 37.78825,
+                longitude: -122.4324,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              });
+            }}
           >
             <LocateFixedIcon
               size={50}
               fill={isTracking ? colors.blue[300] : colors.black}
               color={isTracking ? colors.blue[500] : colors.gray[300]}
             />
-          </View>
+          </Pressable>
         ),
         headerRight: () => (
           <Pressable onPress={() => router.push('/(tab)/settings/main')}>
@@ -102,7 +114,6 @@ export default function DrawerLayout() {
         },
 
         headerLeftContainerStyle: {
-          borderRadius: 99,
           marginLeft: 20,
         },
 
@@ -111,7 +122,7 @@ export default function DrawerLayout() {
           bottom: 25,
           left: 20,
           right: 20,
-          height: 90,
+          height: 70,
           elevation: 5,
           borderRadius: 20,
           backgroundColor: 'white',
@@ -175,7 +186,7 @@ export default function DrawerLayout() {
               />
             ),
           tabBarIconStyle: {
-            marginTop: -50,
+            marginTop: -40,
           },
           tabBarLabel: '',
         }}

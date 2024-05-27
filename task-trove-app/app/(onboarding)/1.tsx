@@ -19,7 +19,7 @@ export default function One() {
             <View className="bg-blue-500 m-3 rounded-2xl p-2 ">
               <Image
                 source={require('~/assets/images/tryve/general.jpg')}
-                style={{ width: '100%', height: 500, borderRadius: 20 }}
+                style={{ width: '100%', height: 400, borderRadius: 20 }}
               />
             </View>
             <View className="flex-1 space-x-4 py-11 px-9">

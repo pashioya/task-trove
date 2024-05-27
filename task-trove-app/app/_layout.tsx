@@ -61,9 +61,7 @@ export default function RootLayout() {
         SplashScreen.hideAsync();
       })
       .catch(console.error);
-    // ! Ignored since this changes the color scheme twice per click
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
 
   if (!isColorSchemeLoaded) {
     return null;
