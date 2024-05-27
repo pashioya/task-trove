@@ -95,7 +95,7 @@ export default function Settings() {
 
               <SimpleAlertDialog
                 trigger={
-                  <Button variant="outline" className=" mt-96 border-red-600 ">
+                  <Button variant="outline" className=" mt-56 border-red-600 ">
                     <Text className="text-red-600">Logout</Text>
                   </Button>
                 }
