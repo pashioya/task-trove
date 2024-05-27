@@ -68,6 +68,7 @@ export function SimpleSelect({
             {options.length === 0 && (
               <SelectItem disabled key="empty" label="No Options Found" value="" />
             )}
+            <ActivityIndicator />
             {options.map(option => (
               <SelectItem key={option.value} label={option.label} value={option.value}>
                 {option.label}
