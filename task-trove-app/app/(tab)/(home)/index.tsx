@@ -77,7 +77,6 @@ export default function Home() {
         return;
       }
       if (!item) {
-        setIsError(true);
         showAlert(
           'Location Column Not Correctly Setup',
           () => {
