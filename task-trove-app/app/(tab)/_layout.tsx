@@ -156,7 +156,7 @@ export default function DrawerLayout() {
           tabBarStyle: {
             display: 'none',
           },
-          headerLeft: () => <ArrowLeft color="black" onPress={() => router.back()} size={40} />,
+          headerLeft: () => <ArrowLeft color="black" onPress={() => router.push('/')} size={40} />,
           headerRight: () => null,
           tabBarIcon: ({ focused }) =>
             isTracking ? (
@@ -165,7 +165,7 @@ export default function DrawerLayout() {
                 fill="white"
                 color={focused ? 'blue' : 'black'}
                 className="bg-white"
-                size={90}
+                size={75}
               />
             ) : (
               <CirclePlayIcon
@@ -173,7 +173,7 @@ export default function DrawerLayout() {
                 fill="white"
                 color={focused ? 'blue' : 'black'}
                 className="bg-white"
-                size={90}
+                size={75}
               />
             ),
           tabBarIconStyle: {

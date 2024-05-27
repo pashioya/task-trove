@@ -3,7 +3,6 @@ import type { Board, Column, Item } from '~/model/types';
 
 import { useSettingsStore } from '~/store';
 import { useToggleShareLocation } from '~/hooks';
-import { Alert, } from 'react-native';
 import { useMondayQuery } from '~/lib/monday/api';
 import { fetchBoardsQuery, fetchColumnsQuery, fetchItemsQuery } from '~/lib/monday/queries';
 import type { MondayAPIError } from '~/lib/monday/error';
@@ -12,7 +11,7 @@ import { SimpleSelect } from './SimpleSelect';
 import { Button } from './ui/button';
 import { Text } from './ui/text';
 import SimpleAlertDialog from './SimpleAlertDialog';
-import { ToastAndroid, View } from 'react-native';
+import { Alert, ToastAndroid, View } from 'react-native';
 
 export default function LocationItemSelects() {
   const [boards, setBoards] = useState<Board[]>([]);
@@ -190,6 +189,8 @@ export default function LocationItemSelects() {
   const handleBoardChange = async (board: Board) => {
     setSelectedBoard(null);
     setSelectedBoard(board);
+    setColumns(await fetchLocationColumns(board.id));
+    setItems(await fetchItems(board.id));
     setSelectedColumn(null);
     setSelectedItem(null);
 
@@ -222,12 +223,11 @@ export default function LocationItemSelects() {
         selectedValue={
           selectedBoard ? { label: selectedBoard.name, value: selectedBoard.id } : null
         }
-        isLoading={boards.length === 0}
+        isLoading={boards.length === 0 || !selectedBoard}
         disabled={false}
-        onValueChange={async boardId => {
-          await handleBoardChange(
-            boards.find(board => board.id === boardId?.value) || ({} as Board),
-          );
+        onValueChange={newBoard => {
+          const board = boards.find(board => board.id === newBoard?.value) || null;
+          if (board) handleBoardChange(board);
         }}
       />
       <SimpleSelect
@@ -239,12 +239,9 @@ export default function LocationItemSelects() {
           selectedColumn ? { label: selectedColumn.title, value: selectedColumn.id } : null
         }
         onValueChange={newColumn => {
-          setSelectedColumn(
-            columns.find(column => column.id === newColumn?.value) || ({} as Column),
-          );
+          setSelectedColumn(columns.find(column => column.id === newColumn?.value) || null);
         }}
       />
-
       <SimpleSelect
         options={itemSelectItems}
         placeholder="Item Select"
@@ -252,10 +249,9 @@ export default function LocationItemSelects() {
         selectedValue={selectedItem ? { label: selectedItem.name, value: selectedItem.id } : null}
         disabled={!selectedColumn || !selectedBoard}
         onValueChange={newItem => {
-          setSelectedItem(items.find(item => item.id === newItem?.value) || ({} as Item));
+          setSelectedItem(items.find(item => item.id === newItem?.value) || null);
         }}
       />
-
       <SimpleAlertDialog
         trigger={
           <Button className="m-3" disabled={!selectedItem}>
