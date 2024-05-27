@@ -3,9 +3,7 @@ import type { Board, Column, Item } from '~/model/types';
 
 import { useSettingsStore } from '~/store';
 import { useToggleShareLocation } from '~/hooks';
-import { CustomAutomateSelect } from './CustomAutomateSelect';
-import { Alert, KeyboardAvoidingView } from 'react-native';
-import * as Burnt from 'burnt';
+import { Alert, } from 'react-native';
 import { useMondayQuery } from '~/lib/monday/api';
 import { fetchBoardsQuery, fetchColumnsQuery, fetchItemsQuery } from '~/lib/monday/queries';
 import type { MondayAPIError } from '~/lib/monday/error';
@@ -39,10 +37,10 @@ export default function LocationItemSelects() {
       Alert.alert('Error', error.errorMessage, [{ text: 'Dismiss' }]);
     } else if (error.errorCode) {
       const errorMessage = handleMondayErrorCode(error.errorCode);
-      Alert.alert('Error', error.errorMessage, [{ text: 'Dismiss' }]);
+      Alert.alert('Error', errorMessage, [{ text: 'Dismiss' }]);
     } else if (error.statusCode) {
       const errorMessage = handleMondayErrorStatusCode(error.statusCode);
-      Alert.alert('Error', error.errorMessage, [{ text: 'Dismiss' }]);
+      Alert.alert('Error', errorMessage, [{ text: 'Dismiss' }]);
     }
   };
 
@@ -94,10 +92,12 @@ export default function LocationItemSelects() {
       if (boards.length === 1) {
         setSelectedBoard(boards[0]);
       }
-      boardSelectItemsRef.current = boards.map(board => ({
-        label: board.name,
-        value: board.id,
-      }));
+      setBoardSelectItems(
+        boards.map(board => ({
+          label: board.name,
+          value: board.id,
+        })),
+      );
     }
   }, [boardsData, boardsError, boardsIsError, boardsIsLoading]);
 
@@ -120,11 +120,12 @@ export default function LocationItemSelects() {
       );
       setColumns(columns);
 
-      columnSelectItemsRef.current = columns.map(column => ({
-        label: column.title,
-        value: column.id,
-      }));
-
+      setColumnSelectItems(
+        columns.map(column => ({
+          label: column.title,
+          value: column.id,
+        })),
+      );
       if (columns.length === 1) {
         setSelectedColumn(columns[0]);
       }
@@ -141,11 +142,12 @@ export default function LocationItemSelects() {
       const items = itemsData.boards[0].items_page.items as Item[];
       setItems(items);
 
-      itemSelectItemsRef.current = items.map(item => ({
-        label: item.name,
-        value: item.id,
-      }));
-
+      setItemSelectItems(
+        items.map(item => ({
+          label: item.name,
+          value: item.id,
+        })),
+      );
       if (items.length === 1) {
         setSelectedItem(items[0]);
       }
