@@ -220,7 +220,7 @@ export default function LocationItemSelects() {
         selectedValue={
           selectedBoard ? { label: selectedBoard.name, value: selectedBoard.id } : null
         }
-        isLoading={boardsIsLoading}
+        isLoading={boardsIsLoading || boardSelectItems.length === 0}
         disabled={false}
         onValueChange={newBoard => {
           const board = boards.find(board => board.id === newBoard?.value) || null;
@@ -231,7 +231,7 @@ export default function LocationItemSelects() {
         options={columnSelectItems}
         placeholder="Column Select"
         disabled={!selectedBoard}
-        isLoading={columnsIsLoading}
+        isLoading={columnsIsLoading || columnSelectItems.length === 0}
         selectedValue={
           selectedColumn ? { label: selectedColumn.title, value: selectedColumn.id } : null
         }
@@ -242,7 +242,7 @@ export default function LocationItemSelects() {
       <SimpleSelect
         options={itemSelectItems}
         placeholder="Item Select"
-        isLoading={itemIsLoading || items.length === 0 || !!selectedColumn}
+        isLoading={itemIsLoading || itemSelectItems.length === 0 || !!selectedColumn}
         selectedValue={selectedItem ? { label: selectedItem.name, value: selectedItem.id } : null}
         disabled={!selectedColumn || !selectedBoard}
         onValueChange={newItem => {
