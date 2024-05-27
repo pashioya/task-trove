@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
 import { useRegionStore, useSettingsStore } from '~/store';
@@ -9,6 +9,9 @@ type TaskData = {
 };
 
 const TASK_FETCH_LOCATION = 'background-location-task';
+
+const START_TRACKING_TIME = 540; // 9 AM
+const END_TRACKING_TIME = 1050; // 5.30 PM
 
 TaskManager.defineTask<TaskData>(TASK_FETCH_LOCATION, ({ data, error }) => {
   if (error) {
@@ -33,6 +36,32 @@ TaskManager.defineTask<TaskData>(TASK_FETCH_LOCATION, ({ data, error }) => {
 const useToggleShareLocation = () => {
   const [region, setRegion] = useRegionStore(state => [state.region, state.setRegion]);
   const { isTracking, setIsTracking, item } = useSettingsStore();
+
+  useEffect(() => {
+    const checkTime = async () => {
+      const now = new Date();
+      const hour = now.getHours();
+      const minute = now.getMinutes();
+
+      const totalMinutes = hour * 60 + minute;
+
+      if (totalMinutes >= START_TRACKING_TIME && hour <= END_TRACKING_TIME) {
+        if (!isTracking) {
+          await startLocationUpdates();
+          setIsTracking(true);
+        }
+      } else {
+        if (isTracking) {
+          await stopLocationUpdates();
+          setIsTracking(false);
+        }
+      }
+    };
+
+    const intervalId = setInterval(checkTime, 60000);
+
+    return () => clearInterval(intervalId);
+  }, [isTracking, setIsTracking]);
 
   const startLocationUpdates = async () => {
     await Location.startLocationUpdatesAsync(TASK_FETCH_LOCATION, {
