@@ -189,8 +189,6 @@ export default function LocationItemSelects() {
   const handleBoardChange = async (board: Board) => {
     setSelectedBoard(null);
     setSelectedBoard(board);
-    setColumns(await fetchLocationColumns(board.id));
-    setItems(await fetchItems(board.id));
     setSelectedColumn(null);
     setSelectedItem(null);
 
