@@ -158,20 +158,20 @@ export default function DrawerLayout() {
           },
           headerLeft: () => <ArrowLeft color="black" onPress={() => router.push('/')} size={40} />,
           headerRight: () => null,
-          tabBarIcon: ({ focused }) =>
+          tabBarIcon: () =>
             isTracking ? (
               <CirclePauseIcon
                 onPress={() => toggleShareLocation()}
                 fill="white"
-                color={focused ? 'blue' : 'black'}
                 className="bg-white"
+                color="black"
                 size={75}
               />
             ) : (
               <CirclePlayIcon
                 onPress={() => toggleShareLocation()}
                 fill="white"
-                color={focused ? 'blue' : 'black'}
+                color="black"
                 className="bg-white"
                 size={75}
               />
