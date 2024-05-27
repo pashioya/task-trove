@@ -4,3 +4,8 @@
 node_modules/
 ios/
 android/
+
+
+# rnr folders
+components/ui/**
+components/primitives/**

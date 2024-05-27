@@ -3,35 +3,14 @@
     "name": "task-trove-app",
     "slug": "task-trove-app",
     "version": "1.0.0",
-    "scheme": "task-trove-app",
-    "web": {
-      "bundler": "metro",
-      "output": "static"
-    },
-    "plugins": [
-      "expo-router",
-      "expo-secure-store",
-      [
-        "expo-location",
-        {
-          "isAndroidBackgroundLocationEnabled": true,
-          "isAndroidForegroundLocationEnabled": true
-        }
-      ],
-
-      "expo-font"
-    ],
-    "experiments": {
-      "typedRoutes": true,
-      "tsconfigPaths": true
-    },
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "userInterfaceStyle": "light",
+    "icon": "./assets/images/tryve/tryve-white-logo-square.png",
+    "scheme": "task-trove-app",
+    "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/tryve/tryve-darkblue-social.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#F0F3FF"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -49,14 +28,36 @@
         }
       },
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/images/tryve/tryve-white-logo-square.png",
+        "backgroundColor": "#F0F3FF"
       },
       "permissions": [
         "ACCESS_BACKGROUND_LOCATION",
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION"
       ]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/tryve/tryve-white-logo-square.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      [
+        "expo-location",
+        {
+          "isAndroidBackgroundLocationEnabled": true,
+          "isAndroidForegroundLocationEnabled": true
+        }
+      ],
+
+      "expo-font"
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "tsconfigPaths": true
     },
     "extra": {
       "router": {
