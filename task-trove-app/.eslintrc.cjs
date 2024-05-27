@@ -60,6 +60,7 @@ module.exports = {
     'react-native/no-inline-styles': 'off',
     'no-duplicate-imports': 'error',
     'import/no-named-as-default': 'off',
+    'react/prop-types': 'off',
     '@typescript-eslint/no-unused-vars': [
       'error',
       {

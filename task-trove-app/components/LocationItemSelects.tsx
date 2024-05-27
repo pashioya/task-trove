@@ -1,7 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Board, Column, Item } from '~/model/types';
 
-import { Button, YStack } from 'tamagui';
 import { useSettingsStore } from '~/store';
 import { useToggleShareLocation } from '~/hooks';
 import { CustomAutomateSelect } from './CustomAutomateSelect';
@@ -11,6 +10,11 @@ import { useMondayQuery } from '~/lib/monday/api';
 import { fetchBoardsQuery, fetchColumnsQuery, fetchItemsQuery } from '~/lib/monday/queries';
 import type { MondayAPIError } from '~/lib/monday/error';
 import { handleMondayErrorCode, handleMondayErrorStatusCode } from '~/utils/MondayErrorHandling';
+import { SimpleSelect } from './SimpleSelect';
+import { Button } from './ui/button';
+import { Text } from './ui/text';
+import SimpleAlertDialog from './SimpleAlertDialog';
+import { ToastAndroid, View } from 'react-native';
 
 export default function LocationItemSelects() {
   const [boards, setBoards] = useState<Board[]>([]);
@@ -21,12 +25,13 @@ export default function LocationItemSelects() {
   const [selectedColumn, setSelectedColumn] = useState<Column | null>(null);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
 
-  const boardSelectItemsRef = useRef<{ label: string; value: string }[]>([]);
-  const columnSelectItemsRef = useRef<{ label: string; value: string }[]>([]);
-  const itemSelectItemsRef = useRef<{ label: string; value: string }[]>([]);
+  const [boardSelectItems, setBoardSelectItems] = useState<{ label: string; value: string }[]>([]);
+  const [columnSelectItems, setColumnSelectItems] = useState<{ label: string; value: string }[]>(
+    [],
+  );
+  const [itemSelectItems, setItemSelectItems] = useState<{ label: string; value: string }[]>([]);
 
   const { setBoard, setColumn, setItem, board, column, item } = useSettingsStore();
-
   const { toggleShareLocation, isTracking } = useToggleShareLocation();
 
   const showAlert = (error: MondayAPIError) => {
@@ -160,14 +165,18 @@ export default function LocationItemSelects() {
   }, [board, column, item]);
 
   useEffect(() => {
-    columnSelectItemsRef.current = columns.map(column => ({
-      label: column.title,
-      value: column.id,
-    }));
-    itemSelectItemsRef.current = items.map(item => ({
-      label: item.name,
-      value: item.id,
-    }));
+    setColumnSelectItems(
+      columns.map(column => ({
+        label: column.title,
+        value: column.id,
+      })),
+    );
+    setItemSelectItems(
+      items.map(item => ({
+        label: item.name,
+        value: item.id,
+      })),
+    );
     if (columns.length === 1) {
       setSelectedColumn(columns[0]);
     }
@@ -179,15 +188,15 @@ export default function LocationItemSelects() {
   const handleBoardChange = async (board: Board) => {
     setSelectedBoard(null);
     setSelectedBoard(board);
-    setSelectedColumn({} as Column);
-    setSelectedItem({} as Item);
+    setSelectedColumn(null);
+    setSelectedItem(null);
 
     await refetchColumns();
     await refetchItems();
   };
 
   const saveChanges = () => {
-    if (selectedBoard?.id && selectedColumn?.id && selectedItem?.id) {
+    if (selectedBoard && selectedColumn && selectedItem) {
       if (isTracking) {
         toggleShareLocation();
         setBoard(selectedBoard);
@@ -199,65 +208,62 @@ export default function LocationItemSelects() {
         setColumn(selectedColumn);
         setItem(selectedItem);
       }
-      Burnt.toast({
-        title: 'Location Item Changed!',
-        message: "You've successfully changed the location item.",
-        preset: 'done',
-        layout: {
-          iconSize: {
-            width: 25,
-            height: 25,
-          },
-        },
-      });
+      ToastAndroid.show('Location saved!', ToastAndroid.SHORT);
     }
   };
 
   return (
-    <YStack alignItems="center">
-      <KeyboardAvoidingView style={{ gap: 10 }}>
-        <CustomAutomateSelect
-          options={boardSelectItemsRef.current}
-          placeholder="Board Select"
-          selectedValue={
-            selectedBoard ? { label: selectedBoard.name, value: selectedBoard.id } : null
-          }
-          disabled={false}
-          onValueChange={boardId => {
-            handleBoardChange(boards.find(board => board.id === boardId?.value) || ({} as Board));
-          }}
-        />
-        <CustomAutomateSelect
-          options={columnSelectItemsRef.current}
-          placeholder="Column Select"
-          disabled={!selectedBoard}
-          selectedValue={
-            selectedColumn ? { label: selectedColumn.title, value: selectedColumn.id } : null
-          }
-          onValueChange={newColumn => {
-            setSelectedColumn(
-              columns.find(column => column.id === newColumn?.value) || ({} as Column),
-            );
-          }}
-        />
+    <View className="justify-center gap-7 items-center m-10">
+      <SimpleSelect
+        options={boardSelectItems}
+        placeholder="Board Select"
+        selectedValue={
+          selectedBoard ? { label: selectedBoard.name, value: selectedBoard.id } : null
+        }
+        isLoading={boards.length === 0}
+        disabled={false}
+        onValueChange={async boardId => {
+          await handleBoardChange(
+            boards.find(board => board.id === boardId?.value) || ({} as Board),
+          );
+        }}
+      />
+      <SimpleSelect
+        options={columnSelectItems}
+        placeholder="Column Select"
+        disabled={!selectedBoard}
+        isLoading={columns.length === 0 && !!selectedBoard}
+        selectedValue={
+          selectedColumn ? { label: selectedColumn.title, value: selectedColumn.id } : null
+        }
+        onValueChange={newColumn => {
+          setSelectedColumn(
+            columns.find(column => column.id === newColumn?.value) || ({} as Column),
+          );
+        }}
+      />
 
-        <CustomAutomateSelect
-          options={itemSelectItemsRef.current}
-          placeholder="Item Select"
-          selectedValue={selectedItem ? { label: selectedItem.name, value: selectedItem.id } : null}
-          disabled={!selectedColumn}
-          onValueChange={newItem => {
-            setSelectedItem(items.find(item => item.id === newItem?.value) || ({} as Item));
-          }}
-        />
-        <Button
-          backgroundColor={!selectedItem ? 'gray' : 'black'}
-          onPress={saveChanges}
-          disabled={!selectedItem}
-        >
-          Save
-        </Button>
-      </KeyboardAvoidingView>
-    </YStack>
+      <SimpleSelect
+        options={itemSelectItems}
+        placeholder="Item Select"
+        isLoading={items.length === 0 && !!selectedColumn}
+        selectedValue={selectedItem ? { label: selectedItem.name, value: selectedItem.id } : null}
+        disabled={!selectedColumn || !selectedBoard}
+        onValueChange={newItem => {
+          setSelectedItem(items.find(item => item.id === newItem?.value) || ({} as Item));
+        }}
+      />
+
+      <SimpleAlertDialog
+        trigger={
+          <Button className="m-3" disabled={!selectedItem}>
+            <Text>Save</Text>
+          </Button>
+        }
+        actionIfConfirmed={saveChanges}
+        title="Are you sure?"
+        description="Check if the selected item is correct. you may update the wrong item if you continue."
+      />
+    </View>
   );
 }
