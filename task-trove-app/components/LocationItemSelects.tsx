@@ -201,7 +201,6 @@ export default function LocationItemSelects() {
   const saveChanges = () => {
     if (selectedBoard && selectedColumn && selectedItem) {
       if (isTracking) {
-        toggleShareLocation();
         setBoard(selectedBoard);
         setColumn(selectedColumn);
         setItem(selectedItem);
