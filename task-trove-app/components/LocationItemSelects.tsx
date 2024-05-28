@@ -29,7 +29,7 @@ export default function LocationItemSelects() {
   const [itemSelectItems, setItemSelectItems] = useState<{ label: string; value: string }[]>([]);
 
   const { setBoard, setColumn, setItem, board, column, item } = useSettingsStore();
-  const { toggleShareLocation, isTracking } = useToggleShareLocation();
+  const { isTracking } = useToggleShareLocation();
 
   const showAlert = (error: MondayAPIError) => {
     if (error.errors) {
@@ -62,6 +62,7 @@ export default function LocationItemSelects() {
   } = useMondayQuery({
     queryKey: [selectedBoard?.id || '', 'columns'],
     query: fetchColumnsQuery,
+    queryKey: [selectedBoard?.id || ''],
     variables: { boardId: selectedBoard?.id || '' },
     enabled: !!selectedBoard?.id,
   });
@@ -75,6 +76,7 @@ export default function LocationItemSelects() {
   } = useMondayQuery({
     queryKey: [selectedBoard?.id || '', 'items'],
     query: fetchItemsQuery,
+    queryKey: [selectedBoard?.id || ''],
     variables: { boardId: selectedBoard?.id || '' },
     enabled: !!selectedBoard?.id,
   });
@@ -200,11 +202,9 @@ export default function LocationItemSelects() {
   const saveChanges = () => {
     if (selectedBoard && selectedColumn && selectedItem) {
       if (isTracking) {
-        toggleShareLocation();
         setBoard(selectedBoard);
         setColumn(selectedColumn);
         setItem(selectedItem);
-        toggleShareLocation();
       } else {
         setBoard(selectedBoard);
         setColumn(selectedColumn);
