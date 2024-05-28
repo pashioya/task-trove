@@ -4,10 +4,8 @@ import React from 'react';
 import { View, Image, Text, ScrollView } from 'react-native';
 import colors from 'tailwindcss/colors';
 import { Button } from '~/components/ui/button';
-import * as NavigationBar from 'expo-navigation-bar';
 
 export default function One() {
-  NavigationBar.setBackgroundColorAsync(colors.blue[200]);
   return (
     <>
       <View className="flex-1 ">
@@ -15,7 +13,7 @@ export default function One() {
           style={{
             flex: 1,
           }}
-          colors={[colors.blue[50], colors.blue[200]]}
+          colors={[colors.blue[50], colors.blue[100]]}
         >
           <ScrollView>
             <View className="bg-blue-500 m-3 shrink rounded-2xl p-2 ">
