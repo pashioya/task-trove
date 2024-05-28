@@ -62,7 +62,6 @@ export default function LocationItemSelects() {
   } = useMondayQuery({
     queryKey: [selectedBoard?.id || '', 'columns'],
     query: fetchColumnsQuery,
-    queryKey: [selectedBoard?.id || ''],
     variables: { boardId: selectedBoard?.id || '' },
     enabled: !!selectedBoard?.id,
   });
@@ -76,7 +75,6 @@ export default function LocationItemSelects() {
   } = useMondayQuery({
     queryKey: [selectedBoard?.id || '', 'items'],
     query: fetchItemsQuery,
-    queryKey: [selectedBoard?.id || ''],
     variables: { boardId: selectedBoard?.id || '' },
     enabled: !!selectedBoard?.id,
   });
@@ -129,7 +127,9 @@ export default function LocationItemSelects() {
           value: column.id,
         })),
       );
-      if (columns.length === 1) {
+      if (columns.length === 0) {
+        setSelectedColumn(null);
+      } else if (columns.length === 1) {
         setSelectedColumn(columns[0]);
       }
     }
@@ -145,17 +145,23 @@ export default function LocationItemSelects() {
       const items = itemsData.boards[0]?.items_page.items;
       setItems(items);
 
+      if (items.length === 0) {
+        setSelectedItem(null);
+      }
+
       setItemSelectItems(
         items.map(item => ({
           label: item.name,
           value: item.id,
         })),
       );
-      if (items.length === 1) {
+      if (columns.length === 0) {
+        setSelectedColumn(null);
+      } else if (items.length === 1) {
         setSelectedItem(items[0]);
       }
     }
-  }, [itemIsLoading, itemsData, itemsError, itemsIsError]);
+  }, [columns.length, itemIsLoading, itemsData, itemsError, itemsIsError]);
 
   useEffect(() => {
     if (board) {
@@ -192,8 +198,10 @@ export default function LocationItemSelects() {
 
   const handleBoardChange = async (board: Board) => {
     setSelectedBoard(board);
+    console.log(selectedColumn, selectedItem);
     setSelectedColumn(null);
     setSelectedItem(null);
+    console.log(selectedColumn, selectedItem);
 
     await refetchColumns();
     await refetchItems();
@@ -231,7 +239,7 @@ export default function LocationItemSelects() {
       />
       <SimpleSelect
         options={columnSelectItems}
-        placeholder="Column Select"
+        placeholder={selectedColumn ? selectedColumn.title : 'Column Select'}
         disabled={!selectedBoard}
         isLoading={columnsIsLoading}
         selectedValue={
@@ -243,7 +251,7 @@ export default function LocationItemSelects() {
       />
       <SimpleSelect
         options={itemSelectItems}
-        placeholder="Item Select"
+        placeholder={selectedItem ? selectedItem.name : 'Item Select'}
         isLoading={itemIsLoading}
         selectedValue={selectedItem ? { label: selectedItem.name, value: selectedItem.id } : null}
         disabled={!selectedColumn || !selectedBoard}
