@@ -60,6 +60,7 @@ export default function LocationItemSelects() {
     error: columnsError,
     refetch: refetchColumns,
   } = useMondayQuery({
+    queryKey: [selectedBoard?.id || ''],
     query: fetchColumnsQuery,
     queryKey: [selectedBoard?.id || ''],
     variables: { boardId: selectedBoard?.id || '' },
@@ -73,6 +74,7 @@ export default function LocationItemSelects() {
     error: itemsError,
     refetch: refetchItems,
   } = useMondayQuery({
+    queryKey: [selectedBoard?.id || ''],
     query: fetchItemsQuery,
     queryKey: [selectedBoard?.id || ''],
     variables: { boardId: selectedBoard?.id || '' },
@@ -223,7 +225,7 @@ export default function LocationItemSelects() {
   };
 
   return (
-    <View className="justify-center gap-7 items-center m-10">
+    <View className="items-center justify-center m-10 gap-7">
       <SimpleSelect
         options={boardSelectItems}
         placeholder="Board Select"
