@@ -252,7 +252,7 @@ export default function LocationItemSelects() {
       />
       <SimpleAlertDialog
         trigger={
-          <Button className="m-3" disabled={!selectedItem}>
+          <Button className=" w-52" disabled={!selectedItem}>
             <Text>Save</Text>
           </Button>
         }

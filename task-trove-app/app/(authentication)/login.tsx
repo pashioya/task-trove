@@ -6,9 +6,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import colors from 'tailwindcss/colors';
 import { Text } from '~/components/ui/text';
 import { Separator } from '~/components/primitives/select';
+import * as NavigationBar from 'expo-navigation-bar';
 
 export default function Login() {
   const { signIn } = useSession();
+
+  NavigationBar.setBackgroundColorAsync('#93c5fd');
 
   return (
     <>
