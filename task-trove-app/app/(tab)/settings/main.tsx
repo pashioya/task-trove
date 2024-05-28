@@ -57,6 +57,7 @@ export default function Settings() {
                 <View className="flex-grow" />
                 <Switch
                   checked={isDarkColorScheme}
+                  disabled
                   onCheckedChange={() => setColorScheme(newTheme)}
                 />
               </View>

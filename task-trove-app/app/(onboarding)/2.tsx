@@ -12,6 +12,7 @@ import colors from 'tailwindcss/colors';
 export default function Two() {
   const { item, setOnboardingCompleted } = useSettingsStore();
   NavigationBar.setBackgroundColorAsync(colors.white);
+  NavigationBar.setButtonStyleAsync('dark');
 
   return (
     <>
