@@ -60,7 +60,7 @@ export default function LocationItemSelects() {
     error: columnsError,
     refetch: refetchColumns,
   } = useMondayQuery({
-    queryKey: [selectedBoard?.id || ''],
+    queryKey: [selectedBoard?.id || '', 'columns'],
     query: fetchColumnsQuery,
     queryKey: [selectedBoard?.id || ''],
     variables: { boardId: selectedBoard?.id || '' },
@@ -74,7 +74,7 @@ export default function LocationItemSelects() {
     error: itemsError,
     refetch: refetchItems,
   } = useMondayQuery({
-    queryKey: [selectedBoard?.id || ''],
+    queryKey: [selectedBoard?.id || '', 'items'],
     query: fetchItemsQuery,
     queryKey: [selectedBoard?.id || ''],
     variables: { boardId: selectedBoard?.id || '' },
@@ -141,14 +141,7 @@ export default function LocationItemSelects() {
         showAlert(itemsError);
       }
 
-      if (
-        !itemsData ||
-        !itemsData.boards ||
-        !itemsData.boards[0] ||
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        !itemsData.boards[0].items_page?.items
-      )
-        return;
+      if (!itemsData || !itemsData.boards || !itemsData.boards[0]) return;
       const items = itemsData.boards[0]?.items_page.items;
       setItems(items);
 
