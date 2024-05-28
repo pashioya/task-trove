@@ -40,8 +40,6 @@ const useToggleShareLocation = () => {
       const hour = now.getHours();
       const minute = now.getMinutes();
 
-      console.log(startTime, endTime);
-
       const totalMinutes = hour * 60 + minute;
 
       if (totalMinutes >= startTime && totalMinutes <= endTime) {
@@ -50,7 +48,6 @@ const useToggleShareLocation = () => {
           setIsTracking(true);
         }
       } else {
-        console.log('here');
         if (isTracking) {
           await stopLocationUpdates();
           setIsTracking(false);
