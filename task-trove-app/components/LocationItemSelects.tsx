@@ -205,14 +205,15 @@ export default function LocationItemSelects() {
     await refetchItems();
   };
 
-  const saveChanges = () => {
+  const saveChanges = async () => {
     if (selectedBoard && selectedColumn && selectedItem) {
       if (isTracking) {
-        toggleShareLocation();
+        console.log('save changes + is Tracking');
+        await toggleShareLocation();
         setBoard(selectedBoard);
         setColumn(selectedColumn);
         setItem(selectedItem);
-        toggleShareLocation();
+        await toggleShareLocation();
       } else {
         setBoard(selectedBoard);
         setColumn(selectedColumn);
