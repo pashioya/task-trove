@@ -34,46 +34,6 @@ const SelectTrigger = React.forwardRef<
 ));
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
 
-/**
- * Platform: WEB ONLY
- */
-const SelectScrollUpButton = ({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollUpButton>) => {
-  if (Platform.OS !== 'web') {
-    return null;
-  }
-  return (
-    <SelectPrimitive.ScrollUpButton
-      className={cn('flex web:cursor-default items-center justify-center py-1', className)}
-      {...props}
-    >
-      <ChevronUp size={14} className="text-foreground" />
-    </SelectPrimitive.ScrollUpButton>
-  );
-};
-
-/**
- * Platform: WEB ONLY
- */
-const SelectScrollDownButton = ({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollDownButton>) => {
-  if (Platform.OS !== 'web') {
-    return null;
-  }
-  return (
-    <SelectPrimitive.ScrollDownButton
-      className={cn('flex web:cursor-default items-center justify-center py-1', className)}
-      {...props}
-    >
-      <ChevronDown size={14} className="text-foreground" />
-    </SelectPrimitive.ScrollDownButton>
-  );
-};
-
 const SelectContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content> & { portalHost?: string }
@@ -98,7 +58,6 @@ const SelectContent = React.forwardRef<
             position={position}
             {...props}
           >
-            <SelectScrollUpButton />
             <SelectPrimitive.Viewport
               className={cn(
                 'p-1',
@@ -108,7 +67,6 @@ const SelectContent = React.forwardRef<
             >
               {children}
             </SelectPrimitive.Viewport>
-            <SelectScrollDownButton />
           </SelectPrimitive.Content>
         </Animated.View>
       </SelectPrimitive.Overlay>
@@ -174,8 +132,6 @@ export {
   SelectGroup,
   SelectItem,
   SelectLabel,
-  SelectScrollDownButton,
-  SelectScrollUpButton,
   SelectSeparator,
   SelectTrigger,
   SelectValue,
