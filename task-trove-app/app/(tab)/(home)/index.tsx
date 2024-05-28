@@ -31,7 +31,7 @@ export default function Home() {
   const router = useRouter();
 
   const mapRef = useRef<MapView>(null);
-  const { board, column, item, error, setError } = useSettingsStore();
+  const { board, column, item, setError } = useSettingsStore();
 
   const { mutate: updateLocation, error: updateLocationError } = useMondayMutation({
     mutation: changeMultipleColumnValuesMutation,
@@ -79,7 +79,7 @@ export default function Home() {
         'Go to Settings',
       );
     }
-  }, [error, item, requestPermissions, router]);
+  }, [item, requestPermissions, router]);
 
   const onLocateMe = async () => {
     try {
