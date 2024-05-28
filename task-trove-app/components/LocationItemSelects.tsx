@@ -60,6 +60,7 @@ export default function LocationItemSelects() {
     error: columnsError,
     refetch: refetchColumns,
   } = useMondayQuery({
+    queryKey: [selectedBoard?.id || ''],
     query: fetchColumnsQuery,
     variables: { boardId: selectedBoard?.id || '' },
     enabled: !!selectedBoard?.id,
@@ -72,6 +73,7 @@ export default function LocationItemSelects() {
     error: itemsError,
     refetch: refetchItems,
   } = useMondayQuery({
+    queryKey: [selectedBoard?.id || ''],
     query: fetchItemsQuery,
     variables: { boardId: selectedBoard?.id || '' },
     enabled: !!selectedBoard?.id,
@@ -137,8 +139,15 @@ export default function LocationItemSelects() {
         showAlert(itemsError);
       }
 
-      if (!itemsData || !itemsData.boards || !itemsData.boards[0]) return;
-      const items = itemsData.boards[0].items_page.items as Item[];
+      if (
+        !itemsData ||
+        !itemsData.boards ||
+        !itemsData.boards[0] ||
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        !itemsData.boards[0].items_page?.items
+      )
+        return;
+      const items = itemsData.boards[0]?.items_page.items;
       setItems(items);
 
       setItemSelectItems(
@@ -213,7 +222,7 @@ export default function LocationItemSelects() {
   };
 
   return (
-    <View className="justify-center gap-7 items-center m-10">
+    <View className="items-center justify-center m-10 gap-7">
       <SimpleSelect
         options={boardSelectItems}
         placeholder="Board Select"
