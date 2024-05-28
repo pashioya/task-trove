@@ -26,12 +26,12 @@ const showAlert = (error: string, onPress: () => void, buttonText: string) => {
 
 export default function Home() {
   const { isTracking, region, setRegion } = useToggleShareLocation();
-  const { foregroundStatus, backgroundStatus } = useLocationPermissions();
+  const { requestPermissions } = useLocationPermissions();
   const { isDarkColorScheme } = useColorScheme();
   const router = useRouter();
 
   const mapRef = useRef<MapView>(null);
-  const { board, column, item, error, setError } = useSettingsStore();
+  const { board, column, item, setError } = useSettingsStore();
 
   const { mutate: updateLocation, error: updateLocationError } = useMondayMutation({
     mutation: changeMultipleColumnValuesMutation,
@@ -66,6 +66,10 @@ export default function Home() {
   }, [updateLocationError]);
 
   useEffect(() => {
+    const checkPermissions = async () => {
+      await requestPermissions();
+    };
+    checkPermissions();
     if (!item) {
       showAlert(
         'Location Column Not Correctly Setup',
@@ -75,14 +79,7 @@ export default function Home() {
         'Go to Settings',
       );
     }
-    if (foregroundStatus !== 'granted' || backgroundStatus !== 'granted') {
-      showAlert(
-        error ? error.message : 'Location permissions not granted',
-        () => router.push('/settings/location'),
-        'Open Settings',
-      );
-    }
-  }, [foregroundStatus, backgroundStatus, error, item, router]);
+  }, [item, requestPermissions, router]);
 
   const onLocateMe = async () => {
     try {
