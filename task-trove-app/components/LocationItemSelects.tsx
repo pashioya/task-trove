@@ -62,6 +62,7 @@ export default function LocationItemSelects() {
   } = useMondayQuery({
     queryKey: [selectedBoard?.id || '', 'columns'],
     query: fetchColumnsQuery,
+    queryKey: [selectedBoard?.id || ''],
     variables: { boardId: selectedBoard?.id || '' },
     enabled: !!selectedBoard?.id,
   });
@@ -75,6 +76,7 @@ export default function LocationItemSelects() {
   } = useMondayQuery({
     queryKey: [selectedBoard?.id || '', 'items'],
     query: fetchItemsQuery,
+    queryKey: [selectedBoard?.id || ''],
     variables: { boardId: selectedBoard?.id || '' },
     enabled: !!selectedBoard?.id,
   });
