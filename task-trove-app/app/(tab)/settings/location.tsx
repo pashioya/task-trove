@@ -46,14 +46,12 @@ export default function LocationSettings() {
       Alert.alert('Error', 'Troubles setting time');
       return;
     }
-    const hours = selectedDate.getHours().toString().padStart(2, '0');
-    const minutes = selectedDate.getMinutes().toString().padStart(2, '0');
-    const timeString = `${hours}:${minutes}`;
+    const totalMinutes = selectedDate.getHours() * 60 + selectedDate.getMinutes();
 
     if (type === 'start') {
-      setStartTime(timeString);
+      setStartTime(totalMinutes);
     } else if (type === 'end') {
-      setEndTime(timeString);
+      setEndTime(totalMinutes);
     }
 
     if (type === 'start') {
@@ -121,7 +119,9 @@ export default function LocationSettings() {
               </TouchableOpacity>
               {showStartTimePicker && (
                 <RNDateTimePicker
-                  value={new Date(`1970-01-01T${startTime}:00`)}
+                  value={
+                    new Date(`1970-01-01T${Math.floor(startTime / 60) % 24}:${startTime % 60}:00`)
+                  }
                   mode="time"
                   is24Hour
                   onChange={event => handleTimeChange(event, 'start')}
@@ -129,7 +129,7 @@ export default function LocationSettings() {
               )}
               {showEndTimePicker && (
                 <RNDateTimePicker
-                  value={new Date(`1970-01-01T${endTime}:00`)}
+                  value={new Date(`1970-01-01T${Math.floor(endTime / 60) % 24}:${endTime % 60}:00`)}
                   mode="time"
                   is24Hour
                   onChange={event => handleTimeChange(event, 'end')}

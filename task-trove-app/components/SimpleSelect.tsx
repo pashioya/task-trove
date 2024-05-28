@@ -9,11 +9,11 @@ import {
 } from '~/components/ui/select';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-gesture-handler';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 
 type Option = { label: string; value: string };
 
-type CustomAutomateSelectProps = {
+type SimpleSelectProps = {
   options: Option[];
   disabled: boolean;
   isLoading?: boolean;
@@ -25,11 +25,11 @@ type CustomAutomateSelectProps = {
 export function SimpleSelect({
   options,
   disabled,
-  isLoading,
+  isLoading = true,
   selectedValue,
   onValueChange,
   placeholder,
-}: CustomAutomateSelectProps) {
+}: SimpleSelectProps) {
   const insets = useSafeAreaInsets();
   const contentInsets = {
     top: insets.top,
@@ -48,14 +48,7 @@ export function SimpleSelect({
       disabled={disabled}
     >
       <SelectTrigger disabled={disabled} className="w-[250px]">
-        {isLoading ? (
-          <ActivityIndicator />
-        ) : (
-          <SelectValue
-            className="text-foreground text-sm native:text-lg"
-            placeholder={placeholder}
-          />
-        )}
+        <SelectValue className="text-foreground text-sm native:text-lg" placeholder={placeholder} />
       </SelectTrigger>
 
       <SelectContent
@@ -65,15 +58,19 @@ export function SimpleSelect({
         <SelectLabel>{placeholder}</SelectLabel>
         <ScrollView>
           <SelectGroup>
-            {options.length === 0 && (
-              <SelectItem disabled key="empty" label="No Options Found" value="" />
+            {isLoading ? (
+              <View className="flex items-center justify-center h-full">
+                <ActivityIndicator />
+              </View>
+            ) : options.length === 0 ? (
+              <SelectItem disabled key="empty" label="No Options Availlable" value="" />
+            ) : (
+              options.map(option => (
+                <SelectItem key={option.value} label={option.label} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))
             )}
-            <ActivityIndicator />
-            {options.map(option => (
-              <SelectItem key={option.value} label={option.label} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))}
           </SelectGroup>
         </ScrollView>
       </SelectContent>

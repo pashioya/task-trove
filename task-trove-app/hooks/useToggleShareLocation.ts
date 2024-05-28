@@ -10,9 +10,6 @@ type TaskData = {
 
 const TASK_FETCH_LOCATION = 'background-location-task';
 
-const START_TRACKING_TIME = 540; // 9 AM
-const END_TRACKING_TIME = 1050; // 5.30 PM
-
 TaskManager.defineTask<TaskData>(TASK_FETCH_LOCATION, ({ data, error }) => {
   if (error) {
     console.log('LOCATION_TRACKING task ERROR:', error);
@@ -35,7 +32,7 @@ TaskManager.defineTask<TaskData>(TASK_FETCH_LOCATION, ({ data, error }) => {
 
 const useToggleShareLocation = () => {
   const [region, setRegion] = useRegionStore(state => [state.region, state.setRegion]);
-  const { isTracking, setIsTracking, item } = useSettingsStore();
+  const { isTracking, setIsTracking, item, startTime, endTime } = useSettingsStore();
 
   useEffect(() => {
     const checkTime = async () => {
@@ -45,7 +42,7 @@ const useToggleShareLocation = () => {
 
       const totalMinutes = hour * 60 + minute;
 
-      if (totalMinutes >= START_TRACKING_TIME && hour <= END_TRACKING_TIME) {
+      if (totalMinutes >= startTime && totalMinutes <= endTime) {
         if (!isTracking) {
           await startLocationUpdates();
           setIsTracking(true);
@@ -61,7 +58,7 @@ const useToggleShareLocation = () => {
     const intervalId = setInterval(checkTime, 60000);
 
     return () => clearInterval(intervalId);
-  }, [isTracking, setIsTracking]);
+  }, [endTime, isTracking, setIsTracking, startTime]);
 
   const startLocationUpdates = async () => {
     await Location.startLocationUpdatesAsync(TASK_FETCH_LOCATION, {
