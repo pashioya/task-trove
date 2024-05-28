@@ -14,7 +14,7 @@ export const changeMultipleColumnValuesMutation = graphql(`
 
 export const fetchBoardsQuery = graphql(`
   query fetchBoards {
-    boards(limit: 100, order_by: used_at) {
+    boards(limit: 10, order_by: used_at) {
       id
       name
     }

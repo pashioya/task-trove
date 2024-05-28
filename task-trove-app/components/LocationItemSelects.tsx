@@ -61,6 +61,7 @@ export default function LocationItemSelects() {
     refetch: refetchColumns,
   } = useMondayQuery({
     query: fetchColumnsQuery,
+    queryKey: [selectedBoard?.id || ''],
     variables: { boardId: selectedBoard?.id || '' },
     enabled: !!selectedBoard?.id,
   });
@@ -73,6 +74,7 @@ export default function LocationItemSelects() {
     refetch: refetchItems,
   } = useMondayQuery({
     query: fetchItemsQuery,
+    queryKey: [selectedBoard?.id || ''],
     variables: { boardId: selectedBoard?.id || '' },
     enabled: !!selectedBoard?.id,
   });
@@ -137,8 +139,15 @@ export default function LocationItemSelects() {
         showAlert(itemsError);
       }
 
-      if (!itemsData || !itemsData.boards || !itemsData.boards[0]) return;
-      const items = itemsData.boards[0].items_page.items as Item[];
+      if (
+        !itemsData ||
+        !itemsData.boards ||
+        !itemsData.boards[0] ||
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        !itemsData.boards[0].items_page?.items
+      )
+        return;
+      const items = itemsData.boards[0]?.items_page.items;
       setItems(items);
 
       setItemSelectItems(
