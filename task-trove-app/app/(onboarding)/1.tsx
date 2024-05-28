@@ -18,11 +18,11 @@ export default function One() {
           colors={[colors.blue[50], colors.blue[200]]}
         >
           <ScrollView>
-            <View className="bg-blue-500 m-3 rounded-2xl p-2 ">
+            <View className="bg-blue-500 m-3 shrink rounded-2xl p-2 ">
               <Image
                 source={require('~/assets/images/tryve/general.jpg')}
-                className="w-full h-96 rounded-2xl"
-                style={{ width: '100%', height: 450, borderRadius: 20 }}
+                className="w-full h-96 rounded-2xl shrink"
+                style={{ width: '100%', height: 400, borderRadius: 20 }}
               />
             </View>
             <View className="flex-1 space-x-4 py-25 px-9">

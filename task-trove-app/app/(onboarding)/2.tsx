@@ -17,9 +17,9 @@ export default function Two() {
   return (
     <>
       <Stack.Screen options={{ title: 'Onboarding Two', headerShown: false, headerTitle: '' }} />
-      <SafeAreaView className="flex-1">
-        <ScrollView className="m-4 pt-52">
-          <View className=" flex justify-between">
+      <SafeAreaView className="h-full">
+        <ScrollView className="h-full">
+          <View className="h-full py-10 flex-1 item-center justify-between">
             <View>
               <Text className="text-2xl font-semibold leading-relaxed text-center">
                 Location Board Selection
@@ -30,7 +30,7 @@ export default function Two() {
               <LocationItemSelects />
             </View>
             <Button
-              className="rounded-md w-52 mt-4 self-center "
+              className="rounded-md w-96 mt-4 self-center bg-blue-700"
               onPress={() => {
                 setOnboardingCompleted(true);
                 router.replace('/');

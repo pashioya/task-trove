@@ -41,62 +41,71 @@ export default function Settings() {
             </View>
           </View>
           <ScrollView>
-            <View className="px-6">
-              <Text className="py-3 text-xs font-semibold tracking-wider">PREFERENCES</Text>
-              <View
-                style={{ backgroundColor: rowColor }}
-                className="flex-row items-center justify-start h-12 bg-gray-100 rounded-lg mb-3 px-3"
-              >
+            <View className="px-6 flex-1 justify-between">
+              <View>
+                <Text className="py-3 text-xs font-semibold tracking-wider">PREFERENCES</Text>
                 <View
-                  className="w-8 h-8 rounded-full mr-3 flex items-center justify-center bg-blue-500"
-                  style={[{ backgroundColor: '#007afe' }]}
+                  style={{ backgroundColor: rowColor }}
+                  className="flex-row items-center justify-start h-12 bg-gray-100 rounded-lg mb-3 px-3"
                 >
-                  <Moon color="#fff" size={20} />
+                  <View
+                    className="w-8 h-8 rounded-full mr-3 flex items-center justify-center bg-blue-500"
+                    style={[{ backgroundColor: '#007afe' }]}
+                  >
+                    <Moon color="#fff" size={20} />
+                  </View>
+                  <Text className="text-lg font-normal ">Dark Mode</Text>
+                  <View className="flex-grow" />
+                  <Switch
+                    checked={isDarkColorScheme}
+                    disabled
+                    onCheckedChange={() => setColorScheme(newTheme)}
+                  />
                 </View>
-                <Text className="text-lg font-normal ">Dark Mode</Text>
-                <View className="flex-grow" />
-                <Switch
-                  checked={isDarkColorScheme}
-                  disabled
-                  onCheckedChange={() => setColorScheme(newTheme)}
-                />
-              </View>
-              <TouchableOpacity
-                onPress={() => {
-                  router.push('/settings/location');
-                }}
-                style={{ backgroundColor: rowColor }}
-                className="flex-row items-center justify-start h-12  rounded-lg mb-3 px-3"
-              >
-                <View className="w-8 h-8 rounded-full mr-3 flex items-center justify-center bg-green-500">
-                  <Navigation color="#fff" size={20} />
-                </View>
-                <Text className="text-lg font-normal ">Location</Text>
-                <View className="flex-grow" />
-                <ChevronRight color="#C6C6C6" size={20} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  router.push('/settings/notifications');
-                }}
-                style={{ backgroundColor: rowColor }}
-                className="flex-row items-center justify-start h-12  rounded-lg mb-3 px-3"
-              >
-                <View
-                  className="w-8 h-8 rounded-full mr-3 flex items-center justify-center bg-yellow-500"
-                  style={[{ backgroundColor: '#32c759' }]}
+                <TouchableOpacity
+                  onPress={() => {
+                    router.push('/settings/location');
+                  }}
+                  style={{ backgroundColor: rowColor }}
+                  className="flex-row items-center justify-start h-12  rounded-lg mb-3 px-3"
                 >
-                  <Ionicons name="notifications-outline" size={20} color="#fff" />
-                </View>
-                <Text className="text-lg font-normal ">Notifications</Text>
-                <View className="flex-grow" />
+                  <View className="w-8 h-8 rounded-full mr-3 flex items-center justify-center bg-green-500">
+                    <Navigation color="#fff" size={20} />
+                  </View>
+                  <Text className="text-lg font-normal ">Location</Text>
+                  <View className="flex-grow" />
+                  <ChevronRight color="#C6C6C6" size={20} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    router.push('/settings/notifications');
+                  }}
+                  style={{ backgroundColor: rowColor }}
+                  className="flex-row items-center justify-start h-12  rounded-lg mb-3 px-3"
+                >
+                  <View
+                    className="w-8 h-8 rounded-full mr-3 flex items-center justify-center bg-yellow-500"
+                    style={[{ backgroundColor: '#32c759' }]}
+                  >
+                    <Ionicons name="notifications-outline" size={20} color="#fff" />
+                  </View>
+                  <Text className="text-lg font-normal ">Notifications</Text>
+                  <View className="flex-grow" />
 
-                <ChevronRight color="#C6C6C6" size={20} />
-              </TouchableOpacity>
+                  <ChevronRight color="#C6C6C6" size={20} />
+                </TouchableOpacity>
+              </View>
+              <Button
+                onPress={() => router.push('/(onboarding)/1')}
+                variant="outline"
+                className=" border-red-600 "
+              >
+                <Text className="text-red-600">onboarding</Text>
+              </Button>
 
               <SimpleAlertDialog
                 trigger={
-                  <Button variant="outline" className=" mt-56 border-red-600 ">
+                  <Button variant="outline" className=" border-red-600">
                     <Text className="text-red-600">Logout</Text>
                   </Button>
                 }
