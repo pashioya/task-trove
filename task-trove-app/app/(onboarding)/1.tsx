@@ -20,7 +20,6 @@ export default function One() {
               <Image
                 source={require('~/assets/images/tryve/general.jpg')}
                 className="w-full h-96 rounded-2xl shrink"
-                style={{ height: 400, borderRadius: 20 }}
               />
             </View>
             <View className="flex-1 space-x-4 py-25 px-9">
