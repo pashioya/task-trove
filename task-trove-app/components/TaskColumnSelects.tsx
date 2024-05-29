@@ -20,17 +20,23 @@ export default function TaskColumnSelects() {
     taskColumnSelectItems,
     boardsIsLoading,
     columnsIsLoading,
-    refetchColumns,
+    refetchTaskColumns,
   } = useLocationItemSelects();
 
   const { taskBoard, taskColumn, setTaskBoard, setTaskColumn } = useSettingsStore();
 
   const handleTaskBoardChange = async (board: Board) => {
+    console.log('Selected board:', board);
     setSelectedBoard(null);
     setSelectedTaskBoard(board);
     setSelectedTaskColumn(null);
 
-    await refetchColumns();
+    console.log('current board:', taskBoard);
+
+    await refetchTaskColumns();
+
+    console.log('columns:', taskColumns);
+    console.log(' ');
   };
 
   const saveTaskColumn = () => {

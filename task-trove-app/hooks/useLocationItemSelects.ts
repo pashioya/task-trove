@@ -61,10 +61,23 @@ const useLocationItemSelects = () => {
     error: columnsError,
     refetch: refetchColumns,
   } = useMondayQuery({
-    queryKey: [selectedBoard?.id || selectedTaskBoard?.id || '', 'columns'],
+    queryKey: [selectedBoard?.id || '', 'columns'],
     query: fetchColumnsQuery,
-    variables: { boardId: selectedBoard?.id || selectedTaskBoard?.id || '' },
-    enabled: !!selectedBoard?.id || !!selectedTaskBoard?.id,
+    variables: { boardId: selectedBoard?.id || '' },
+    enabled: !!selectedBoard?.id,
+  });
+
+  const {
+    data: taskColumnsData,
+    isLoading: taskColumnsIsLoading,
+    isError: taskColumnsIsError,
+    error: taskColumnsError,
+    refetch: refetchTaskColumns,
+  } = useMondayQuery({
+    queryKey: [selectedTaskBoard?.id || '', 'columns'],
+    query: fetchColumnsQuery,
+    variables: { boardId: selectedTaskBoard?.id || '' },
+    enabled: !!selectedTaskBoard?.id,
   });
 
   const {
@@ -125,39 +138,61 @@ const useLocationItemSelects = () => {
     const columns: Column[] = columnsData.boards[0].columns.filter(
       (column): column is Column => column !== null,
     );
+    setColumns(columns);
 
-    if (selectedTaskBoard) {
-      setTaskColumns(columns);
+    setColumnSelectItems(
+      columns.map(column => ({
+        label: column.title,
+        value: column.id,
+      })),
+    );
 
-      setTaskColumnSelectItems(
-        columns.map(column => ({
-          label: column.title,
-          value: column.id,
-        })),
-      );
-
-      if (columns.length === 0) {
-        setSelectedTaskColumn(null);
-      } else if (columns.length === 1) {
-        setSelectedTaskColumn(columns[0]);
-      }
-    } else if (selectedBoard) {
-      setColumns(columns);
-
-      setColumnSelectItems(
-        columns.map(column => ({
-          label: column.title,
-          value: column.id,
-        })),
-      );
-
-      if (columns.length === 0) {
-        setSelectedColumn(null);
-      } else if (columns.length === 1) {
-        setSelectedColumn(columns[0]);
-      }
+    if (columns.length === 0) {
+      setSelectedColumn(null);
+    } else if (columns.length === 1) {
+      setSelectedColumn(columns[0]);
     }
   }, [columnsData, columnsError, columnsIsError, columnsIsLoading]);
+
+  useEffect(() => {
+    if (taskColumnsIsLoading) {
+      return;
+    }
+    if (taskColumnsIsError) {
+      showAlert(taskColumnsError);
+      return;
+    }
+
+    if (
+      !taskColumnsData ||
+      !taskColumnsData.boards ||
+      !taskColumnsData.boards[0] ||
+      !taskColumnsData.boards[0].columns
+    )
+      return;
+
+    const columns: Column[] = taskColumnsData.boards[0].columns.filter(
+      (column): column is Column => column !== null,
+    );
+
+    console.log('task columns:', columns);
+    setTaskColumns(columns);
+
+    setTaskColumnSelectItems(
+      columns.map(column => ({
+        label: column.title,
+        value: column.id,
+      })),
+    );
+
+    console.log('task column items:', taskColumnSelectItems);
+
+    if (columns.length === 0) {
+      setSelectedTaskColumn(null);
+    } else if (columns.length === 1) {
+      setSelectedTaskColumn(columns[0]);
+    }
+  }, [taskColumnsData, taskColumnsError, taskColumnsIsError, taskColumnsIsLoading]);
 
   useEffect(() => {
     if (itemIsLoading) {
@@ -201,7 +236,7 @@ const useLocationItemSelects = () => {
     if (item) {
       setSelectedItem(item);
     }
-  }, [board, column, item]);
+  }, [board, column, item, taskBoard, taskColumn]);
 
   return {
     boards,
@@ -225,6 +260,7 @@ const useLocationItemSelects = () => {
     boardsIsLoading,
     columnsIsLoading,
     itemIsLoading,
+    refetchTaskColumns,
     refetchColumns,
     refetchItems,
   };
