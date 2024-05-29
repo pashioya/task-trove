@@ -1,33 +1,29 @@
-import { useEffect, useState } from 'react';
-import type { Board, Column, Item } from '~/model/types';
-
-import { useSettingsStore } from '~/store';
+import { Alert, ToastAndroid, View } from 'react-native';
+import { SimpleSelect } from './SimpleSelect';
+import SimpleAlertDialog from './SimpleAlertDialog';
 import { useMondayQuery } from '~/lib/monday/api';
-import { fetchBoardsQuery, fetchColumnsQuery, fetchItemsQuery } from '~/lib/monday/queries';
+import { fetchBoardsQuery, fetchColumnsQuery } from '~/lib/monday/queries';
+import { useEffect, useState } from 'react';
+import type { Board, Column } from '~/model/types';
 import type { MondayAPIError } from '~/lib/monday/error';
 import { handleMondayErrorCode, handleMondayErrorStatusCode } from '~/utils/MondayErrorHandling';
-import { SimpleSelect } from './SimpleSelect';
+import { useSettingsStore } from '~/store';
 import { Button } from './ui/button';
 import { Text } from './ui/text';
-import SimpleAlertDialog from './SimpleAlertDialog';
-import { Alert, ToastAndroid, View } from 'react-native';
 
-export default function LocationItemSelects() {
+export default function TaskColumnSelects() {
   const [boards, setBoards] = useState<Board[]>([]);
   const [columns, setColumns] = useState<Column[]>([]);
-  const [items, setItems] = useState<Item[]>([]);
 
   const [selectedBoard, setSelectedBoard] = useState<Board | null>(null);
   const [selectedColumn, setSelectedColumn] = useState<Column | null>(null);
-  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
 
   const [boardSelectItems, setBoardSelectItems] = useState<{ label: string; value: string }[]>([]);
   const [columnSelectItems, setColumnSelectItems] = useState<{ label: string; value: string }[]>(
     [],
   );
-  const [itemSelectItems, setItemSelectItems] = useState<{ label: string; value: string }[]>([]);
 
-  const { setBoard, setColumn, setItem, board, column, item } = useSettingsStore();
+  const { setTaskBoard, setTaskColumn, taskBoard, taskColumn } = useSettingsStore();
 
   const showAlert = (error: MondayAPIError) => {
     if (error.errors) {
@@ -60,19 +56,6 @@ export default function LocationItemSelects() {
   } = useMondayQuery({
     queryKey: [selectedBoard?.id || '', 'columns'],
     query: fetchColumnsQuery,
-    variables: { boardId: selectedBoard?.id || '' },
-    enabled: !!selectedBoard?.id,
-  });
-
-  const {
-    data: itemsData,
-    isLoading: itemIsLoading,
-    isError: itemsIsError,
-    error: itemsError,
-    refetch: refetchItems,
-  } = useMondayQuery({
-    queryKey: [selectedBoard?.id || '', 'items'],
-    query: fetchItemsQuery,
     variables: { boardId: selectedBoard?.id || '' },
     enabled: !!selectedBoard?.id,
   });
@@ -134,81 +117,26 @@ export default function LocationItemSelects() {
   }, [columnsData, columnsError, columnsIsError, columnsIsLoading]);
 
   useEffect(() => {
-    if (!itemIsLoading) {
-      if (itemsIsError) {
-        showAlert(itemsError);
-      }
-
-      if (!itemsData || !itemsData.boards || !itemsData.boards[0]) return;
-      const items = itemsData.boards[0]?.items_page.items;
-      setItems(items);
-
-      if (items.length === 0) {
-        setSelectedItem(null);
-      }
-
-      setItemSelectItems(
-        items.map(item => ({
-          label: item.name,
-          value: item.id,
-        })),
-      );
-      if (columns.length === 0) {
-        setSelectedColumn(null);
-      } else if (items.length === 1) {
-        setSelectedItem(items[0]);
-      }
+    if (taskBoard) {
+      setSelectedBoard(taskBoard);
     }
-  }, [columns.length, itemIsLoading, itemsData, itemsError, itemsIsError]);
-
-  useEffect(() => {
-    if (board) {
-      setSelectedBoard(board);
+    if (taskColumn) {
+      setSelectedColumn(taskColumn);
     }
-    if (column) {
-      setSelectedColumn(column);
-    }
-    if (item) {
-      setSelectedItem(item);
-    }
-  }, [board, column, item]);
-
-  useEffect(() => {
-    setColumnSelectItems(
-      columns.map(column => ({
-        label: column.title,
-        value: column.id,
-      })),
-    );
-    setItemSelectItems(
-      items.map(item => ({
-        label: item.name,
-        value: item.id,
-      })),
-    );
-    if (columns.length === 1) {
-      setSelectedColumn(columns[0]);
-    }
-    if (items.length === 1) {
-      setSelectedItem(items[0]);
-    }
-  }, [columns, items]);
+  }, [taskBoard, taskColumn]);
 
   const handleBoardChange = async (board: Board) => {
     setSelectedBoard(board);
     setSelectedColumn(null);
-    setSelectedItem(null);
 
     await refetchColumns();
-    await refetchItems();
   };
 
   const saveChanges = () => {
-    if (selectedBoard && selectedColumn && selectedItem) {
-      setBoard(selectedBoard);
-      setColumn(selectedColumn);
-      setItem(selectedItem);
-      ToastAndroid.show('Location saved!', ToastAndroid.SHORT);
+    if (selectedBoard && selectedColumn) {
+      setTaskBoard(selectedBoard);
+      setTaskColumn(selectedColumn);
+      ToastAndroid.show('Task board saved!', ToastAndroid.SHORT);
     }
   };
 
@@ -239,19 +167,9 @@ export default function LocationItemSelects() {
           setSelectedColumn(columns.find(column => column.id === newColumn?.value) || null);
         }}
       />
-      <SimpleSelect
-        options={itemSelectItems}
-        placeholder={selectedItem ? selectedItem.name : 'Item Select'}
-        isLoading={itemIsLoading}
-        selectedValue={selectedItem ? { label: selectedItem.name, value: selectedItem.id } : null}
-        disabled={!selectedColumn || !selectedBoard}
-        onValueChange={newItem => {
-          setSelectedItem(items.find(item => item.id === newItem?.value) || null);
-        }}
-      />
       <SimpleAlertDialog
         trigger={
-          <Button className="m-3" disabled={!selectedItem}>
+          <Button className="m-3" disabled={!selectedColumn}>
             <Text>Save</Text>
           </Button>
         }

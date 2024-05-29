@@ -14,6 +14,8 @@ type SettingsState = {
   startTime: number;
   endTime: number;
   activeDays: number[];
+  taskBoard: Board | null;
+  taskColumn: Column | null;
   setActiveDays: (activeDays: number[]) => void;
   setEndTime: (endTime: number) => void;
   setStartTime: (startTime: number) => void;
@@ -24,6 +26,8 @@ type SettingsState = {
   setBoard: (board: Board) => void;
   setColumn: (column: Column) => void;
   setItem: (item: Item) => void;
+  setTaskBoard: (taskBoard: Board) => void;
+  setTaskColumn: (taskColumn: Column) => void;
 };
 
 const useSettingsStore = create<SettingsState>()(
@@ -39,6 +43,8 @@ const useSettingsStore = create<SettingsState>()(
       startTime: 540, // 9 AM (minutes since midnight: 9 * 60 + 0)
       endTime: 1020, // 5 PM
       activeDays: [],
+      taskBoard: null,
+      taskColumn: null,
       setActiveDays: activeDays => set({ activeDays }),
       setEndTime: endTime => set({ endTime }),
       setStartTime: startTime => set({ startTime }),
@@ -49,6 +55,8 @@ const useSettingsStore = create<SettingsState>()(
       setBoard: board => set({ board }),
       setColumn: column => set({ column }),
       setItem: item => set({ item }),
+      setTaskBoard: taskBoard => set({ taskBoard }),
+      setTaskColumn: taskColumn => set({ taskColumn }),
     }),
     {
       name: 'settings-storage',
