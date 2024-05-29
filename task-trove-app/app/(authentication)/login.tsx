@@ -6,9 +6,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import colors from 'tailwindcss/colors';
 import { Text } from '~/components/ui/text';
 import { Separator } from '~/components/primitives/select';
+import * as NavigationBar from 'expo-navigation-bar';
 
 export default function Login() {
   const { signIn } = useSession();
+
+  NavigationBar.setBackgroundColorAsync('#93c5fd');
 
   return (
     <>
@@ -23,7 +26,7 @@ export default function Login() {
             className="w-72 h-72 rounded-full flex-shrink"
           />
         </View>
-        <View className=" absolute bottom-10 left-0 right-0 items-center gap-11">
+        <View className="absolute bottom-10 left-0 right-0 items-center gap-11">
           <Text className="text-2xl font-semibold ">Sign in With</Text>
           <Separator className="my-1 bg-black text-black h-1 w-64" />
           <Button size="lg" className="rounded-md flex-row" onPress={signIn}>

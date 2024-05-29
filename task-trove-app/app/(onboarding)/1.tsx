@@ -13,17 +13,17 @@ export default function One() {
           style={{
             flex: 1,
           }}
-          colors={[colors.blue[50], colors.blue[200]]}
+          colors={[colors.blue[50], colors.blue[100]]}
         >
           <ScrollView>
-            <View className="bg-blue-500 m-3 rounded-2xl p-2 ">
+            <View className="bg-blue-500 m-3 shrink rounded-2xl p-2 ">
               <Image
                 source={require('~/assets/images/tryve/general.jpg')}
-                style={{ width: '100%', height: 400, borderRadius: 20 }}
+                className="w-full h-96 rounded-2xl shrink"
               />
             </View>
-            <View className="flex-1 space-x-4 py-11 px-9">
-              <View>
+            <View className="flex-1 space-x-4 py-25 px-9">
+              <View className="py-10 gap-2">
                 <Text className="text-2xl font-medium text-purple-900 text-center mb-3 leading-10">
                   Track your location{'\n'}with{' '}
                   <View className="bg-blue-300" style={{ transform: [{ rotate: '-5deg' }] }}>
@@ -41,7 +41,7 @@ export default function One() {
                 </Text>
               </View>
               <Button onPress={() => router.push('/(onboarding)/2')} className="bg-blue-700">
-                <Text className="font-semibold text-white">Lets go</Text>
+                <Text className="font-semibold text-white">Let&apos;s go</Text>
               </Button>
             </View>
           </ScrollView>

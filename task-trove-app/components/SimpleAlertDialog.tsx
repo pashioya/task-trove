@@ -27,8 +27,10 @@ const SimpleAlertDialog: React.FC<AlertDialogScreenProps> = ({
   actionIfConfirmed,
 }) => {
   return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
+    <AlertDialog className="w-full">
+      <AlertDialogTrigger className="w-full" asChild>
+        {trigger}
+      </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
@@ -38,7 +40,7 @@ const SimpleAlertDialog: React.FC<AlertDialogScreenProps> = ({
           <AlertDialogCancel>
             <Text>Cancel</Text>
           </AlertDialogCancel>
-          <AlertDialogAction onPress={actionIfConfirmed}>
+          <AlertDialogAction className="bg-blue-500" onPress={actionIfConfirmed}>
             <Text>Continue</Text>
           </AlertDialogAction>
         </AlertDialogFooter>

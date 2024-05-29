@@ -24,14 +24,14 @@ export function SimpleDialog({ trigger, title, content }: SimpleDialogProps) {
       <DialogTrigger asChild>
         <TouchableOpacity>{trigger}</TouchableOpacity>
       </DialogTrigger>
-      <DialogContent className=" z-40">
+      <DialogContent className="z-40">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
         {content}
         <DialogFooter>
           <DialogClose asChild>
-            <Button>
+            <Button className="bg-blue-700">
               <Text>OK</Text>
             </Button>
           </DialogClose>
