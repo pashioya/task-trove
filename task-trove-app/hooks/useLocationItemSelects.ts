@@ -25,7 +25,7 @@ const useLocationItemSelects = () => {
   );
   const [itemSelectItems, setItemSelectItems] = useState<{ label: string; value: string }[]>([]);
 
-  const { board, column, item } = useSettingsStore();
+  const { taskBoard, taskColumn, board, column, item } = useSettingsStore();
 
   const showAlert = (error: MondayAPIError) => {
     if (error.errors) {
@@ -175,6 +175,12 @@ const useLocationItemSelects = () => {
   }, [columns.length, itemIsLoading, itemsData, itemsError, itemsIsError]);
 
   useEffect(() => {
+    if (taskBoard) {
+      setSelectedTaskBoard(taskBoard);
+    }
+    if (taskColumn) {
+      setSelectedTaskColumn(taskColumn);
+    }
     if (board) {
       setSelectedBoard(board);
     }

@@ -23,7 +23,7 @@ export default function TaskColumnSelects() {
     refetchColumns,
   } = useLocationItemSelects();
 
-  const { setTaskBoard, setTaskColumn } = useSettingsStore();
+  const { taskBoard, taskColumn, setTaskBoard, setTaskColumn } = useSettingsStore();
 
   const handleTaskBoardChange = async (board: Board) => {
     setSelectedBoard(null);
