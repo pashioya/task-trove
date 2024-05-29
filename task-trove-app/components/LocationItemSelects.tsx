@@ -198,10 +198,8 @@ export default function LocationItemSelects() {
 
   const handleBoardChange = async (board: Board) => {
     setSelectedBoard(board);
-    console.log(selectedColumn, selectedItem);
     setSelectedColumn(null);
     setSelectedItem(null);
-    console.log(selectedColumn, selectedItem);
 
     await refetchColumns();
     await refetchItems();
