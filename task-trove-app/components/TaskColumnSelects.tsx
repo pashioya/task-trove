@@ -65,7 +65,9 @@ export default function TaskColumnSelects() {
         disabled={!selectedTaskBoard}
         isLoading={columnsIsLoading}
         selectedValue={
-          selectedTaskColumn ? { label: selectedTaskColumn.title, value: selectedTaskColumn.id } : null
+          selectedTaskColumn
+            ? { label: selectedTaskColumn.title, value: selectedTaskColumn.id }
+            : null
         }
         onValueChange={newColumn => {
           setSelectedTaskColumn(columns.find(column => column.id === newColumn?.value) || null);
