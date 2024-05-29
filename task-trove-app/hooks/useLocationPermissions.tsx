@@ -21,9 +21,7 @@ const useLocationPermissions = () => {
     const { status: fgStatus } = await ExpoLocation.requestForegroundPermissionsAsync();
     if (fgStatus === 'granted') {
       const { status: bgStatus } = await ExpoLocation.requestBackgroundPermissionsAsync();
-      console.log('backgroundStatus', bgStatus);
       if (bgStatus !== 'granted') {
-        console.log('Background location permission not granted');
         showPermissionAlert();
       }
     } else {

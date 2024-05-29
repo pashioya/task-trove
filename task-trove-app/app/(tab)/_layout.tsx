@@ -5,10 +5,10 @@ import {
   ArrowLeft,
   CirclePauseIcon,
   CirclePlayIcon,
+  ClipboardListIcon,
   Home,
   LocateFixedIcon,
 } from 'lucide-react-native';
-import { Ionicons } from '@expo/vector-icons';
 
 import { Text } from '~/components/ui/text';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
@@ -16,7 +16,7 @@ import { useSettingsStore } from '~/store';
 import colors from 'tailwindcss/colors';
 import { useToggleShareLocation } from '~/hooks';
 
-export default function DrawerLayout() {
+export default function TabLayout() {
   const { session, isLoading } = useSession();
   const { isTracking } = useSettingsStore();
   const { toggleShareLocation } = useToggleShareLocation();
@@ -41,7 +41,7 @@ export default function DrawerLayout() {
         headerTitleAlign: 'center',
         headerTransparent: true,
         headerTitleStyle: {
-          backgroundColor: 'white',
+          backgroundColor: colors.blue[50],
           padding: 7,
           borderRadius: 10,
           elevation: 5,
@@ -55,7 +55,7 @@ export default function DrawerLayout() {
         },
         headerLeft: () => (
           <Pressable
-            className="bg-white rounded-full p-1"
+            className="bg-blue-50 rounded-full p-1"
             style={{
               elevation: 5,
               shadowColor: 'black',
@@ -107,7 +107,6 @@ export default function DrawerLayout() {
         headerLeftContainerStyle: {
           marginLeft: 20,
         },
-
         tabBarStyle: {
           position: 'absolute',
           bottom: 25,
@@ -116,7 +115,7 @@ export default function DrawerLayout() {
           height: 70,
           elevation: 5,
           borderRadius: 20,
-          backgroundColor: 'white',
+          backgroundColor: colors.blue[50],
           shadowColor: 'black',
           shadowOffset: {
             width: 0,
@@ -128,19 +127,16 @@ export default function DrawerLayout() {
       }}
     >
       <Tabs.Screen
-        name="boards"
+        name="(home)"
         options={{
-          headerTitle: 'Boards',
-          tabBarIcon: ({ focused }) => (
-            <Ionicons name="folder-outline" color={focused ? 'blue' : 'black'} size={30} />
-          ),
-          title: 'Boards',
-          tabBarBadge: 3,
-          tabBarLabel: 'Boards',
+          headerTitle: 'Task Trove',
+          tabBarIcon: ({ focused }) => <Home color={focused ? 'blue' : 'black'} size={30} />,
+          title: 'Home',
+          tabBarLabel: 'Home',
           tabBarLabelStyle: {
             fontSize: 12,
-            marginBottom: 15,
             fontWeight: 'bold',
+            marginBottom: 15,
           },
         }}
       />
@@ -183,16 +179,19 @@ export default function DrawerLayout() {
         }}
       />
       <Tabs.Screen
-        name="(home)"
+        name="tasks"
         options={{
-          headerTitle: 'Task Trove',
-          tabBarIcon: ({ focused }) => <Home color={focused ? 'blue' : 'black'} size={30} />,
-          title: 'Home',
-          tabBarLabel: 'Home',
+          headerTitle: 'Tasks',
+          tabBarIcon: ({ focused }) => (
+            <ClipboardListIcon color={focused ? 'blue' : 'black'} size={30} />
+          ),
+          title: 'Tasks',
+          tabBarBadge: 3,
+          tabBarLabel: 'Tasks',
           tabBarLabelStyle: {
             fontSize: 12,
-            fontWeight: 'bold',
             marginBottom: 15,
+            fontWeight: 'bold',
           },
         }}
       />
