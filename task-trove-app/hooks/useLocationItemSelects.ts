@@ -5,9 +5,9 @@ import { useMondayQuery } from '~/lib/monday/api';
 import { fetchBoardsQuery, fetchColumnsQuery, fetchItemsQuery } from '~/lib/monday/queries';
 import type { MondayAPIError } from '~/lib/monday/error';
 import { handleMondayErrorCode, handleMondayErrorStatusCode } from '~/utils/MondayErrorHandling';
-import { Alert, ToastAndroid } from 'react-native';
+import { Alert } from 'react-native';
 
-export const useLocationItemSelects = () => {
+const useLocationItemSelects = () => {
   const [boards, setBoards] = useState<Board[]>([]);
   const [columns, setColumns] = useState<Column[]>([]);
   const [items, setItems] = useState<Item[]>([]);
@@ -22,7 +22,7 @@ export const useLocationItemSelects = () => {
   );
   const [itemSelectItems, setItemSelectItems] = useState<{ label: string; value: string }[]>([]);
 
-  const { setBoard, setColumn, setItem, board, column, item } = useSettingsStore();
+  const { board, column, item } = useSettingsStore();
 
   const showAlert = (error: MondayAPIError) => {
     if (error.errors) {
@@ -174,27 +174,6 @@ export const useLocationItemSelects = () => {
     }
   }, [board, column, item]);
 
-  const handleBoardChange = async (board: Board) => {
-    setSelectedBoard(board);
-    setSelectedColumn(null);
-    setSelectedItem(null);
-
-    await refetchColumns();
-    await refetchItems();
-  };
-
-  const saveChanges = () => {
-    if (!selectedBoard || !selectedColumn || !selectedItem) {
-      ToastAndroid.show('Please select a board, column, and item!', ToastAndroid.SHORT);
-      return;
-    }
-    setBoard(selectedBoard);
-    setColumn(selectedColumn);
-    setItem(selectedItem);
-
-    ToastAndroid.show('Location saved!', ToastAndroid.SHORT);
-  };
-
   return {
     boards,
     columns,
@@ -211,7 +190,9 @@ export const useLocationItemSelects = () => {
     boardsIsLoading,
     columnsIsLoading,
     itemIsLoading,
-    handleBoardChange,
-    saveChanges,
+    refetchColumns,
+    refetchItems,
   };
 };
+
+export default useLocationItemSelects;

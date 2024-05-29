@@ -1,143 +1,45 @@
-import { Alert, ToastAndroid, View } from 'react-native';
+import { ToastAndroid, View } from 'react-native';
 import { SimpleSelect } from './SimpleSelect';
 import SimpleAlertDialog from './SimpleAlertDialog';
-import { useMondayQuery } from '~/lib/monday/api';
-import { fetchBoardsQuery, fetchColumnsQuery } from '~/lib/monday/queries';
-import { useEffect, useState } from 'react';
-import type { Board, Column } from '~/model/types';
-import type { MondayAPIError } from '~/lib/monday/error';
-import { handleMondayErrorCode, handleMondayErrorStatusCode } from '~/utils/MondayErrorHandling';
-import { useSettingsStore } from '~/store';
+import { useLocationItemSelects } from '~/hooks';
+import type { Board } from '~/model/types';
 import { Button } from './ui/button';
 import { Text } from './ui/text';
+import { useSettingsStore } from '~/store';
 
 export default function TaskColumnSelects() {
-  const [boards, setBoards] = useState<Board[]>([]);
-  const [columns, setColumns] = useState<Column[]>([]);
-
-  const [selectedBoard, setSelectedBoard] = useState<Board | null>(null);
-  const [selectedColumn, setSelectedColumn] = useState<Column | null>(null);
-
-  const [boardSelectItems, setBoardSelectItems] = useState<{ label: string; value: string }[]>([]);
-  const [columnSelectItems, setColumnSelectItems] = useState<{ label: string; value: string }[]>(
-    [],
-  );
-
-  const { setTaskBoard, setTaskColumn, taskBoard, taskColumn } = useSettingsStore();
-
-  const showAlert = (error: MondayAPIError) => {
-    if (error.errors) {
-      Alert.alert('Error', error.errorMessage, [{ text: 'Dismiss' }]);
-    } else if (error.errorCode) {
-      const errorMessage = handleMondayErrorCode(error.errorCode);
-      Alert.alert('Error', errorMessage, [{ text: 'Dismiss' }]);
-    } else if (error.statusCode) {
-      const errorMessage = handleMondayErrorStatusCode(error.statusCode);
-      Alert.alert('Error', errorMessage, [{ text: 'Dismiss' }]);
-    }
-  };
-
   const {
-    data: boardsData,
-    isLoading: boardsIsLoading,
-    isError: boardsIsError,
-    error: boardsError,
-  } = useMondayQuery({
-    query: fetchBoardsQuery,
-    variables: {},
-  });
+    boards,
+    columns,
+    selectedBoard,
+    selectedColumn,
+    setSelectedBoard,
+    setSelectedColumn,
+    boardSelectItems,
+    columnSelectItems,
+    boardsIsLoading,
+    columnsIsLoading,
+    refetchColumns,
+  } = useLocationItemSelects();
 
-  const {
-    data: columnsData,
-    isLoading: columnsIsLoading,
-    isError: columnsIsError,
-    error: columnsError,
-    refetch: refetchColumns,
-  } = useMondayQuery({
-    queryKey: [selectedBoard?.id || '', 'columns'],
-    query: fetchColumnsQuery,
-    variables: { boardId: selectedBoard?.id || '' },
-    enabled: !!selectedBoard?.id,
-  });
+  const { setBoard, setColumn } = useSettingsStore();
 
-  useEffect(() => {
-    if (!boardsIsLoading && boardsData) {
-      if (boardsIsError) {
-        showAlert(boardsError);
-      }
-      if (!boardsData.boards) return;
-
-      const boards: Board[] = boardsData.boards.filter((board): board is Board => board !== null);
-
-      setBoards(boards);
-
-      if (boards.length === 1) {
-        setSelectedBoard(boards[0]);
-      }
-      setBoardSelectItems(
-        boards.map(board => ({
-          label: board.name,
-          value: board.id,
-        })),
-      );
-    }
-  }, [boardsData, boardsError, boardsIsError, boardsIsLoading]);
-
-  useEffect(() => {
-    if (!columnsIsLoading) {
-      if (columnsIsError) {
-        showAlert(columnsError);
-      }
-
-      if (
-        !columnsData ||
-        !columnsData.boards ||
-        !columnsData.boards[0] ||
-        !columnsData.boards[0].columns
-      )
-        return;
-
-      const columns: Column[] = columnsData.boards[0].columns.filter(
-        (column): column is Column => column !== null,
-      );
-      setColumns(columns);
-
-      setColumnSelectItems(
-        columns.map(column => ({
-          label: column.title,
-          value: column.id,
-        })),
-      );
-      if (columns.length === 0) {
-        setSelectedColumn(null);
-      } else if (columns.length === 1) {
-        setSelectedColumn(columns[0]);
-      }
-    }
-  }, [columnsData, columnsError, columnsIsError, columnsIsLoading]);
-
-  useEffect(() => {
-    if (taskBoard) {
-      setSelectedBoard(taskBoard);
-    }
-    if (taskColumn) {
-      setSelectedColumn(taskColumn);
-    }
-  }, [taskBoard, taskColumn]);
-
-  const handleBoardChange = async (board: Board) => {
+  const handleTaskBoardChange = async (board: Board) => {
     setSelectedBoard(board);
     setSelectedColumn(null);
 
     await refetchColumns();
   };
 
-  const saveChanges = () => {
-    if (selectedBoard && selectedColumn) {
-      setTaskBoard(selectedBoard);
-      setTaskColumn(selectedColumn);
-      ToastAndroid.show('Task board saved!', ToastAndroid.SHORT);
+  const saveTaskColumn = () => {
+    if (!selectedBoard || !selectedColumn) {
+      ToastAndroid.show('Please select a board and column!', ToastAndroid.SHORT);
+      return;
     }
+    setBoard(selectedBoard);
+    setColumn(selectedColumn);
+
+    ToastAndroid.show('Task board saved!', ToastAndroid.SHORT);
   };
 
   return (
@@ -152,7 +54,7 @@ export default function TaskColumnSelects() {
         disabled={false}
         onValueChange={newBoard => {
           const board = boards.find(board => board.id === newBoard?.value) || null;
-          if (board) handleBoardChange(board);
+          if (board) handleTaskBoardChange(board);
         }}
       />
       <SimpleSelect
@@ -173,7 +75,7 @@ export default function TaskColumnSelects() {
             <Text>Save</Text>
           </Button>
         }
-        actionIfConfirmed={saveChanges}
+        actionIfConfirmed={saveTaskColumn}
         title="Are you sure?"
         description="Check if the selected item is correct. you may update the wrong item if you continue."
       />
