@@ -22,9 +22,9 @@ export default function Two() {
           colors={[colors.white, colors.blue[100]]}
         >
           <ScrollView>
-            <View className=" py-10 flex-1 item-center justify-between">
+            <View className="py-10 flex-1 item-center justify-between">
               <View>
-                <Text className=" mt-52 text-2xl font-semibold leading-relaxed text-center">
+                <Text className="mt-52 text-2xl font-semibold leading-relaxed text-center">
                   Location Board Selection
                 </Text>
                 <Text className="my-text text-l text-center mb-1">

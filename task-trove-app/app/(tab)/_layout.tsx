@@ -55,7 +55,7 @@ export default function TabLayout() {
         },
         headerLeft: () => (
           <Pressable
-            className=" bg-blue-50 rounded-full p-1"
+            className="bg-blue-50 rounded-full p-1"
             style={{
               elevation: 5,
               shadowColor: 'black',

@@ -42,7 +42,7 @@ export default function One() {
                 </Text>
               </View>
               <Button onPress={() => router.push('/(onboarding)/2')} className="bg-blue-700">
-                <Text className="font-semibold text-white">let&apos;s go</Text>
+                <Text className="font-semibold text-white">Let&apos;s go</Text>
               </Button>
             </View>
           </ScrollView>
