@@ -127,19 +127,16 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="boards"
+        name="(home)"
         options={{
-          headerTitle: 'Boards',
-          tabBarIcon: ({ focused }) => (
-            <ClipboardListIcon color={focused ? 'blue' : 'black'} size={30} />
-          ),
-          title: 'Boards',
-          tabBarBadge: 3,
-          tabBarLabel: 'Boards',
+          headerTitle: 'Task Trove',
+          tabBarIcon: ({ focused }) => <Home color={focused ? 'blue' : 'black'} size={30} />,
+          title: 'Home',
+          tabBarLabel: 'Home',
           tabBarLabelStyle: {
             fontSize: 12,
-            marginBottom: 15,
             fontWeight: 'bold',
+            marginBottom: 15,
           },
         }}
       />
@@ -182,16 +179,19 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="(home)"
+        name="tasks"
         options={{
-          headerTitle: 'Task Trove',
-          tabBarIcon: ({ focused }) => <Home color={focused ? 'blue' : 'black'} size={30} />,
-          title: 'Home',
-          tabBarLabel: 'Home',
+          headerTitle: 'Tasks',
+          tabBarIcon: ({ focused }) => (
+            <ClipboardListIcon color={focused ? 'blue' : 'black'} size={30} />
+          ),
+          title: 'Tasks',
+          tabBarBadge: 3,
+          tabBarLabel: 'Tasks',
           tabBarLabelStyle: {
             fontSize: 12,
-            fontWeight: 'bold',
             marginBottom: 15,
+            fontWeight: 'bold',
           },
         }}
       />
