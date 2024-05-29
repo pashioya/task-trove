@@ -59,7 +59,7 @@ const useLocationItemSelects = () => {
     queryKey: [selectedBoard?.id || selectedTaskBoard?.id || '', 'columns'],
     query: fetchColumnsQuery,
     variables: { boardId: selectedBoard?.id || selectedTaskBoard?.id || '' },
-    enabled: !!selectedBoard?.id,
+    enabled: !!selectedBoard?.id || !!selectedTaskBoard?.id,
   });
 
   const {
@@ -122,7 +122,6 @@ const useLocationItemSelects = () => {
     );
 
     setColumns(columns);
-    console.log(columns);
 
     setColumnSelectItems(
       columns.map(column => ({

@@ -31,7 +31,6 @@ export default function TaskColumnSelects() {
     setSelectedTaskColumn(null);
 
     await refetchColumns();
-    console.log("here", columns);
   };
 
   const saveTaskColumn = () => {

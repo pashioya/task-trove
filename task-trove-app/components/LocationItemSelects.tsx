@@ -29,7 +29,7 @@ export default function LocationItemSelects() {
     refetchItems,
   } = useLocationItemSelects();
 
-  const { setTaskBoard, setTaskColumn } = useSettingsStore();
+  const { setBoard, setColumn } = useSettingsStore();
 
   const handleBoardChange = async (board: Board) => {
     setSelectedTaskBoard(null);
@@ -46,8 +46,8 @@ export default function LocationItemSelects() {
       ToastAndroid.show('Please select a board, column, and item!', ToastAndroid.SHORT);
       return;
     }
-    setTaskBoard(selectedBoard);
-    setTaskColumn(selectedColumn);
+    setBoard(selectedBoard);
+    setColumn(selectedColumn);
 
     ToastAndroid.show('Location saved!', ToastAndroid.SHORT);
   };
