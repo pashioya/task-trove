@@ -12,6 +12,7 @@ export default function LocationItemSelects() {
     boards,
     columns,
     items,
+    setSelectedTaskBoard,
     selectedBoard,
     selectedColumn,
     setSelectedBoard,
@@ -31,6 +32,7 @@ export default function LocationItemSelects() {
   const { setTaskBoard, setTaskColumn } = useSettingsStore();
 
   const handleBoardChange = async (board: Board) => {
+    setSelectedTaskBoard(null);
     setSelectedBoard(board);
     setSelectedColumn(null);
     setSelectedItem(null);

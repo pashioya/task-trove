@@ -11,10 +11,11 @@ export default function TaskColumnSelects() {
   const {
     boards,
     columns,
-    selectedBoard,
-    selectedColumn,
     setSelectedBoard,
-    setSelectedColumn,
+    selectedTaskBoard,
+    selectedTaskColumn,
+    setSelectedTaskBoard,
+    setSelectedTaskColumn,
     boardSelectItems,
     columnSelectItems,
     boardsIsLoading,
@@ -22,22 +23,24 @@ export default function TaskColumnSelects() {
     refetchColumns,
   } = useLocationItemSelects();
 
-  const { setBoard, setColumn } = useSettingsStore();
+  const { setTaskBoard, setTaskColumn } = useSettingsStore();
 
   const handleTaskBoardChange = async (board: Board) => {
-    setSelectedBoard(board);
-    setSelectedColumn(null);
+    setSelectedBoard(null);
+    setSelectedTaskBoard(board);
+    setSelectedTaskColumn(null);
 
     await refetchColumns();
+    console.log("here", columns);
   };
 
   const saveTaskColumn = () => {
-    if (!selectedBoard || !selectedColumn) {
+    if (!selectedTaskBoard || !selectedTaskColumn) {
       ToastAndroid.show('Please select a board and column!', ToastAndroid.SHORT);
       return;
     }
-    setBoard(selectedBoard);
-    setColumn(selectedColumn);
+    setTaskBoard(selectedTaskBoard);
+    setTaskColumn(selectedTaskColumn);
 
     ToastAndroid.show('Task board saved!', ToastAndroid.SHORT);
   };
@@ -48,7 +51,7 @@ export default function TaskColumnSelects() {
         options={boardSelectItems}
         placeholder="Board Select"
         selectedValue={
-          selectedBoard ? { label: selectedBoard.name, value: selectedBoard.id } : null
+          selectedTaskBoard ? { label: selectedTaskBoard.name, value: selectedTaskBoard.id } : null
         }
         isLoading={boardsIsLoading}
         disabled={false}
@@ -59,19 +62,19 @@ export default function TaskColumnSelects() {
       />
       <SimpleSelect
         options={columnSelectItems}
-        placeholder={selectedColumn ? selectedColumn.title : 'Column Select'}
-        disabled={!selectedBoard}
+        placeholder={selectedTaskColumn ? selectedTaskColumn.title : 'Column Select'}
+        disabled={!selectedTaskBoard}
         isLoading={columnsIsLoading}
         selectedValue={
-          selectedColumn ? { label: selectedColumn.title, value: selectedColumn.id } : null
+          selectedTaskColumn ? { label: selectedTaskColumn.title, value: selectedTaskColumn.id } : null
         }
         onValueChange={newColumn => {
-          setSelectedColumn(columns.find(column => column.id === newColumn?.value) || null);
+          setSelectedTaskColumn(columns.find(column => column.id === newColumn?.value) || null);
         }}
       />
       <SimpleAlertDialog
         trigger={
-          <Button className="m-3" disabled={!selectedColumn}>
+          <Button className="m-3" disabled={!selectedTaskColumn}>
             <Text>Save</Text>
           </Button>
         }

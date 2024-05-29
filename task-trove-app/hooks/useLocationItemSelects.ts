@@ -16,6 +16,9 @@ const useLocationItemSelects = () => {
   const [selectedColumn, setSelectedColumn] = useState<Column | null>(null);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
 
+  const [selectedTaskBoard, setSelectedTaskBoard] = useState<Board | null>(null);
+  const [selectedTaskColumn, setSelectedTaskColumn] = useState<Column | null>(null);
+
   const [boardSelectItems, setBoardSelectItems] = useState<{ label: string; value: string }[]>([]);
   const [columnSelectItems, setColumnSelectItems] = useState<{ label: string; value: string }[]>(
     [],
@@ -53,9 +56,9 @@ const useLocationItemSelects = () => {
     error: columnsError,
     refetch: refetchColumns,
   } = useMondayQuery({
-    queryKey: [selectedBoard?.id || '', 'columns'],
+    queryKey: [selectedBoard?.id || selectedTaskBoard?.id || '', 'columns'],
     query: fetchColumnsQuery,
-    variables: { boardId: selectedBoard?.id || '' },
+    variables: { boardId: selectedBoard?.id || selectedTaskBoard?.id || '' },
     enabled: !!selectedBoard?.id,
   });
 
@@ -117,7 +120,9 @@ const useLocationItemSelects = () => {
     const columns: Column[] = columnsData.boards[0].columns.filter(
       (column): column is Column => column !== null,
     );
+
     setColumns(columns);
+    console.log(columns);
 
     setColumnSelectItems(
       columns.map(column => ({
@@ -125,10 +130,18 @@ const useLocationItemSelects = () => {
         value: column.id,
       })),
     );
-    if (columns.length === 0) {
-      setSelectedColumn(null);
-    } else if (columns.length === 1) {
-      setSelectedColumn(columns[0]);
+    if (selectedTaskBoard) {
+      if (columns.length === 0) {
+        setSelectedTaskColumn(null);
+      } else if (columns.length === 1) {
+        setSelectedTaskColumn(columns[0]);
+      }
+    } else if (selectedBoard) {
+      if (columns.length === 0) {
+        setSelectedColumn(null);
+      } else if (columns.length === 1) {
+        setSelectedColumn(columns[0]);
+      }
     }
   }, [columnsData, columnsError, columnsIsError, columnsIsLoading]);
 
@@ -184,6 +197,10 @@ const useLocationItemSelects = () => {
     setSelectedColumn,
     selectedItem,
     setSelectedItem,
+    selectedTaskBoard,
+    setSelectedTaskBoard,
+    selectedTaskColumn,
+    setSelectedTaskColumn,
     boardSelectItems,
     columnSelectItems,
     itemSelectItems,
