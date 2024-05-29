@@ -28,7 +28,7 @@ export default function LocationItemSelects() {
     refetchItems,
   } = useLocationItemSelects();
 
-  const { setBoard, setColumn, setItem } = useSettingsStore();
+  const { setTaskBoard, setTaskColumn } = useSettingsStore();
 
   const handleBoardChange = async (board: Board) => {
     setSelectedBoard(board);
@@ -44,9 +44,8 @@ export default function LocationItemSelects() {
       ToastAndroid.show('Please select a board, column, and item!', ToastAndroid.SHORT);
       return;
     }
-    setBoard(selectedBoard);
-    setColumn(selectedColumn);
-    setItem(selectedItem);
+    setTaskBoard(selectedBoard);
+    setTaskColumn(selectedColumn);
 
     ToastAndroid.show('Location saved!', ToastAndroid.SHORT);
   };
@@ -90,7 +89,7 @@ export default function LocationItemSelects() {
       />
       <SimpleAlertDialog
         trigger={
-          <Button className="m-3" disabled={!selectedItem}>
+          <Button className="bg-blue-700 w-full" disabled={!selectedItem}>
             <Text>Save</Text>
           </Button>
         }
