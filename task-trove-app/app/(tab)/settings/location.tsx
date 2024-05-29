@@ -64,8 +64,8 @@ export default function LocationSettings() {
 
   return (
     <>
-      <Stack.Screen options={{ title: 'Boards' }} />
-      <SafeAreaView style={{ flex: 1, marginTop: 50 }}>
+      <Stack.Screen options={{ title: 'Location', headerShadowVisible: false }} />
+      <SafeAreaView style={{ flex: 1 }}>
         <LinearGradient
           style={{
             flex: 1,
@@ -78,18 +78,6 @@ export default function LocationSettings() {
                 <Text className="py-3 text-xs font-semibold uppercase tracking-wider mb-8">
                   Tracking
                 </Text>
-                <View
-                  style={{ backgroundColor: rowColor }}
-                  className="flex-row items-center justify-start h-12 rounded-lg mb-3 px-3"
-                >
-                  <Text className="text-lg font-normal">Location Tracking</Text>
-                  <View className="flex-1" />
-                  <Switch
-                    style={{ backgroundColor: isTracking ? colors.blue[500] : colors.gray[300] }}
-                    checked={isTracking}
-                    onCheckedChange={() => toggleShareLocation()}
-                  />
-                </View>
 
                 <SimpleDialog
                   trigger={
@@ -105,7 +93,20 @@ export default function LocationSettings() {
                   title="Change Location Save Location"
                   content={<LocationItemSelects />}
                 />
+                <View
+                  style={{ backgroundColor: rowColor }}
+                  className="flex-row items-center justify-start h-12 rounded-lg mb-3 px-3"
+                >
+                  <Text className="text-lg font-normal">Location Tracking</Text>
+                  <View className="flex-1" />
+                  <Switch
+                    style={{ backgroundColor: isTracking ? colors.blue[500] : colors.gray[300] }}
+                    checked={isTracking}
+                    onCheckedChange={() => toggleShareLocation()}
+                  />
+                </View>
               </View>
+
               <View className="px-6">
                 <Text className="py-3 text-xs font-semibold uppercase tracking-wider mb-8">
                   Tracking Times

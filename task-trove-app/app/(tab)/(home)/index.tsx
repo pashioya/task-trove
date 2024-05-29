@@ -115,6 +115,8 @@ export default function Home() {
           style={StyleSheet.absoluteFillObject}
           customMapStyle={isDarkColorScheme ? darkStyle : lightStyle}
           loadingEnabled
+          showsMyLocationButton={false}
+          showsCompass={false}
           initialRegion={INITIAL_REGION}
           ref={mapRef}
           region={{

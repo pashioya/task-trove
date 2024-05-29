@@ -6,9 +6,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function NotificationSettings() {
   return (
     <>
-      <Stack.Screen options={{ title: 'NotificationSettings' }} />
+      <Stack.Screen options={{ title: 'Notification', headerShadowVisible: false }} />
       <SafeAreaView>
-        <Text>NotificationSettings</Text>
+        <Text>Notification Settings</Text>
       </SafeAreaView>
     </>
   );

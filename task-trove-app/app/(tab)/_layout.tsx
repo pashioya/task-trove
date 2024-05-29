@@ -2,7 +2,6 @@ import { Redirect, router, Tabs } from 'expo-router';
 import { useSession } from '~/contexts/session-provider';
 import { ActivityIndicator, Pressable, View } from 'react-native';
 import {
-  ArrowLeft,
   CirclePauseIcon,
   CirclePlayIcon,
   ClipboardListIcon,
@@ -54,7 +53,7 @@ export default function TabLayout() {
           shadowRadius: 3.84,
         },
         headerLeft: () => (
-          <Pressable
+          <View
             className="bg-blue-50 rounded-full p-1"
             style={{
               elevation: 5,
@@ -66,19 +65,16 @@ export default function TabLayout() {
               shadowOpacity: 0.25,
               shadowRadius: 3.84,
             }}
-            onPress={() => {
-              router.push('/');
-            }}
           >
             <LocateFixedIcon
               size={50}
               fill={isTracking ? colors.blue[300] : colors.black}
               color={isTracking ? colors.blue[500] : colors.gray[300]}
             />
-          </Pressable>
+          </View>
         ),
         headerRight: () => (
-          <Pressable onPress={() => router.push('/(tab)/settings/main')}>
+          <Pressable onPress={() => router.navigate('/(tab)/settings/main')}>
             <Avatar
               alt="profile-pic"
               className="w-[60] h-[60] mr-5"
@@ -142,18 +138,18 @@ export default function TabLayout() {
       />
       <Tabs.Screen
         name="settings"
-        options={{
-          headerTitle: '',
-          headerTitleContainerStyle: {
-            backgroundColor: 'transparent',
-            height: 0,
-            width: 0,
+        listeners={{
+          tabPress: e => {
+            e.preventDefault();
           },
+        }}
+        options={{
+          lazy: true,
+
           tabBarStyle: {
             display: 'none',
           },
-          headerLeft: () => <ArrowLeft color="black" onPress={() => router.back()} size={40} />,
-          headerRight: () => null,
+          headerShown: false,
           tabBarIcon: () =>
             isTracking ? (
               <CirclePauseIcon
@@ -175,6 +171,7 @@ export default function TabLayout() {
           tabBarIconStyle: {
             marginTop: -40,
           },
+          tabBarShowLabel: false,
           tabBarLabel: '',
         }}
       />

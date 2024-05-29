@@ -4,7 +4,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSession } from '~/contexts/session-provider';
 import { Text } from '~/components/ui/text';
-import { ChevronRight, LocateFixedIcon, Moon } from 'lucide-react-native';
+import { ChevronRight, LocateFixedIcon, LucideMoveLeft, Moon } from 'lucide-react-native';
 import { useColorScheme } from '~/lib/useColorScheme';
 import { Switch } from '~/components/ui/switch';
 import colors from 'tailwindcss/colors';
@@ -22,16 +22,28 @@ export default function Settings() {
 
   return (
     <>
-      <Stack.Screen options={{ title: 'Boards', headerShown: false }} />
-      <SafeAreaView style={{ flex: 1 }}>
-        <LinearGradient
-          style={{
-            flex: 1,
-          }}
-          colors={[colors.white, colors.blue[100]]}
-        >
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+      />
+
+      <LinearGradient
+        style={{
+          flex: 1,
+        }}
+        colors={[colors.white, colors.blue[100]]}
+      >
+        <SafeAreaView style={{ flex: 1 }}>
           <View className="flex-1">
-            <View className="p-6 items-center justify-center">
+            <Button
+              onPress={() => router.navigate('/')}
+              variant="outline"
+              className="absolute top-16 left-6 z-10"
+            >
+              <LucideMoveLeft color="black" size={45} />
+            </Button>
+            <View className="mt-12 p-6 items-center justify-center">
               <View className="relative">
                 <Image
                   alt=""
@@ -43,9 +55,7 @@ export default function Settings() {
               </View>
 
               <View>
-                <Text className="mt-5 text-lg font-semibold text-center">
-                  {session?.user?.name}
-                </Text>
+                <Text className="text-lg font-semibold text-center">{session?.user?.name}</Text>
                 <Text className="mt-1 text-base text-center">{session?.user?.email}</Text>
               </View>
             </View>
@@ -101,6 +111,7 @@ export default function Settings() {
                     <ChevronRight color="#C6C6C6" size={20} />
                   </TouchableOpacity>
                 </View>
+
                 <SimpleAlertDialog
                   trigger={
                     <Button variant="destructive" className=" border-red-600">
@@ -114,8 +125,8 @@ export default function Settings() {
               </View>
             </ScrollView>
           </View>
-        </LinearGradient>
-      </SafeAreaView>
+        </SafeAreaView>
+      </LinearGradient>
     </>
   );
 }

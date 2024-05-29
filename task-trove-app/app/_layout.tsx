@@ -66,6 +66,8 @@ export default function RootLayout() {
         SplashScreen.hideAsync();
       })
       .catch(console.error);
+    // ! should only run once
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!isColorSchemeLoaded) {

@@ -2,19 +2,19 @@ import { Stack } from 'expo-router';
 
 export default function SettingsLayout() {
   return (
-    <Stack initialRouteName="main">
-      <Stack.Screen name="main" options={{ title: 'Settings', headerShown: false }} />
-      <Stack.Screen
-        name="location"
-        options={{
-          title: 'Location Settings',
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="notifications"
-        options={{ title: 'Notifications Settings', headerShown: false }}
-      />
+    <Stack
+      initialRouteName="main"
+      screenOptions={{
+        headerShown: true,
+        headerTintColor: 'black',
+        headerTitleStyle: { fontWeight: 'bold' },
+        headerBackTitleVisible: true,
+        headerBackTitle: 'Back',
+      }}
+    >
+      <Stack.Screen name="main" />
+      <Stack.Screen name="location" />
+      <Stack.Screen name="notifications" />
     </Stack>
   );
 }
