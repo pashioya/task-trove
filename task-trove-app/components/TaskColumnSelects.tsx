@@ -10,14 +10,14 @@ import { useSettingsStore } from '~/store';
 export default function TaskColumnSelects() {
   const {
     boards,
-    columns,
+    taskColumns,
     setSelectedBoard,
     selectedTaskBoard,
     selectedTaskColumn,
     setSelectedTaskBoard,
     setSelectedTaskColumn,
     boardSelectItems,
-    columnSelectItems,
+    taskColumnSelectItems,
     boardsIsLoading,
     columnsIsLoading,
     refetchColumns,
@@ -60,7 +60,7 @@ export default function TaskColumnSelects() {
         }}
       />
       <SimpleSelect
-        options={columnSelectItems}
+        options={taskColumnSelectItems}
         placeholder={selectedTaskColumn ? selectedTaskColumn.title : 'Column Select'}
         disabled={!selectedTaskBoard}
         isLoading={columnsIsLoading}
@@ -70,7 +70,7 @@ export default function TaskColumnSelects() {
             : null
         }
         onValueChange={newColumn => {
-          setSelectedTaskColumn(columns.find(column => column.id === newColumn?.value) || null);
+          setSelectedTaskColumn(taskColumns.find(column => column.id === newColumn?.value) || null);
         }}
       />
       <SimpleAlertDialog

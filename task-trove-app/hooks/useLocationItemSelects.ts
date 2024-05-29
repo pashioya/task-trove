@@ -12,6 +12,8 @@ const useLocationItemSelects = () => {
   const [columns, setColumns] = useState<Column[]>([]);
   const [items, setItems] = useState<Item[]>([]);
 
+  const [taskColumns, setTaskColumns] = useState<Column[]>([]);
+
   const [selectedBoard, setSelectedBoard] = useState<Board | null>(null);
   const [selectedColumn, setSelectedColumn] = useState<Column | null>(null);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
@@ -21,6 +23,9 @@ const useLocationItemSelects = () => {
 
   const [boardSelectItems, setBoardSelectItems] = useState<{ label: string; value: string }[]>([]);
   const [columnSelectItems, setColumnSelectItems] = useState<{ label: string; value: string }[]>(
+    [],
+  );
+  const [taskColumnSelectItems, setTaskColumnSelectItems] = useState<{ label: string; value: string }[]>(
     [],
   );
   const [itemSelectItems, setItemSelectItems] = useState<{ label: string; value: string }[]>([]);
@@ -121,21 +126,31 @@ const useLocationItemSelects = () => {
       (column): column is Column => column !== null,
     );
 
-    setColumns(columns);
-
-    setColumnSelectItems(
-      columns.map(column => ({
-        label: column.title,
-        value: column.id,
-      })),
-    );
     if (selectedTaskBoard) {
+      setTaskColumns(columns);
+
+      setTaskColumnSelectItems(
+        columns.map(column => ({
+          label: column.title,
+          value: column.id,
+        })),
+      );
+
       if (columns.length === 0) {
         setSelectedTaskColumn(null);
       } else if (columns.length === 1) {
         setSelectedTaskColumn(columns[0]);
       }
     } else if (selectedBoard) {
+      setColumns(columns);
+
+      setColumnSelectItems(
+        columns.map(column => ({
+          label: column.title,
+          value: column.id,
+        })),
+      );
+
       if (columns.length === 0) {
         setSelectedColumn(null);
       } else if (columns.length === 1) {
@@ -157,18 +172,14 @@ const useLocationItemSelects = () => {
     const items = itemsData.boards[0]?.items_page.items;
     setItems(items);
 
-    if (items.length === 0) {
-      setSelectedItem(null);
-    }
-
     setItemSelectItems(
       items.map(item => ({
         label: item.name,
         value: item.id,
       })),
     );
-    if (columns.length === 0) {
-      setSelectedColumn(null);
+    if (items.length === 0) {
+      setSelectedItem(null);
     } else if (items.length === 1) {
       setSelectedItem(items[0]);
     }
@@ -196,6 +207,7 @@ const useLocationItemSelects = () => {
     boards,
     columns,
     items,
+    taskColumns,
     selectedBoard,
     setSelectedBoard,
     selectedColumn,
@@ -209,6 +221,7 @@ const useLocationItemSelects = () => {
     boardSelectItems,
     columnSelectItems,
     itemSelectItems,
+    taskColumnSelectItems,
     boardsIsLoading,
     columnsIsLoading,
     itemIsLoading,
