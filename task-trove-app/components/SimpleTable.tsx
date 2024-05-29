@@ -10,11 +10,33 @@ import {
   TableRow,
 } from '~/components/ui/table';
 import { Text } from '~/components/ui/text';
+import { useMondayQuery } from '~/lib/monday/api';
+import { fetchItemsQuery } from '~/lib/monday/queries';
+import { useSettingsStore } from '~/store';
 
 const MIN_COLUMN_WIDTHS = [120, 120, 100, 120];
 
 export default function SimpleTable() {
   const { width } = useWindowDimensions();
+
+  const { taskBoard } = useSettingsStore();
+
+  const {
+    data: itemsData,
+    isLoading: itemIsLoading,
+    isError: itemsIsError,
+    error: itemsError,
+  } = useMondayQuery({
+    queryKey: [taskBoard?.id || '', 'items'],
+    query: fetchItemsQuery,
+    variables: { boardId: taskBoard?.id || '' },
+  });
+
+  useEffect(() => {
+    if (itemsIsError) {
+      showAlert(itemsError);
+    } else
+  }, []);
 
   const columnWidths = React.useMemo(() => {
     return MIN_COLUMN_WIDTHS.map(minWidth => {
