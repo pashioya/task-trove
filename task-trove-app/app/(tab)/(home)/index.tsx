@@ -136,29 +136,32 @@ export default function Home() {
           }}
         />
         <View className="absolute bottom-32 right-5 gap-4">
-          <View
-            className="bg-blue-50 rounded-full  flex items-center justify-center"
-            style={{
-              elevation: 5,
-              width: 70,
-              height: 70,
-              shadowColor: 'black',
-              shadowOffset: {
-                width: 0,
-                height: 10,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
-            }}
-          >
-            <Navigation
-              onPress={() => onLocateMe()}
-              fill="white"
-              color="black"
-              className="bg-white"
-              size={40}
-            />
-          </View>
+          {isTracking ? (
+            <View
+              className="bg-blue-50 rounded-full  flex items-center justify-center"
+              style={{
+                elevation: 5,
+                width: 70,
+                height: 70,
+                shadowColor: 'black',
+                shadowOffset: {
+                  width: 0,
+                  height: 10,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+              }}
+            >
+              <Navigation
+                onPress={() => onLocateMe()}
+                fill="white"
+                color="black"
+                className="bg-white"
+                size={40}
+              />
+            </View>
+          ) : null}
+
           <View
             className="bg-blue-50 rounded-full p-1 flex items-center justify-center"
             style={{
