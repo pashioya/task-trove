@@ -24,7 +24,7 @@ const DialogOverlayWeb = React.forwardRef<
       className={cn(
         'z-50 bg-black/80 flex justify-center items-center p-2',
         open ? 'web:animate-in web:fade-in-0' : 'web:animate-out web:fade-out-0',
-        className
+        className,
       )}
       {...props}
       ref={ref}
@@ -41,7 +41,7 @@ const DialogOverlayNative = React.forwardRef<
   return (
     <DialogPrimitive.Overlay
       style={StyleSheet.absoluteFill}
-      className={cn('z-50 flex bg-black/80 justify-center items-center p-2', className)}
+      className={cn('z-40 flex bg-black/80 justify-center items-center p-2', className)}
       {...props}
       ref={ref}
     >
@@ -70,11 +70,11 @@ const DialogContent = React.forwardRef<
         <DialogPrimitive.Content
           ref={ref}
           className={cn(
-            'z-50 max-w-lg gap-4 border border-border web:cursor-default bg-background p-6 shadow-lg web:duration-200 rounded-lg',
+            'max-w-lg gap-4 border border-border web:cursor-default bg-background p-6 shadow-lg web:duration-200 rounded-lg',
             open
               ? 'web:animate-in web:fade-in-0 web:zoom-in-95'
               : 'web:animate-out web:fade-out-0 web:zoom-out-95',
-            className
+            className,
           )}
           {...props}
         >
@@ -117,7 +117,7 @@ const DialogTitle = React.forwardRef<
     ref={ref}
     className={cn(
       'text-lg native:text-xl text-foreground font-semibold leading-none tracking-tight',
-      className
+      className,
     )}
     {...props}
   />
