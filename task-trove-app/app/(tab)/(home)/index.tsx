@@ -177,7 +177,7 @@ export default function Home() {
             {isTracking ? (
               <Pause
                 onPress={() => toggleShareLocation()}
-                fill={colors.blue[500]}
+                fill="white"
                 color="black"
                 className="bg-white"
                 size={50}
@@ -195,7 +195,7 @@ export default function Home() {
             ) : (
               <Play
                 onPress={() => toggleShareLocation()}
-                fill={colors.blue[500]}
+                fill="white"
                 color="black"
                 className="bg-white"
                 size={50}
