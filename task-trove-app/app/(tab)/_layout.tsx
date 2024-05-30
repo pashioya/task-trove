@@ -1,24 +1,16 @@
 import { Redirect, router, Tabs } from 'expo-router';
 import { useSession } from '~/contexts/session-provider';
 import { ActivityIndicator, Pressable, View } from 'react-native';
-import {
-  CirclePauseIcon,
-  CirclePlayIcon,
-  ClipboardListIcon,
-  Home,
-  LocateFixedIcon,
-} from 'lucide-react-native';
+import { ClipboardListIcon, Home, LocateFixedIcon } from 'lucide-react-native';
 
 import { Text } from '~/components/ui/text';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { useSettingsStore } from '~/store';
 import colors from 'tailwindcss/colors';
-import { useToggleShareLocation } from '~/hooks';
 
 export default function TabLayout() {
   const { session, isLoading } = useSession();
   const { isTracking } = useSettingsStore();
-  const { toggleShareLocation } = useToggleShareLocation();
 
   if (isLoading) {
     return (
@@ -138,39 +130,13 @@ export default function TabLayout() {
       />
       <Tabs.Screen
         name="settings"
-        listeners={{
-          tabPress: e => {
-            e.preventDefault();
-          },
-        }}
         options={{
           lazy: true,
-
           tabBarStyle: {
             display: 'none',
           },
           headerShown: false,
-          tabBarIcon: () =>
-            isTracking ? (
-              <CirclePauseIcon
-                onPress={() => toggleShareLocation()}
-                fill="white"
-                color="black"
-                className="bg-white"
-                size={75}
-              />
-            ) : (
-              <CirclePlayIcon
-                onPress={() => toggleShareLocation()}
-                fill="white"
-                color="black"
-                className="bg-white"
-                size={75}
-              />
-            ),
-          tabBarIconStyle: {
-            marginTop: -40,
-          },
+          tabBarIcon: () => null,
           tabBarShowLabel: false,
           tabBarLabel: '',
         }}

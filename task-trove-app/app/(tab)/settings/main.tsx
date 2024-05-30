@@ -24,12 +24,13 @@ export default function Settings() {
     <>
       <Stack.Screen
         options={{
-          headerShown: false,
-          headerBackVisible: false,
-          headerBackButtonMenuEnabled: false,
+          headerShown: true,
+          headerBackVisible: true,
           headerTitle: '',
-          headerBackTitle: '',
-          header: () => null,
+          headerShadowVisible: false,
+          headerLeft: () => (
+            <LucideMoveLeft onPress={() => router.back()} color="black" size={45} />
+          ),
         }}
       />
 
@@ -39,17 +40,9 @@ export default function Settings() {
         }}
         colors={[colors.white, colors.blue[100]]}
       >
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView className="h-full" style={{ flex: 1 }}>
           <View className="flex-1">
-            <Button
-              onPress={() => router.navigate('/')}
-              variant="outline"
-              size="lg"
-              className="absolute top-2 left-4 z-10"
-            >
-              <LucideMoveLeft color="black" size={45} />
-            </Button>
-            <View className="p-6 items-center justify-center">
+            <View className="pb-10 items-center justify-center">
               <View className="relative">
                 <Image
                   alt=""
@@ -66,7 +59,7 @@ export default function Settings() {
               </View>
             </View>
             <ScrollView>
-              <View className="px-6 flex-1 justify-between">
+              <View className="px-6">
                 <View>
                   <Text className="py-3 text-xs font-semibold tracking-wider">PREFERENCES</Text>
                   <View
@@ -89,7 +82,7 @@ export default function Settings() {
                   </View>
                   <TouchableOpacity
                     onPress={() => {
-                      router.push('/settings/location');
+                      router.navigate('/settings/location');
                     }}
                     style={{ backgroundColor: rowColor }}
                     className="flex-row items-center justify-start h-12  rounded-lg mb-3 px-3"
@@ -103,7 +96,7 @@ export default function Settings() {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
-                      router.push('/settings/notifications');
+                      router.navigate('/settings/notifications');
                     }}
                     style={{ backgroundColor: rowColor }}
                     className="flex-row items-center justify-start h-12  rounded-lg mb-3 px-3"
@@ -117,20 +110,21 @@ export default function Settings() {
                     <ChevronRight color="#C6C6C6" size={20} />
                   </TouchableOpacity>
                 </View>
-
-                <SimpleAlertDialog
-                  trigger={
-                    <Button variant="destructive" className=" border-red-600">
-                      <Text>Logout</Text>
-                    </Button>
-                  }
-                  actionIfConfirmed={signOut}
-                  title="Are you sure you want to logout?"
-                  description="Do you want to logout from your account? You can always login back."
-                />
               </View>
             </ScrollView>
           </View>
+          <SimpleAlertDialog
+            trigger={
+              <View className="px-6 absolute bottom-10 left-0 right-0">
+                <Button variant="destructive" className=" border-red-600  ">
+                  <Text>Logout</Text>
+                </Button>
+              </View>
+            }
+            actionIfConfirmed={signOut}
+            title="Are you sure you want to logout?"
+            description="Do you want to logout from your account? You can always login back."
+          />
         </SafeAreaView>
       </LinearGradient>
     </>

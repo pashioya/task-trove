@@ -13,6 +13,7 @@ import { useColorScheme } from '~/lib/useColorScheme';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { Ionicons } from '@expo/vector-icons';
 import colors from 'tailwindcss/colors';
+import { CirclePauseIcon, CirclePlayIcon } from 'lucide-react-native';
 
 const showAlert = (error: string, onPress: () => void, buttonText: string) => {
   Alert.alert('Error', error, [
@@ -25,7 +26,7 @@ const showAlert = (error: string, onPress: () => void, buttonText: string) => {
 };
 
 export default function Home() {
-  const { isTracking, region, setRegion } = useToggleShareLocation();
+  const { isTracking, region, setRegion, toggleShareLocation } = useToggleShareLocation();
   const { requestPermissions } = useLocationPermissions();
   const { isDarkColorScheme } = useColorScheme();
   const router = useRouter();
@@ -131,6 +132,27 @@ export default function Home() {
             <TouchableOpacity style={styles.locateBtn} onPress={onLocateMe}>
               <Ionicons name="navigate" size={24} color={colors.black} />
             </TouchableOpacity>
+          </View>
+        )}
+        {isTracking ? (
+          <View className="absolute bottom-28 left-48">
+            <CirclePauseIcon
+              onPress={() => toggleShareLocation()}
+              fill="white"
+              color="black"
+              className="bg-white"
+              size={75}
+            />
+          </View>
+        ) : (
+          <View className="absolute bottom-28 left-48">
+            <CirclePlayIcon
+              onPress={() => toggleShareLocation()}
+              fill="white"
+              color="black"
+              className="bg-white "
+              size={75}
+            />
           </View>
         )}
       </SafeAreaView>
