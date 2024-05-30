@@ -106,6 +106,9 @@ export default function Settings() {
                     </View>
                     <Text className="text-lg font-normal ">Notifications</Text>
                     <View className="flex-grow" />
+                    <Button onPress={() => router.push('/(onboarding)/1')}>
+                      <Text>Finish</Text>
+                    </Button>
 
                     <ChevronRight color="#C6C6C6" size={20} />
                   </TouchableOpacity>
