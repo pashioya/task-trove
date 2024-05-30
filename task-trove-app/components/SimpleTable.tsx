@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import { ScrollView, useWindowDimensions } from 'react-native';
 
 import {
@@ -13,6 +14,7 @@ import { Text } from '~/components/ui/text';
 import { useMondayQuery } from '~/lib/monday/api';
 import { fetchItemsQuery } from '~/lib/monday/queries';
 import { useSettingsStore } from '~/store';
+import showAlert from '~/utils/ShowAlert';
 
 const MIN_COLUMN_WIDTHS = [120, 120, 100, 120];
 
@@ -33,10 +35,14 @@ export default function SimpleTable() {
   });
 
   useEffect(() => {
-    if (itemsIsError) {
-      showAlert(itemsError);
-    } else
-  }, []);
+    if (!itemIsLoading) {
+      if (itemsIsError) {
+        showAlert(itemsError);
+      } else {
+        console.log(itemsData);
+      }
+    }
+  }, [itemIsLoading, itemsData, itemsError, itemsIsError]);
 
   const columnWidths = React.useMemo(() => {
     return MIN_COLUMN_WIDTHS.map(minWidth => {

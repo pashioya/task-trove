@@ -3,9 +3,7 @@ import type { Board, Column, Item } from '~/model/types';
 import { useSettingsStore } from '~/store';
 import { useMondayQuery } from '~/lib/monday/api';
 import { fetchBoardsQuery, fetchColumnsQuery, fetchItemsQuery } from '~/lib/monday/queries';
-import type { MondayAPIError } from '~/lib/monday/error';
-import { handleMondayErrorCode, handleMondayErrorStatusCode } from '~/utils/MondayErrorHandling';
-import { Alert } from 'react-native';
+import showAlert from '~/utils/ShowAlert';
 
 const useLocationItemSelects = () => {
   const [boards, setBoards] = useState<Board[]>([]);
