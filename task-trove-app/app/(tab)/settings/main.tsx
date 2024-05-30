@@ -25,6 +25,11 @@ export default function Settings() {
       <Stack.Screen
         options={{
           headerShown: false,
+          headerBackVisible: false,
+          headerBackButtonMenuEnabled: false,
+          headerTitle: '',
+          headerBackTitle: '',
+          header: () => null,
         }}
       />
 
@@ -39,11 +44,12 @@ export default function Settings() {
             <Button
               onPress={() => router.navigate('/')}
               variant="outline"
-              className="absolute top-16 left-6 z-10"
+              size="lg"
+              className="absolute top-2 left-4 z-10"
             >
               <LucideMoveLeft color="black" size={45} />
             </Button>
-            <View className="mt-12 p-6 items-center justify-center">
+            <View className="p-6 items-center justify-center">
               <View className="relative">
                 <Image
                   alt=""
