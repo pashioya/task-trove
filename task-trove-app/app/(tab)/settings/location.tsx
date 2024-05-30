@@ -1,5 +1,5 @@
 import { Stack } from 'expo-router';
-import { View, TouchableOpacity, Alert } from 'react-native';
+import { View, TouchableOpacity, Alert, Pressable } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text } from '~/components/ui/text';
@@ -21,6 +21,7 @@ import { useToggleShareLocation } from '~/hooks';
 import { Switch } from '~/components/ui/switch';
 import { useSettingsStore } from '~/store';
 import { LinearGradient } from 'expo-linear-gradient';
+import SimpleModal from '~/components/SimpleModal';
 
 export default function LocationSettings() {
   const { isTracking, toggleShareLocation } = useToggleShareLocation();
@@ -62,6 +63,8 @@ export default function LocationSettings() {
     }
   };
 
+  let [modalIsVisible, setModalIsVisible] = useState(false);
+
   return (
     <>
       <Stack.Screen options={{ title: 'Location', headerShadowVisible: false }} />
@@ -93,6 +96,23 @@ export default function LocationSettings() {
                   title="Change Location Save Location"
                   content={<LocationItemSelects />}
                 />
+                <Pressable
+                  onPress={() => setModalIsVisible(true)}
+                  style={{ backgroundColor: rowColor }}
+                  className="flex-row items-center justify-start h-12 rounded-lg mb-3 px-3"
+                >
+                  <Text className="text-lg font-normal">Change Location Save Location</Text>
+                  <View className="flex-1" />
+                  <ChevronRight color="#C6C6C6" size={20} />
+                </Pressable>
+                <SimpleModal
+                  isVisible={modalIsVisible}
+                  content={<LocationItemSelects />}
+                  onClose={function (): void {
+                    setModalIsVisible(false);
+                  }}
+                />
+
                 <View
                   style={{ backgroundColor: rowColor }}
                   className="flex-row items-center justify-start h-12 rounded-lg mb-3 px-3"
