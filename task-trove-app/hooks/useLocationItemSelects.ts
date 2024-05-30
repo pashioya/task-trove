@@ -25,9 +25,9 @@ const useLocationItemSelects = () => {
   const [columnSelectItems, setColumnSelectItems] = useState<{ label: string; value: string }[]>(
     [],
   );
-  const [taskColumnSelectItems, setTaskColumnSelectItems] = useState<{ label: string; value: string }[]>(
-    [],
-  );
+  const [taskColumnSelectItems, setTaskColumnSelectItems] = useState<
+    { label: string; value: string }[]
+  >([]);
   const [itemSelectItems, setItemSelectItems] = useState<{ label: string; value: string }[]>([]);
 
   const { taskBoard, taskColumn, board, column, item } = useSettingsStore();
@@ -175,17 +175,13 @@ const useLocationItemSelects = () => {
       (column): column is Column => column !== null,
     );
 
-    console.log('task columns:', columns);
     setTaskColumns(columns);
-
     setTaskColumnSelectItems(
       columns.map(column => ({
         label: column.title,
         value: column.id,
       })),
     );
-
-    console.log('task column items:', taskColumnSelectItems);
 
     if (columns.length === 0) {
       setSelectedTaskColumn(null);
@@ -259,6 +255,7 @@ const useLocationItemSelects = () => {
     taskColumnSelectItems,
     boardsIsLoading,
     columnsIsLoading,
+    taskColumnsIsLoading,
     itemIsLoading,
     refetchTaskColumns,
     refetchColumns,

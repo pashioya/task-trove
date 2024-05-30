@@ -11,7 +11,6 @@ export default function TaskColumnSelects() {
   const {
     boards,
     taskColumns,
-    setSelectedBoard,
     selectedTaskBoard,
     selectedTaskColumn,
     setSelectedTaskBoard,
@@ -19,24 +18,17 @@ export default function TaskColumnSelects() {
     boardSelectItems,
     taskColumnSelectItems,
     boardsIsLoading,
-    columnsIsLoading,
+    taskColumnsIsLoading,
     refetchTaskColumns,
   } = useLocationItemSelects();
 
-  const { taskBoard, taskColumn, setTaskBoard, setTaskColumn } = useSettingsStore();
+  const { setTaskBoard, setTaskColumn } = useSettingsStore();
 
   const handleTaskBoardChange = async (board: Board) => {
-    console.log('Selected board:', board);
-    setSelectedBoard(null);
     setSelectedTaskBoard(board);
     setSelectedTaskColumn(null);
 
-    console.log('current board:', taskBoard);
-
     await refetchTaskColumns();
-
-    console.log('columns:', taskColumns);
-    console.log(' ');
   };
 
   const saveTaskColumn = () => {
@@ -67,9 +59,9 @@ export default function TaskColumnSelects() {
       />
       <SimpleSelect
         options={taskColumnSelectItems}
-        placeholder={selectedTaskColumn ? selectedTaskColumn.title : 'Column Select'}
+        placeholder={selectedTaskColumn ? selectedTaskColumn.title : 'Task Column Select'}
         disabled={!selectedTaskBoard}
-        isLoading={columnsIsLoading}
+        isLoading={taskColumnsIsLoading}
         selectedValue={
           selectedTaskColumn
             ? { label: selectedTaskColumn.title, value: selectedTaskColumn.id }
