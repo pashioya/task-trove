@@ -115,13 +115,16 @@ export default function Settings() {
           </View>
           <SimpleAlertDialog
             trigger={
-              <View className="px-6 absolute bottom-10 left-0 right-0">
-                <Button variant="destructive" className=" border-red-600  ">
+              <TouchableOpacity className="px-6 absolute bottom-10 left-0 right-0">
+                <Button
+                  variant="destructive"
+                  className=" border-red-600 w-full absolute bottom-10 left-5 right-0"
+                >
                   <Text>Logout</Text>
                 </Button>
-              </View>
+              </TouchableOpacity>
             }
-            actionIfConfirmed={signOut}
+            actionIfConfirmed={() => signOut()}
             title="Are you sure you want to logout?"
             description="Do you want to logout from your account? You can always login back."
           />
