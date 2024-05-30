@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { SetStateAction, useEffect, useMemo, useState } from 'react';
 import { ScrollView, useWindowDimensions } from 'react-native';
 
 import {
@@ -12,7 +12,7 @@ import {
 import { Text } from '~/components/ui/text';
 import { useMondayQuery } from '~/lib/monday/api';
 import { fetchTasksQuery } from '~/lib/monday/queries';
-import type { Task } from '~/model/types';
+import type { TaskItem, Task } from '~/model/types';
 import { useSettingsStore } from '~/store';
 import showAlert from '~/utils/ShowAlert';
 
@@ -20,7 +20,8 @@ const MIN_COLUMN_WIDTHS = [120, 120, 100, 120];
 
 export default function SimpleTable() {
   const { width } = useWindowDimensions();
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<TaskItem[]>([]);
+  const [tableTasks, setTableTasks] = useState<Task[]>([]);
 
   const [columnNames, setColumnNames] = useState<string[]>([]);
 
@@ -49,8 +50,6 @@ export default function SimpleTable() {
     if (!itemsData || !itemsData.boards || !itemsData.boards[0]) return;
     const items = itemsData.boards[0]?.items_page.items;
 
-    console.log(itemsData.boards[0]?.items_page.items[0].column_values);
-
     const columnNames = items[0].column_values.map(column => column.id.toString() || '');
     setColumnNames(columnNames);
     //TODO: fix types (Type string | null is not assignable to type string)
@@ -63,7 +62,17 @@ export default function SimpleTable() {
     });
     //TODO: put columns in column_values
     setTasks(items);
+    const reformattedTasks: SetStateAction<Task[]> = [];
 
+    tasks.map(task => {
+      const value = task.column_values[0].value;
+      const jsonValue = JSON.parse(value);
+      console.log(jsonValue);
+      if (!jsonValue) return;
+      const reformattedTask = {id: task.id, name: task.name, lat: jsonValue["lat"], long: jsonValue["lng"]} as Task;
+      reformattedTasks.push(reformattedTask);
+    })
+    setTableTasks(reformattedTasks);
   }, [itemIsLoading, itemsData, itemsError, itemsIsError]);
 
   const columnWidths = useMemo(() => {
@@ -73,6 +82,7 @@ export default function SimpleTable() {
     });
   }, [width]);
 
+  console.log(tableTasks);
   return (
     <ScrollView horizontal bounces={false} showsHorizontalScrollIndicator={false}>
       <Table aria-labelledby="invoice-table">
@@ -87,13 +97,13 @@ export default function SimpleTable() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {tasks.map(task => (
+          {tableTasks.map(task => (
             <TableRow key={task.id}>
               <TableCell style={{ width: columnWidths[0] * 2 }}>
                 <Text>{task.name}</Text>
               </TableCell>
               <TableCell style={{ width: columnWidths[1] }}>
-                <Text>{task.column_values[0].value}</Text>
+                <Text>{task.lat}, {task.long}</Text>
               </TableCell>
             </TableRow>
           ))}
