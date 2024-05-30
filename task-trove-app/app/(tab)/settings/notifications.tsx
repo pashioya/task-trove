@@ -15,9 +15,6 @@ export default function NotificationSettings() {
   return (
     <>
       <Stack.Screen options={{ title: 'Notification', headerShadowVisible: false }} />
-      <SafeAreaView>
-        <Text>Notification Settings</Text>
-      <Stack.Screen options={{ title: 'Boards' }} />
       <SafeAreaView style={{ flex: 1, marginTop: 50 }}>
         <View className="flex-1">
           <ScrollView>

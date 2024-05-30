@@ -1,7 +1,6 @@
 import { Stack, useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
-import * as ExpoLocation from 'expo-location';
-import { Alert, SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Alert, SafeAreaView, StyleSheet, View } from 'react-native';
 import { useToggleShareLocation, useLocationPermissions } from '~/hooks';
 import { useMondayMutation } from '~/lib/monday/api';
 import { changeMultipleColumnValuesMutation } from '~/lib/monday/queries';
@@ -11,8 +10,7 @@ import lightStyle from '~/assets/map/lightStyle.json';
 import darkStyle from '~/assets/map/darkStyle.json';
 import { useColorScheme } from '~/lib/useColorScheme';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
-import { Ionicons } from '@expo/vector-icons';
-import colors from 'tailwindcss/colors';
+
 import { CirclePauseIcon, CirclePlayIcon } from 'lucide-react-native';
 
 const showAlert = (error: string, onPress: () => void, buttonText: string) => {
@@ -26,13 +24,13 @@ const showAlert = (error: string, onPress: () => void, buttonText: string) => {
 };
 
 export default function Home() {
-  const { isTracking, region, setRegion, toggleShareLocation } = useToggleShareLocation();
+  const { isTracking, region, toggleShareLocation } = useToggleShareLocation();
   const { requestPermissions } = useLocationPermissions();
   const { isDarkColorScheme } = useColorScheme();
   const router = useRouter();
 
   const mapRef = useRef<MapView>(null);
-  const { board, column, item, setError } = useSettingsStore();
+  const { board, column, item } = useSettingsStore();
 
   const { mutate: updateLocation, error: updateLocationError } = useMondayMutation({
     mutation: changeMultipleColumnValuesMutation,
@@ -84,30 +82,6 @@ export default function Home() {
     }
   }, [item, requestPermissions, router]);
 
-  const onLocateMe = async () => {
-    try {
-      const location = await ExpoLocation.getCurrentPositionAsync();
-      setRegion({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-        speed: location.coords.speed ? location.coords.speed : 0,
-      });
-      mapRef.current?.animateToRegion(
-        {
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-          latitudeDelta: 0.7,
-          longitudeDelta: 0.7,
-        },
-        1000,
-      );
-    } catch (e) {
-      if (e instanceof Error) {
-        setError(e);
-      }
-    }
-  };
-
   return (
     <>
       <Stack.Screen options={{ title: 'Home', headerShown: false }} />
@@ -129,13 +103,6 @@ export default function Home() {
             longitudeDelta: 0.0421,
           }}
         />
-        {isTracking && (
-          <View className="absolute left-80 right-0 items-center">
-            <TouchableOpacity style={styles.locateBtn} onPress={onLocateMe}>
-              <Ionicons name="navigate" size={24} color={colors.black} />
-            </TouchableOpacity>
-          </View>
-        )}
         {isTracking ? (
           <View className="absolute bottom-28 left-48">
             <CirclePauseIcon
@@ -161,21 +128,3 @@ export default function Home() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  locateBtn: {
-    position: 'absolute',
-    backgroundColor: '#fff',
-    padding: 10,
-    top: 650,
-    borderRadius: 10,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    shadowOffset: {
-      width: 1,
-      height: 10,
-    },
-  },
-});
