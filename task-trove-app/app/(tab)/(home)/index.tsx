@@ -11,7 +11,9 @@ import darkStyle from '~/assets/map/darkStyle.json';
 import { useColorScheme } from '~/lib/useColorScheme';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
-import { CirclePauseIcon, CirclePlayIcon } from 'lucide-react-native';
+import { Play, Navigation, Pause } from 'lucide-react-native';
+import colors from 'tailwindcss/colors';
+import * as ExpoLocation from 'expo-location';
 
 const showAlert = (error: string, onPress: () => void, buttonText: string) => {
   Alert.alert('Error', error, [
@@ -24,7 +26,7 @@ const showAlert = (error: string, onPress: () => void, buttonText: string) => {
 };
 
 export default function Home() {
-  const { isTracking, region, toggleShareLocation } = useToggleShareLocation();
+  const { isTracking, region, setRegion, toggleShareLocation } = useToggleShareLocation();
   const { requestPermissions } = useLocationPermissions();
   const { isDarkColorScheme } = useColorScheme();
   const router = useRouter();
@@ -82,6 +84,36 @@ export default function Home() {
     }
   }, [item, requestPermissions, router]);
 
+  const onLocateMe = async () => {
+    try {
+      const location = await ExpoLocation.getCurrentPositionAsync();
+      setRegion({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        speed: location.coords.speed ? location.coords.speed : 0,
+      });
+      mapRef.current?.animateToRegion(
+        {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+          latitudeDelta: 0.5,
+          longitudeDelta: 0.6,
+        },
+        3000,
+      );
+    } catch (e) {
+      if (e instanceof Error) {
+        showAlert(
+          e.message,
+          () => {
+            onLocateMe();
+          },
+          'Retry',
+        );
+      }
+    }
+  };
+
   return (
     <>
       <Stack.Screen options={{ title: 'Home', headerShown: false }} />
@@ -103,27 +135,84 @@ export default function Home() {
             longitudeDelta: 0.0421,
           }}
         />
-        {isTracking ? (
-          <View className="absolute bottom-28 left-48">
-            <CirclePauseIcon
-              onPress={() => toggleShareLocation()}
+        <View className="absolute bottom-32 right-5 gap-4">
+          <View
+            className="bg-blue-50 rounded-full  flex items-center justify-center"
+            style={{
+              elevation: 5,
+              width: 70,
+              height: 70,
+              shadowColor: 'black',
+              shadowOffset: {
+                width: 0,
+                height: 10,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+            }}
+          >
+            <Navigation
+              onPress={() => onLocateMe()}
               fill="white"
               color="black"
               className="bg-white"
-              size={75}
+              size={40}
             />
           </View>
-        ) : (
-          <View className="absolute bottom-28 left-48">
-            <CirclePlayIcon
-              onPress={() => toggleShareLocation()}
-              fill="white"
-              color="black"
-              className="bg-white "
-              size={75}
-            />
+          <View
+            className="bg-blue-50 rounded-full p-1 flex items-center justify-center"
+            style={{
+              elevation: 5,
+              width: 70,
+              height: 70,
+              shadowColor: 'black',
+              shadowOffset: {
+                width: 0,
+                height: 10,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+            }}
+          >
+            {isTracking ? (
+              <Pause
+                onPress={() => toggleShareLocation()}
+                fill={colors.blue[500]}
+                color="black"
+                className="bg-white"
+                size={50}
+                style={{
+                  elevation: 5,
+                  shadowColor: 'black',
+                  shadowOffset: {
+                    width: 0,
+                    height: 10,
+                  },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 3.84,
+                }}
+              />
+            ) : (
+              <Play
+                onPress={() => toggleShareLocation()}
+                fill={colors.blue[500]}
+                color="black"
+                className="bg-white"
+                size={50}
+                style={{
+                  elevation: 5,
+                  shadowColor: 'black',
+                  shadowOffset: {
+                    width: 0,
+                    height: 10,
+                  },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 3.84,
+                }}
+              />
+            )}
           </View>
-        )}
+        </View>
       </SafeAreaView>
     </>
   );

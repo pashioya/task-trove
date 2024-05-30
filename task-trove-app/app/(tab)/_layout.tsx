@@ -1,7 +1,7 @@
 import { Redirect, router, Tabs } from 'expo-router';
 import { useSession } from '~/contexts/session-provider';
 import { ActivityIndicator, Pressable, View } from 'react-native';
-import { ClipboardListIcon, Home, LocateFixedIcon } from 'lucide-react-native';
+import { ClipboardListIcon, Home, LocateFixedIcon, SettingsIcon } from 'lucide-react-native';
 
 import { Text } from '~/components/ui/text';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
@@ -129,19 +129,6 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="settings"
-        options={{
-          lazy: true,
-          tabBarStyle: {
-            display: 'none',
-          },
-          headerShown: false,
-          tabBarIcon: () => null,
-          tabBarShowLabel: false,
-          tabBarLabel: '',
-        }}
-      />
-      <Tabs.Screen
         name="tasks"
         options={{
           headerTitle: 'Tasks',
@@ -155,6 +142,27 @@ export default function TabLayout() {
             fontSize: 12,
             marginBottom: 15,
             fontWeight: 'bold',
+          },
+        }}
+      />
+
+      <Tabs.Screen
+        name="settings"
+        options={{
+          headerTitle: 'Settings',
+          title: 'Settings',
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <SettingsIcon color={focused ? 'blue' : 'black'} size={35} />
+          ),
+          tabBarLabel: 'Settings',
+          tabBarLabelStyle: {
+            fontSize: 12,
+            fontWeight: 'bold',
+            marginBottom: 15,
+          },
+          tabBarStyle: {
+            display: 'none',
           },
         }}
       />
