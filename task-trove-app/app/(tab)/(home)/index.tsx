@@ -63,8 +63,10 @@ export default function Home() {
       Alert.alert('An unexpected error occurred', updateLocationError.message, [
         { text: 'Dismiss' },
       ]);
+
+      toggleShareLocation();
     }
-  }, [updateLocationError]);
+  }, [toggleShareLocation, updateLocationError]);
 
   useEffect(() => {
     const checkPermissions = async () => {
