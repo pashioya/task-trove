@@ -25,7 +25,7 @@ const showAlert = (error: string, onPress: () => void, buttonText: string) => {
 };
 
 export default function Home() {
-  const { isTracking, region, setRegion } = useToggleShareLocation();
+  const { isTracking, region, setRegion, toggleShareLocation } = useToggleShareLocation();
   const { requestPermissions } = useLocationPermissions();
   const { isDarkColorScheme } = useColorScheme();
   const router = useRouter();
@@ -62,8 +62,10 @@ export default function Home() {
       Alert.alert('An unexpected error occurred', updateLocationError.message, [
         { text: 'Dismiss' },
       ]);
+
+      toggleShareLocation();
     }
-  }, [updateLocationError]);
+  }, [toggleShareLocation, updateLocationError]);
 
   useEffect(() => {
     const checkPermissions = async () => {

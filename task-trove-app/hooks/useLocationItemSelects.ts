@@ -10,17 +10,25 @@ const useLocationItemSelects = () => {
   const [columns, setColumns] = useState<Column[]>([]);
   const [items, setItems] = useState<Item[]>([]);
 
+  const [taskColumns, setTaskColumns] = useState<Column[]>([]);
+
   const [selectedBoard, setSelectedBoard] = useState<Board | null>(null);
   const [selectedColumn, setSelectedColumn] = useState<Column | null>(null);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+
+  const [selectedTaskBoard, setSelectedTaskBoard] = useState<Board | null>(null);
+  const [selectedTaskColumn, setSelectedTaskColumn] = useState<Column | null>(null);
 
   const [boardSelectItems, setBoardSelectItems] = useState<{ label: string; value: string }[]>([]);
   const [columnSelectItems, setColumnSelectItems] = useState<{ label: string; value: string }[]>(
     [],
   );
+  const [taskColumnSelectItems, setTaskColumnSelectItems] = useState<
+    { label: string; value: string }[]
+  >([]);
   const [itemSelectItems, setItemSelectItems] = useState<{ label: string; value: string }[]>([]);
 
-  const { board, column, item } = useSettingsStore();
+  const { taskBoard, taskColumn, board, column, item } = useSettingsStore();
 
   const {
     data: boardsData,
@@ -43,6 +51,19 @@ const useLocationItemSelects = () => {
     query: fetchColumnsQuery,
     variables: { boardId: selectedBoard?.id || '' },
     enabled: !!selectedBoard?.id,
+  });
+
+  const {
+    data: taskColumnsData,
+    isLoading: taskColumnsIsLoading,
+    isError: taskColumnsIsError,
+    error: taskColumnsError,
+    refetch: refetchTaskColumns,
+  } = useMondayQuery({
+    queryKey: [selectedTaskBoard?.id || '', 'columns'],
+    query: fetchColumnsQuery,
+    variables: { boardId: selectedTaskBoard?.id || '' },
+    enabled: !!selectedTaskBoard?.id,
   });
 
   const {
@@ -111,12 +132,49 @@ const useLocationItemSelects = () => {
         value: column.id,
       })),
     );
+
     if (columns.length === 0) {
       setSelectedColumn(null);
     } else if (columns.length === 1) {
       setSelectedColumn(columns[0]);
     }
   }, [columnsData, columnsError, columnsIsError, columnsIsLoading]);
+
+  useEffect(() => {
+    if (taskColumnsIsLoading) {
+      return;
+    }
+    if (taskColumnsIsError) {
+      showAlert(taskColumnsError);
+      return;
+    }
+
+    if (
+      !taskColumnsData ||
+      !taskColumnsData.boards ||
+      !taskColumnsData.boards[0] ||
+      !taskColumnsData.boards[0].columns
+    )
+      return;
+
+    const columns: Column[] = taskColumnsData.boards[0].columns.filter(
+      (column): column is Column => column !== null,
+    );
+
+    setTaskColumns(columns);
+    setTaskColumnSelectItems(
+      columns.map(column => ({
+        label: column.title,
+        value: column.id,
+      })),
+    );
+
+    if (columns.length === 0) {
+      setSelectedTaskColumn(null);
+    } else if (columns.length === 1) {
+      setSelectedTaskColumn(columns[0]);
+    }
+  }, [taskColumnsData, taskColumnsError, taskColumnsIsError, taskColumnsIsLoading]);
 
   useEffect(() => {
     if (itemIsLoading) {
@@ -131,24 +189,26 @@ const useLocationItemSelects = () => {
     const items = itemsData.boards[0]?.items_page.items;
     setItems(items);
 
-    if (items.length === 0) {
-      setSelectedItem(null);
-    }
-
     setItemSelectItems(
       items.map(item => ({
         label: item.name,
         value: item.id,
       })),
     );
-    if (columns.length === 0) {
-      setSelectedColumn(null);
+    if (items.length === 0) {
+      setSelectedItem(null);
     } else if (items.length === 1) {
       setSelectedItem(items[0]);
     }
   }, [columns.length, itemIsLoading, itemsData, itemsError, itemsIsError]);
 
   useEffect(() => {
+    if (taskBoard) {
+      setSelectedTaskBoard(taskBoard);
+    }
+    if (taskColumn) {
+      setSelectedTaskColumn(taskColumn);
+    }
     if (board) {
       setSelectedBoard(board);
     }
@@ -158,24 +218,32 @@ const useLocationItemSelects = () => {
     if (item) {
       setSelectedItem(item);
     }
-  }, [board, column, item]);
+  }, [board, column, item, taskBoard, taskColumn]);
 
   return {
     boards,
     columns,
     items,
+    taskColumns,
     selectedBoard,
     setSelectedBoard,
     selectedColumn,
     setSelectedColumn,
     selectedItem,
     setSelectedItem,
+    selectedTaskBoard,
+    setSelectedTaskBoard,
+    selectedTaskColumn,
+    setSelectedTaskColumn,
     boardSelectItems,
     columnSelectItems,
     itemSelectItems,
+    taskColumnSelectItems,
     boardsIsLoading,
     columnsIsLoading,
+    taskColumnsIsLoading,
     itemIsLoading,
+    refetchTaskColumns,
     refetchColumns,
     refetchItems,
   };
