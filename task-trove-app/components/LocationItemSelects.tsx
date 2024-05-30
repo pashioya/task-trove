@@ -2,8 +2,10 @@ import { SimpleSelect } from './SimpleSelect';
 import { Button } from './ui/button';
 import { Text } from './ui/text';
 import SimpleAlertDialog from './SimpleAlertDialog';
-import { View } from 'react-native';
-import { useLocationItemSelects } from '~/hooks/useLocationItemSelects';
+import { ToastAndroid, View } from 'react-native';
+import { useLocationItemSelects } from '~/hooks';
+import type { Board } from '~/model/types';
+import { useSettingsStore } from '~/store';
 
 export default function LocationItemSelects() {
   const {
@@ -12,6 +14,7 @@ export default function LocationItemSelects() {
     items,
     selectedBoard,
     selectedColumn,
+    setSelectedBoard,
     setSelectedColumn,
     selectedItem,
     setSelectedItem,
@@ -21,9 +24,33 @@ export default function LocationItemSelects() {
     boardsIsLoading,
     columnsIsLoading,
     itemIsLoading,
-    handleBoardChange,
-    saveChanges,
+    refetchColumns,
+    refetchItems,
   } = useLocationItemSelects();
+
+  const { setBoard, setColumn, setItem } = useSettingsStore();
+
+  const handleBoardChange = async (board: Board) => {
+    setSelectedBoard(board);
+    setSelectedColumn(null);
+    setSelectedItem(null);
+
+    await refetchColumns();
+    await refetchItems();
+  };
+
+  const saveChanges = () => {
+    if (!selectedBoard || !selectedColumn || !selectedItem) {
+      ToastAndroid.show('Please select a board, column, and item!', ToastAndroid.SHORT);
+      return;
+    }
+    setBoard(selectedBoard);
+    setColumn(selectedColumn);
+    setItem(selectedItem);
+
+    ToastAndroid.show('Location saved!', ToastAndroid.SHORT);
+  };
+
   return (
     <View className="items-center justify-center m-10 gap-7">
       <SimpleSelect

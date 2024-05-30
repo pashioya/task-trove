@@ -5,24 +5,32 @@ import { useMondayQuery } from '~/lib/monday/api';
 import { fetchBoardsQuery, fetchColumnsQuery, fetchItemsQuery } from '~/lib/monday/queries';
 import type { MondayAPIError } from '~/lib/monday/error';
 import { handleMondayErrorCode, handleMondayErrorStatusCode } from '~/utils/MondayErrorHandling';
-import { Alert, ToastAndroid } from 'react-native';
+import { Alert } from 'react-native';
 
-export const useLocationItemSelects = () => {
+const useLocationItemSelects = () => {
   const [boards, setBoards] = useState<Board[]>([]);
   const [columns, setColumns] = useState<Column[]>([]);
   const [items, setItems] = useState<Item[]>([]);
+
+  const [taskColumns, setTaskColumns] = useState<Column[]>([]);
 
   const [selectedBoard, setSelectedBoard] = useState<Board | null>(null);
   const [selectedColumn, setSelectedColumn] = useState<Column | null>(null);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
 
+  const [selectedTaskBoard, setSelectedTaskBoard] = useState<Board | null>(null);
+  const [selectedTaskColumn, setSelectedTaskColumn] = useState<Column | null>(null);
+
   const [boardSelectItems, setBoardSelectItems] = useState<{ label: string; value: string }[]>([]);
   const [columnSelectItems, setColumnSelectItems] = useState<{ label: string; value: string }[]>(
     [],
   );
+  const [taskColumnSelectItems, setTaskColumnSelectItems] = useState<
+    { label: string; value: string }[]
+  >([]);
   const [itemSelectItems, setItemSelectItems] = useState<{ label: string; value: string }[]>([]);
 
-  const { setBoard, setColumn, setItem, board, column, item } = useSettingsStore();
+  const { taskBoard, taskColumn, board, column, item } = useSettingsStore();
 
   const showAlert = (error: MondayAPIError) => {
     if (error.errors) {
@@ -57,6 +65,19 @@ export const useLocationItemSelects = () => {
     query: fetchColumnsQuery,
     variables: { boardId: selectedBoard?.id || '' },
     enabled: !!selectedBoard?.id,
+  });
+
+  const {
+    data: taskColumnsData,
+    isLoading: taskColumnsIsLoading,
+    isError: taskColumnsIsError,
+    error: taskColumnsError,
+    refetch: refetchTaskColumns,
+  } = useMondayQuery({
+    queryKey: [selectedTaskBoard?.id || '', 'columns'],
+    query: fetchColumnsQuery,
+    variables: { boardId: selectedTaskBoard?.id || '' },
+    enabled: !!selectedTaskBoard?.id,
   });
 
   const {
@@ -125,12 +146,49 @@ export const useLocationItemSelects = () => {
         value: column.id,
       })),
     );
+
     if (columns.length === 0) {
       setSelectedColumn(null);
     } else if (columns.length === 1) {
       setSelectedColumn(columns[0]);
     }
   }, [columnsData, columnsError, columnsIsError, columnsIsLoading]);
+
+  useEffect(() => {
+    if (taskColumnsIsLoading) {
+      return;
+    }
+    if (taskColumnsIsError) {
+      showAlert(taskColumnsError);
+      return;
+    }
+
+    if (
+      !taskColumnsData ||
+      !taskColumnsData.boards ||
+      !taskColumnsData.boards[0] ||
+      !taskColumnsData.boards[0].columns
+    )
+      return;
+
+    const columns: Column[] = taskColumnsData.boards[0].columns.filter(
+      (column): column is Column => column !== null,
+    );
+
+    setTaskColumns(columns);
+    setTaskColumnSelectItems(
+      columns.map(column => ({
+        label: column.title,
+        value: column.id,
+      })),
+    );
+
+    if (columns.length === 0) {
+      setSelectedTaskColumn(null);
+    } else if (columns.length === 1) {
+      setSelectedTaskColumn(columns[0]);
+    }
+  }, [taskColumnsData, taskColumnsError, taskColumnsIsError, taskColumnsIsLoading]);
 
   useEffect(() => {
     if (itemIsLoading) {
@@ -145,24 +203,26 @@ export const useLocationItemSelects = () => {
     const items = itemsData.boards[0]?.items_page.items;
     setItems(items);
 
-    if (items.length === 0) {
-      setSelectedItem(null);
-    }
-
     setItemSelectItems(
       items.map(item => ({
         label: item.name,
         value: item.id,
       })),
     );
-    if (columns.length === 0) {
-      setSelectedColumn(null);
+    if (items.length === 0) {
+      setSelectedItem(null);
     } else if (items.length === 1) {
       setSelectedItem(items[0]);
     }
   }, [columns.length, itemIsLoading, itemsData, itemsError, itemsIsError]);
 
   useEffect(() => {
+    if (taskBoard) {
+      setSelectedTaskBoard(taskBoard);
+    }
+    if (taskColumn) {
+      setSelectedTaskColumn(taskColumn);
+    }
     if (board) {
       setSelectedBoard(board);
     }
@@ -172,46 +232,35 @@ export const useLocationItemSelects = () => {
     if (item) {
       setSelectedItem(item);
     }
-  }, [board, column, item]);
-
-  const handleBoardChange = async (board: Board) => {
-    setSelectedBoard(board);
-    setSelectedColumn(null);
-    setSelectedItem(null);
-
-    await refetchColumns();
-    await refetchItems();
-  };
-
-  const saveChanges = () => {
-    if (!selectedBoard || !selectedColumn || !selectedItem) {
-      ToastAndroid.show('Please select a board, column, and item!', ToastAndroid.SHORT);
-      return;
-    }
-    setBoard(selectedBoard);
-    setColumn(selectedColumn);
-    setItem(selectedItem);
-
-    ToastAndroid.show('Location saved!', ToastAndroid.SHORT);
-  };
+  }, [board, column, item, taskBoard, taskColumn]);
 
   return {
     boards,
     columns,
     items,
+    taskColumns,
     selectedBoard,
     setSelectedBoard,
     selectedColumn,
     setSelectedColumn,
     selectedItem,
     setSelectedItem,
+    selectedTaskBoard,
+    setSelectedTaskBoard,
+    selectedTaskColumn,
+    setSelectedTaskColumn,
     boardSelectItems,
     columnSelectItems,
     itemSelectItems,
+    taskColumnSelectItems,
     boardsIsLoading,
     columnsIsLoading,
+    taskColumnsIsLoading,
     itemIsLoading,
-    handleBoardChange,
-    saveChanges,
+    refetchTaskColumns,
+    refetchColumns,
+    refetchItems,
   };
 };
+
+export default useLocationItemSelects;
