@@ -131,11 +131,11 @@ export default function TabLayout() {
       <Tabs.Screen
         name="tasks"
         options={{
-          headerTitle: 'Tasks',
+          headerTitle: '',
+          headerTitleContainerStyle: { display: 'none' },
           tabBarIcon: ({ focused }) => (
             <ClipboardListIcon color={focused ? 'blue' : 'black'} size={30} />
           ),
-          title: 'Tasks',
           tabBarBadge: 3,
           tabBarLabel: 'Tasks',
           tabBarLabelStyle: {
