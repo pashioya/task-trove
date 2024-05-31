@@ -4,6 +4,7 @@ import * as TaskManager from 'expo-task-manager';
 import { useRegionStore, useSettingsStore } from '~/store';
 import { Alert } from 'react-native';
 
+
 type TaskData = {
   locations?: Location.LocationObject[];
 };
