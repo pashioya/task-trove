@@ -2,7 +2,8 @@ import { Stack } from 'expo-router';
 import { View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import SimpleCard from '~/components/SimpleCard';
+import { SimpleDialog } from '~/components/SimpleDialog';
+import TaskCard from '~/components/TaskCard';
 import { Text } from '~/components/ui/text';
 import type { Task } from '~/model/types';
 
@@ -25,12 +26,22 @@ export default function Tasks() {
               </View>
             </View>
           </View>
-          <View className="items-center w-full gap-4">
+          <View className="items-center ml-5 w-full gap-4 justify-center ">
             <FlatList
-              className="w-full "
+              className="w-full"
               data={tasks}
               renderItem={({ item }: { item: Task }) => (
-                <SimpleCard title={item.name} description={item.id} />
+                <SimpleDialog
+                  trigger={<TaskCard title={item.name} description={item.id} />}
+                  title={item.name}
+                  content={
+                    <View className="m-10">
+                      <Text>{item.id}</Text>
+                      <Text>{item.lat}</Text>
+                      <Text>{item.long}</Text>
+                    </View>
+                  }
+                />
               )}
             />
           </View>
