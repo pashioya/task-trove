@@ -1,7 +1,6 @@
 import { Stack, useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
-import * as ExpoLocation from 'expo-location';
-import { Alert, SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Alert, SafeAreaView, StyleSheet, View } from 'react-native';
 import { useToggleShareLocation, useLocationPermissions } from '~/hooks';
 import { useMondayMutation } from '~/lib/monday/api';
 import { changeMultipleColumnValuesMutation } from '~/lib/monday/queries';
@@ -11,8 +10,10 @@ import lightStyle from '~/assets/map/lightStyle.json';
 import darkStyle from '~/assets/map/darkStyle.json';
 import { useColorScheme } from '~/lib/useColorScheme';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
-import { Ionicons } from '@expo/vector-icons';
+
+import { Play, Navigation, Pause } from 'lucide-react-native';
 import colors from 'tailwindcss/colors';
+import * as ExpoLocation from 'expo-location';
 
 const showAlert = (error: string, onPress: () => void, buttonText: string) => {
   Alert.alert('Error', error, [
@@ -31,7 +32,7 @@ export default function Home() {
   const router = useRouter();
 
   const mapRef = useRef<MapView>(null);
-  const { board, column, item, setError } = useSettingsStore();
+  const { board, column, item } = useSettingsStore();
 
   const { mutate: updateLocation, error: updateLocationError } = useMondayMutation({
     mutation: changeMultipleColumnValuesMutation,
@@ -95,14 +96,20 @@ export default function Home() {
         {
           latitude: location.coords.latitude,
           longitude: location.coords.longitude,
-          latitudeDelta: 0.7,
-          longitudeDelta: 0.7,
+          latitudeDelta: 0.5,
+          longitudeDelta: 0.6,
         },
-        1000,
+        3000,
       );
     } catch (e) {
       if (e instanceof Error) {
-        setError(e);
+        showAlert(
+          e.message,
+          () => {
+            onLocateMe();
+          },
+          'Retry',
+        );
       }
     }
   };
@@ -117,6 +124,8 @@ export default function Home() {
           style={StyleSheet.absoluteFillObject}
           customMapStyle={isDarkColorScheme ? darkStyle : lightStyle}
           loadingEnabled
+          showsMyLocationButton={false}
+          showsCompass={false}
           initialRegion={INITIAL_REGION}
           ref={mapRef}
           region={{
@@ -126,32 +135,88 @@ export default function Home() {
             longitudeDelta: 0.0421,
           }}
         />
-        {isTracking && (
-          <View className="absolute left-80 right-0 items-center">
-            <TouchableOpacity style={styles.locateBtn} onPress={onLocateMe}>
-              <Ionicons name="navigate" size={24} color={colors.black} />
-            </TouchableOpacity>
+        <View className="absolute bottom-32 right-5 gap-4">
+          {isTracking ? (
+            <View
+              className="bg-blue-50 rounded-full  flex items-center justify-center"
+              style={{
+                elevation: 5,
+                width: 70,
+                height: 70,
+                shadowColor: 'black',
+                shadowOffset: {
+                  width: 0,
+                  height: 10,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+              }}
+            >
+              <Navigation
+                onPress={() => onLocateMe()}
+                fill="white"
+                color="black"
+                className="bg-white"
+                size={40}
+              />
+            </View>
+          ) : null}
+
+          <View
+            className="bg-blue-50 rounded-full p-1 flex items-center justify-center"
+            style={{
+              elevation: 5,
+              width: 70,
+              height: 70,
+              shadowColor: 'black',
+              shadowOffset: {
+                width: 0,
+                height: 10,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+            }}
+          >
+            {isTracking ? (
+              <Pause
+                onPress={() => toggleShareLocation()}
+                fill={colors.blue[500]}
+                color="black"
+                className="bg-white"
+                size={50}
+                style={{
+                  elevation: 5,
+                  shadowColor: 'black',
+                  shadowOffset: {
+                    width: 0,
+                    height: 10,
+                  },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 3.84,
+                }}
+              />
+            ) : (
+              <Play
+                onPress={() => toggleShareLocation()}
+                fill={colors.blue[500]}
+                color="black"
+                className="bg-white"
+                size={50}
+                style={{
+                  elevation: 5,
+                  shadowColor: 'black',
+                  shadowOffset: {
+                    width: 0,
+                    height: 10,
+                  },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 3.84,
+                }}
+              />
+            )}
           </View>
-        )}
+        </View>
       </SafeAreaView>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  locateBtn: {
-    position: 'absolute',
-    backgroundColor: '#fff',
-    padding: 10,
-    top: 650,
-    borderRadius: 10,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    shadowOffset: {
-      width: 1,
-      height: 10,
-    },
-  },
-});

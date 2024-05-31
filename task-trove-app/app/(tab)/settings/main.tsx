@@ -4,7 +4,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSession } from '~/contexts/session-provider';
 import { Text } from '~/components/ui/text';
-import { ChevronRight, LocateFixedIcon, Moon } from 'lucide-react-native';
+import { ChevronRight, LocateFixedIcon, LucideMoveLeft, Moon } from 'lucide-react-native';
 import { useColorScheme } from '~/lib/useColorScheme';
 import { Switch } from '~/components/ui/switch';
 import colors from 'tailwindcss/colors';
@@ -22,16 +22,27 @@ export default function Settings() {
 
   return (
     <>
-      <Stack.Screen options={{ title: 'Boards', headerShown: false }} />
-      <SafeAreaView style={{ flex: 1 }}>
-        <LinearGradient
-          style={{
-            flex: 1,
-          }}
-          colors={[colors.white, colors.blue[100]]}
-        >
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          headerBackVisible: true,
+          headerTitle: '',
+          headerShadowVisible: false,
+          headerLeft: () => (
+            <LucideMoveLeft onPress={() => router.back()} color="black" size={45} />
+          ),
+        }}
+      />
+
+      <LinearGradient
+        style={{
+          flex: 1,
+        }}
+        colors={[colors.white, colors.blue[100]]}
+      >
+        <SafeAreaView className="h-full" style={{ flex: 1 }}>
           <View className="flex-1">
-            <View className="p-6 items-center justify-center">
+            <View className="pb-10 items-center justify-center">
               <View className="relative">
                 <Image
                   alt=""
@@ -43,14 +54,12 @@ export default function Settings() {
               </View>
 
               <View>
-                <Text className="mt-5 text-lg font-semibold text-center">
-                  {session?.user?.name}
-                </Text>
+                <Text className="text-lg font-semibold text-center">{session?.user?.name}</Text>
                 <Text className="mt-1 text-base text-center">{session?.user?.email}</Text>
               </View>
             </View>
             <ScrollView>
-              <View className="px-6 flex-1 justify-between">
+              <View className="px-6">
                 <View>
                   <Text className="py-3 text-xs font-semibold tracking-wider">PREFERENCES</Text>
                   <View
@@ -73,7 +82,7 @@ export default function Settings() {
                   </View>
                   <TouchableOpacity
                     onPress={() => {
-                      router.push('/settings/location');
+                      router.navigate('/settings/location');
                     }}
                     style={{ backgroundColor: rowColor }}
                     className="flex-row items-center justify-start h-12  rounded-lg mb-3 px-3"
@@ -87,7 +96,7 @@ export default function Settings() {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
-                      router.push('/settings/notifications');
+                      router.navigate('/settings/notifications');
                     }}
                     style={{ backgroundColor: rowColor }}
                     className="flex-row items-center justify-start h-12  rounded-lg mb-3 px-3"
@@ -101,21 +110,23 @@ export default function Settings() {
                     <ChevronRight color="#C6C6C6" size={20} />
                   </TouchableOpacity>
                 </View>
-                <SimpleAlertDialog
-                  trigger={
-                    <Button variant="destructive" className=" border-red-600">
-                      <Text>Logout</Text>
-                    </Button>
-                  }
-                  actionIfConfirmed={signOut}
-                  title="Are you sure you want to logout?"
-                  description="Do you want to logout from your account? You can always login back."
-                />
               </View>
             </ScrollView>
           </View>
-        </LinearGradient>
-      </SafeAreaView>
+          <SimpleAlertDialog
+            trigger={
+              <View className="px-6 absolute bottom-10 left-0 right-0">
+                <Button variant="destructive" className=" border-red-600  ">
+                  <Text>Logout</Text>
+                </Button>
+              </View>
+            }
+            actionIfConfirmed={signOut}
+            title="Are you sure you want to logout?"
+            description="Do you want to logout from your account? You can always login back."
+          />
+        </SafeAreaView>
+      </LinearGradient>
     </>
   );
 }
