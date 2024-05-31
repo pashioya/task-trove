@@ -1,6 +1,6 @@
-import { Alert } from "react-native";
-import { MondayAPIError } from "~/lib/monday/error";
-import { handleMondayErrorCode, handleMondayErrorStatusCode } from "./MondayErrorHandling";
+import { Alert } from 'react-native';
+import type { MondayAPIError } from '~/lib/monday/error';
+import { handleMondayErrorCode, handleMondayErrorStatusCode } from './MondayErrorHandling';
 
 const showAlert = (error: MondayAPIError) => {
   if (error.errors) {

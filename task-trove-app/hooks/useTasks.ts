@@ -1,9 +1,9 @@
-import { SetStateAction, useEffect, useState } from "react";
-import { useMondayQuery } from "~/lib/monday/api";
-import { fetchTasksQuery } from "~/lib/monday/queries";
-import { Task, TaskItem } from "~/model/types";
-import { useSettingsStore } from "~/store";
-import showAlert from "~/utils/ShowAlert";
+import { useEffect, useState, type SetStateAction } from 'react';
+import { useMondayQuery } from '~/lib/monday/api';
+import { fetchTasksQuery } from '~/lib/monday/queries';
+import type { Task, TaskItem } from '~/model/types';
+import { useSettingsStore } from '~/store';
+import showAlert from '~/utils/ShowAlert';
 
 const useTasks = () => {
   const [tasks, setTasks] = useState<TaskItem[]>([]);
@@ -62,6 +62,6 @@ const useTasks = () => {
   }, [itemIsLoading, itemsData, itemsError, itemsIsError, tasks]);
 
   return { tableTasks };
-}
+};
 
 export default useTasks;
