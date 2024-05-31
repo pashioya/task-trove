@@ -1,4 +1,4 @@
-import { SetStateAction, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type SetStateAction } from 'react';
 import { ScrollView, useWindowDimensions } from 'react-native';
 
 import {
@@ -22,8 +22,6 @@ export default function SimpleTable() {
   const { width } = useWindowDimensions();
   const [tasks, setTasks] = useState<TaskItem[]>([]);
   const [tableTasks, setTableTasks] = useState<Task[]>([]);
-
-  const [columnNames, setColumnNames] = useState<string[]>([]);
 
   const { taskBoard } = useSettingsStore();
 
@@ -50,30 +48,31 @@ export default function SimpleTable() {
     if (!itemsData || !itemsData.boards || !itemsData.boards[0]) return;
     const items = itemsData.boards[0]?.items_page.items;
 
-    const columnNames = items[0].column_values.map(column => column.id.toString() || '');
-    setColumnNames(columnNames);
-    //TODO: fix types (Type string | null is not assignable to type string)
-    const columns = items[0].column_values.map((column, index) => {
-      return {
-        id: column.id.toString() || '',
-        title: column.text,
-        value: column.value,
-      };
-    });
     //TODO: put columns in column_values
     setTasks(items);
+
+    type Position = {
+      address: string;
+      changed_at: string;
+      lat: number;
+      lng: number;
+    };
+
     const reformattedTasks: SetStateAction<Task[]> = [];
 
     tasks.map(task => {
       const value = task.column_values[0].value;
-      const jsonValue = JSON.parse(value);
-      console.log(jsonValue);
-      if (!jsonValue) return;
-      const reformattedTask = {id: task.id, name: task.name, lat: jsonValue["lat"], long: jsonValue["lng"]} as Task;
+      const jsonValue = JSON.parse(value) as Position;
+      const reformattedTask = {
+        id: task.id,
+        name: task.name,
+        lat: jsonValue.lat,
+        long: jsonValue.lng,
+      } as Task;
       reformattedTasks.push(reformattedTask);
-    })
+    });
     setTableTasks(reformattedTasks);
-  }, [itemIsLoading, itemsData, itemsError, itemsIsError]);
+  }, [itemIsLoading, itemsData, itemsError, itemsIsError, tasks]);
 
   const columnWidths = useMemo(() => {
     return MIN_COLUMN_WIDTHS.map(minWidth => {
@@ -103,7 +102,9 @@ export default function SimpleTable() {
                 <Text>{task.name}</Text>
               </TableCell>
               <TableCell style={{ width: columnWidths[1] }}>
-                <Text>{task.lat}, {task.long}</Text>
+                <Text>
+                  {task.lat}, {task.long}
+                </Text>
               </TableCell>
             </TableRow>
           ))}
