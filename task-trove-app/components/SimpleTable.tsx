@@ -48,7 +48,6 @@ export default function SimpleTable() {
     if (!itemsData || !itemsData.boards || !itemsData.boards[0]) return;
     const items = itemsData.boards[0]?.items_page.items;
 
-    //TODO: put columns in column_values
     setTasks(items);
 
     type Position = {
@@ -62,14 +61,16 @@ export default function SimpleTable() {
 
     tasks.map(task => {
       const value = task.column_values[0].value;
-      const jsonValue = JSON.parse(value) as Position;
-      const reformattedTask = {
-        id: task.id,
-        name: task.name,
-        lat: jsonValue.lat,
-        long: jsonValue.lng,
-      } as Task;
-      reformattedTasks.push(reformattedTask);
+      if (value) {
+        const jsonValue = JSON.parse(value) as Position;
+        const reformattedTask = {
+          id: task.id,
+          name: task.name,
+          lat: jsonValue.lat,
+          long: jsonValue.lng,
+        } as Task;
+        reformattedTasks.push(reformattedTask);
+      }
     });
     setTableTasks(reformattedTasks);
   }, [itemIsLoading, itemsData, itemsError, itemsIsError, tasks]);

@@ -22,8 +22,8 @@ export type TaskItem = {
 
 type ColumnValue = {
   id: string;
-  value: string;
-  text: string;
+  value: string | null;
+  text: string | null;
 };
 
 export type Task = {
