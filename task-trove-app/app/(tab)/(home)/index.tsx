@@ -12,7 +12,6 @@ import { useColorScheme } from '~/lib/useColorScheme';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
 import { Play, Navigation, Pause } from 'lucide-react-native';
-import colors from 'tailwindcss/colors';
 import * as ExpoLocation from 'expo-location';
 
 const showAlert = (error: string, onPress: () => void, buttonText: string) => {
@@ -180,7 +179,7 @@ export default function Home() {
             {isTracking ? (
               <Pause
                 onPress={() => toggleShareLocation()}
-                fill={colors.blue[500]}
+                fill="white"
                 color="black"
                 className="bg-white"
                 size={50}
@@ -198,7 +197,7 @@ export default function Home() {
             ) : (
               <Play
                 onPress={() => toggleShareLocation()}
-                fill={colors.blue[500]}
+                fill="white"
                 color="black"
                 className="bg-white"
                 size={50}
