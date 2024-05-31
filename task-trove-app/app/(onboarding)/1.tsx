@@ -40,7 +40,7 @@ export default function One() {
                   Get a clear view of your assigned tasks based on your location
                 </Text>
               </View>
-              <Button onPress={() => router.push('/(onboarding)/2')} className="bg-blue-700">
+              <Button onPress={() => router.navigate('/(onboarding)/2')} className="bg-blue-700">
                 <Text className="font-semibold text-white">Let&apos;s go</Text>
               </Button>
             </View>
