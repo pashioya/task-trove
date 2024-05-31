@@ -40,11 +40,16 @@ export default function One() {
                   Get a clear view of your assigned tasks based on your location
                 </Text>
               </View>
-              <Button onPress={() => router.navigate('/(onboarding)/2')} className="bg-blue-700">
-                <Text className="font-semibold text-white">Let&apos;s go</Text>
-              </Button>
             </View>
           </ScrollView>
+          <Button
+            className="absolute bottom-10  rounded-md w-96 self-center bg-blue-700"
+            onPress={() => {
+              router.navigate('/(onboarding)/2');
+            }}
+          >
+            <Text className="font-semibold text-white">Let&apos;s go</Text>
+          </Button>
         </LinearGradient>
       </View>
     </>
