@@ -41,7 +41,7 @@ export default function Settings() {
         colors={[colors.white, colors.blue[100]]}
       >
         <SafeAreaView className="h-full" style={{ flex: 1 }}>
-          <View className="flex-1">
+          <View className="flex-1 px-6">
             <View className="pb-10 items-center justify-center">
               <View className="relative">
                 <Image
@@ -59,7 +59,7 @@ export default function Settings() {
               </View>
             </View>
             <ScrollView>
-              <View className="px-6">
+              <View>
                 <View>
                   <Text className="py-3 text-xs font-semibold tracking-wider">PREFERENCES</Text>
                   <View
@@ -112,22 +112,20 @@ export default function Settings() {
                 </View>
               </View>
             </ScrollView>
-          </View>
-          <SimpleAlertDialog
-            trigger={
-              <TouchableOpacity className="px-6 absolute bottom-10 left-0 right-0">
+            <SimpleAlertDialog
+              trigger={
                 <Button
                   variant="destructive"
-                  className=" border-red-600 w-full absolute bottom-10 left-5 right-0"
+                  className=" border-red-600 w-full absolute bottom-10 left-0 right-0"
                 >
                   <Text>Logout</Text>
                 </Button>
-              </TouchableOpacity>
-            }
-            actionIfConfirmed={() => signOut()}
-            title="Are you sure you want to logout?"
-            description="Do you want to logout from your account? You can always login back."
-          />
+              }
+              actionIfConfirmed={() => signOut()}
+              title="Are you sure you want to logout?"
+              description="Do you want to logout from your account? You can always login back."
+            />
+          </View>
         </SafeAreaView>
       </LinearGradient>
     </>
