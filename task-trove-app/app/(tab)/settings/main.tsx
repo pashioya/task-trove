@@ -118,7 +118,7 @@ export default function Settings() {
                   variant="destructive"
                   className=" border-red-600 w-full absolute bottom-10 left-0 right-0"
                 >
-                  <Text>Logout</Text>
+                  <Text>Log out</Text>
                 </Button>
               }
               actionIfConfirmed={() => signOut()}
