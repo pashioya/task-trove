@@ -31,6 +31,7 @@ export type Task = {
   name: string;
   lat: number;
   long: number;
+  address: string;
 };
 
 export type User = {

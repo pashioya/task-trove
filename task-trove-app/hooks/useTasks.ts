@@ -9,21 +9,21 @@ const useTasks = () => {
   const [tasks, setTasks] = useState<TaskItem[]>([]);
   const [tableTasks, setTableTasks] = useState<Task[]>([]);
 
-  const { taskBoard } = useSettingsStore();
+  const { taskBoard, taskColumn } = useSettingsStore();
 
   const {
     data: itemsData,
-    isLoading: itemIsLoading,
+    isLoading: itemsAreLoading,
     isError: itemsIsError,
     error: itemsError,
   } = useMondayQuery({
     queryKey: [taskBoard?.id || '', 'taskItems'],
     query: fetchTasksQuery,
-    variables: { boardId: taskBoard?.id || '' },
+    variables: { boardId: taskBoard?.id || '', columnId: taskColumn?.id || '' },
   });
 
   useEffect(() => {
-    if (itemIsLoading) {
+    if (itemsAreLoading) {
       return;
     }
     if (itemsIsError) {
@@ -54,12 +54,13 @@ const useTasks = () => {
           name: task.name,
           lat: jsonValue.lat,
           long: jsonValue.lng,
+          address: task.column_values[0].text || '',
         } as Task;
         reformattedTasks.push(reformattedTask);
       }
     });
     setTableTasks(reformattedTasks);
-  }, [itemIsLoading, itemsData, itemsError, itemsIsError, tasks]);
+  }, [itemsAreLoading, itemsData, itemsError, itemsIsError, tasks]);
 
   return { tableTasks };
 };

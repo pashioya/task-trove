@@ -45,9 +45,7 @@ export default function SimpleTable() {
                 <Text>{task.name}</Text>
               </TableCell>
               <TableCell style={{ width: columnWidths[1] }}>
-                <Text>
-                  {task.lat}, {task.long}
-                </Text>
+                <Text>{task.address}</Text>
               </TableCell>
             </TableRow>
           ))}
