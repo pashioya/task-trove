@@ -29,7 +29,7 @@ const showAlert = (error: string, onPress: () => void, buttonText: string) => {
 };
 
 export default function Home() {
-  const { isTracking, region, setRegion, toggleShareLocation } = useToggleShareLocation();
+  const { isTracking, region, toggleShareLocation } = useToggleShareLocation();
   const { requestPermissions } = useLocationPermissions();
   const { isDarkColorScheme } = useColorScheme();
   const router = useRouter();
@@ -89,23 +89,22 @@ export default function Home() {
 
   const onLocateMe = async () => {
     try {
-      const location = await ExpoLocation.getCurrentPositionAsync();
-      setRegion({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-        speed: location.coords.speed ? location.coords.speed : 0,
-      });
-      // @ts-expect-error - ignore
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      mapRef.current?.animateToRegion(
-        {
+      const location = await ExpoLocation.getLastKnownPositionAsync({});
+
+      if (location) {
+        // @ts-expect-error - ignore
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        mapRef.current?.animateToRegion({
           latitude: location.coords.latitude,
           longitude: location.coords.longitude,
-          latitudeDelta: 0.5,
-          longitudeDelta: 0.6,
-        },
-        3000,
-      );
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        });
+      } else {
+        // @ts-expect-error - ignore
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        mapRef.current?.animateToRegion(INITIAL_REGION);
+      }
     } catch (e) {
       if (e instanceof Error) {
         showAlert(
@@ -124,6 +123,7 @@ export default function Home() {
       <Stack.Screen options={{ title: 'Home', headerShown: false }} />
       <SafeAreaView className="flex-1">
         <MapView
+          followsUserLocation={false}
           provider={PROVIDER_GOOGLE}
           showsUserLocation={isTracking}
           style={StyleSheet.absoluteFillObject}
@@ -131,6 +131,7 @@ export default function Home() {
           loadingEnabled
           showsMyLocationButton={false}
           showsCompass={false}
+          mapPadding={{ top: 100, right: 0, left: 0, bottom: 0 }}
           initialRegion={INITIAL_REGION}
           ref={mapRef}
           renderCluster={cluster => {
@@ -141,6 +142,7 @@ export default function Home() {
             return (
               <Marker
                 key={`cluster-${id}`}
+                tracksViewChanges={false}
                 coordinate={{
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                   longitude: geometry.coordinates[0],
@@ -163,15 +165,10 @@ export default function Home() {
               </Marker>
             );
           }}
-          region={{
-            latitude: region?.latitude || INITIAL_REGION.latitude,
-            longitude: region?.longitude || INITIAL_REGION.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
         >
           {tasks.map(task => (
             <Marker
+              tracksViewChanges={false}
               coordinate={{
                 latitude: task.lat,
                 longitude: task.long,
