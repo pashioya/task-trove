@@ -44,3 +44,21 @@ export const fetchItemsQuery = graphql(`
     }
   }
 `);
+
+export const fetchTasksQuery = graphql(`
+  query fetchTasks($boardId: ID!, $columnId: String!) {
+    boards(ids: [$boardId]) {
+      items_page(limit: 100) {
+        items {
+          id
+          name
+          column_values(types: location, ids: [$columnId]) {
+            id
+            value
+            text
+          }
+        }
+      }
+    }
+  }
+`);

@@ -14,6 +14,26 @@ export type Column = {
   type: string;
 };
 
+export type TaskItem = {
+  id: string;
+  name: string;
+  column_values: ColumnValue[];
+};
+
+type ColumnValue = {
+  id: string;
+  value: string | null;
+  text: string | null;
+};
+
+export type Task = {
+  id: string;
+  name: string;
+  lat: number;
+  long: number;
+  address: string;
+};
+
 export type User = {
   firstName: string;
   lastName: string;

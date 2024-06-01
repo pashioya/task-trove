@@ -13,7 +13,6 @@ import { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import MapView from 'react-native-map-clustering';
 
 import { Play, Navigation, Pause } from 'lucide-react-native';
-import colors from 'tailwindcss/colors';
 import * as ExpoLocation from 'expo-location';
 
 import { Text } from '~/components/ui/text';
@@ -190,7 +189,7 @@ export default function Home() {
             {isTracking ? (
               <Pause
                 onPress={() => toggleShareLocation()}
-                fill={colors.blue[500]}
+                fill="white"
                 color="black"
                 className="bg-white shadow-lg"
                 size={50}
@@ -198,7 +197,7 @@ export default function Home() {
             ) : (
               <Play
                 onPress={() => toggleShareLocation()}
-                fill={colors.blue[500]}
+                fill="white"
                 color="black"
                 className="bg-white shadow-lg"
                 size={50}

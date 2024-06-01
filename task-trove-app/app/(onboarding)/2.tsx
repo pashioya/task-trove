@@ -13,7 +13,14 @@ export default function Two() {
 
   return (
     <>
-      <Stack.Screen options={{ title: 'Onboarding Two', headerShown: false, headerTitle: '' }} />
+      <Stack.Screen
+        options={{
+          title: 'Onboarding Two',
+          headerShown: true,
+          headerTransparent: true,
+          headerTitle: '',
+        }}
+      />
       <View className="h-full">
         <LinearGradient
           style={{
@@ -22,8 +29,8 @@ export default function Two() {
           colors={[colors.white, colors.blue[100]]}
         >
           <ScrollView>
-            <View className="py-10 flex-1 item-center justify-between">
-              <View>
+            <View className="py-4 flex-1 item-center ">
+              <View className="px-6">
                 <Text className="mt-52 text-2xl font-semibold leading-relaxed text-center">
                   Location Board Selection
                 </Text>
@@ -32,18 +39,18 @@ export default function Two() {
                 </Text>
                 <LocationItemSelects />
               </View>
-              <Button
-                className="rounded-md w-96 mt-4 self-center bg-blue-700"
-                onPress={() => {
-                  setOnboardingCompleted(true);
-                  router.replace('/');
-                }}
-                disabled={!item}
-              >
-                <Text>Finish</Text>
-              </Button>
             </View>
           </ScrollView>
+          <Button
+            className="absolute bottom-10  rounded-md w-96 self-center bg-blue-700"
+            onPress={() => {
+              setOnboardingCompleted(true);
+              router.replace('/');
+            }}
+            disabled={!item}
+          >
+            <Text>Finish</Text>
+          </Button>
         </LinearGradient>
       </View>
     </>
