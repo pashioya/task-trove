@@ -1,7 +1,7 @@
 import { Stack, useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
 import { Alert, SafeAreaView, StyleSheet, View } from 'react-native';
-import { useToggleShareLocation, useLocationPermissions } from '~/hooks';
+import { useToggleShareLocation, useLocationPermissions, useTasks } from '~/hooks';
 import { useMondayMutation } from '~/lib/monday/api';
 import { changeMultipleColumnValuesMutation } from '~/lib/monday/queries';
 import { useSettingsStore } from '~/store';
@@ -16,7 +16,6 @@ import { Play, Navigation, Pause } from 'lucide-react-native';
 import * as ExpoLocation from 'expo-location';
 
 import { Text } from '~/components/ui/text';
-import type { Task } from '~/model/types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 const showAlert = (error: string, onPress: () => void, buttonText: string) => {
   Alert.alert('Error', error, [
@@ -33,6 +32,7 @@ export default function Home() {
   const { requestPermissions } = useLocationPermissions();
   const { isDarkColorScheme } = useColorScheme();
   const router = useRouter();
+  const { tableTasks } = useTasks();
 
   const mapRef = useRef<MapView>(null);
   const { board, column, item } = useSettingsStore();
@@ -158,7 +158,7 @@ export default function Home() {
             );
           }}
         >
-          {tasks.map(task => (
+          {tableTasks.map(task => (
             <Marker
               tracksViewChanges={false}
               coordinate={{
@@ -209,66 +209,3 @@ export default function Home() {
     </>
   );
 }
-
-const tasks: Task[] = [
-  {
-    id: '1',
-    name: 'Task One',
-    lat: 34.0522,
-    long: -118.2437,
-  },
-  {
-    id: '132',
-    name: 'Task One',
-    lat: 34.0522,
-    long: -118.2437,
-  },
-  {
-    id: '1145',
-    name: 'Task One',
-    lat: 34.0522,
-    long: -118.2437,
-  },
-  {
-    id: '15231',
-    name: 'Task One',
-    lat: 34.0522,
-    long: -118.2437,
-  },
-  {
-    id: '153125',
-    name: 'Task One',
-    lat: 34.0522,
-    long: -118.2437,
-  },
-  {
-    id: '2',
-    name: 'Task Two',
-    lat: 40.7128,
-    long: -74.006,
-  },
-  {
-    id: '3',
-    name: 'Task Three',
-    lat: 37.7749,
-    long: -122.4194,
-  },
-  {
-    id: '4',
-    name: 'Task Four',
-    lat: 51.5074,
-    long: -0.1278,
-  },
-  {
-    id: '5',
-    name: 'Task Five',
-    lat: 48.8566,
-    long: 2.3522,
-  },
-  {
-    id: '6',
-    name: 'Task Six',
-    lat: 35.6895,
-    long: 139.6917,
-  },
-];

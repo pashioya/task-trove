@@ -39,10 +39,3 @@ export type User = {
   lastName: string;
   email: string;
 };
-
-export type Task = {
-  id: string;
-  name: string;
-  lat: number;
-  long: number;
-};
