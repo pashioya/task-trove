@@ -1,31 +1,12 @@
-import { MapPinIcon } from 'lucide-react-native';
-import colors from 'tailwindcss/colors';
 import { Card, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
+import type { Task } from '~/model/types';
 
-type TaskListCardProps = {
-  title: string;
-  description: string;
-  content?: string;
-  footer?: string;
-};
-
-export default function TaskListCard({ title, description }: TaskListCardProps) {
+export default function TaskListCard({ task }: { task: Task }) {
   return (
-    <Card className="w-full max-w-sm my-2">
+    <Card className="w-full max-w-sm my-2 ml-5">
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
-        <MapPinIcon
-          size={35}
-          style={{
-            position: 'absolute',
-            right: 12,
-            top: 21,
-            width: 24,
-            height: 24,
-          }}
-          color={colors.red[500]}
-        />
+        <CardTitle>{task.name}</CardTitle>
+        <CardDescription>{task.address.split(',')[0]}</CardDescription>
       </CardHeader>
     </Card>
   );

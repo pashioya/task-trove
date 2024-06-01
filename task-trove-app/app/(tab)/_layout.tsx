@@ -7,10 +7,12 @@ import { Text } from '~/components/ui/text';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { useSettingsStore } from '~/store';
 import colors from 'tailwindcss/colors';
+import { useTasks } from '~/hooks';
 
 export default function TabLayout() {
   const { session, isLoading } = useSession();
   const { isTracking } = useSettingsStore();
+  const { tableTasks } = useTasks();
 
   if (isLoading) {
     return (
@@ -67,21 +69,8 @@ export default function TabLayout() {
           </View>
         ),
         headerRight: () => (
-          <Pressable onPress={() => router.navigate('/(tab)/settings/main')}>
-            <Avatar
-              alt="profile-pic"
-              className="w-[60] h-[60] mr-5"
-              style={{
-                elevation: 5,
-                shadowColor: 'black',
-                shadowOffset: {
-                  width: 0,
-                  height: 10,
-                },
-                shadowOpacity: 0.25,
-                shadowRadius: 3.84,
-              }}
-            >
+          <Pressable className="shadow-2xl" onPress={() => router.navigate('/(tab)/settings/main')}>
+            <Avatar alt="profile-pic" className="w-[60] h-[60] mr-5 shadow-2xl">
               <AvatarImage source={{ uri: session.user?.thumbnail }} />
               <AvatarFallback>
                 <Text>TR</Text>
@@ -137,7 +126,7 @@ export default function TabLayout() {
           tabBarIcon: ({ focused }) => (
             <ClipboardListIcon color={focused ? 'blue' : 'black'} size={30} />
           ),
-          tabBarBadge: 3,
+          tabBarBadge: tableTasks.length,
           tabBarLabel: 'Tasks',
           tabBarLabelStyle: {
             fontSize: 12,

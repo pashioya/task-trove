@@ -62,7 +62,7 @@ const useTasks = () => {
     setTableTasks(reformattedTasks);
   }, [itemsAreLoading, itemsData, itemsError, itemsIsError, tasks]);
 
-  return { tableTasks };
+  return { tableTasks, itemsAreLoading };
 };
 
 export default useTasks;
