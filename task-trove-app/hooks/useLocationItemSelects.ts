@@ -3,9 +3,7 @@ import type { Board, Column, Item } from '~/model/types';
 import { useSettingsStore } from '~/store';
 import { useMondayQuery } from '~/lib/monday/api';
 import { fetchBoardsQuery, fetchColumnsQuery, fetchItemsQuery } from '~/lib/monday/queries';
-import type { MondayAPIError } from '~/lib/monday/error';
-import { handleMondayErrorCode, handleMondayErrorStatusCode } from '~/utils/MondayErrorHandling';
-import { Alert } from 'react-native';
+import showAlert from '~/utils/ShowAlert';
 
 const useLocationItemSelects = () => {
   const [boards, setBoards] = useState<Board[]>([]);
@@ -31,18 +29,6 @@ const useLocationItemSelects = () => {
   const [itemSelectItems, setItemSelectItems] = useState<{ label: string; value: string }[]>([]);
 
   const { taskBoard, taskColumn, board, column, item } = useSettingsStore();
-
-  const showAlert = (error: MondayAPIError) => {
-    if (error.errors) {
-      Alert.alert('Error', error.errorMessage, [{ text: 'Dismiss' }]);
-    } else if (error.errorCode) {
-      const errorMessage = handleMondayErrorCode(error.errorCode);
-      Alert.alert('Error', errorMessage, [{ text: 'Dismiss' }]);
-    } else if (error.statusCode) {
-      const errorMessage = handleMondayErrorStatusCode(error.statusCode);
-      Alert.alert('Error', errorMessage, [{ text: 'Dismiss' }]);
-    }
-  };
 
   const {
     data: boardsData,

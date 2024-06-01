@@ -93,6 +93,7 @@ export default function LocationSettings() {
                   title="Change Location Save Location"
                   content={<LocationItemSelects />}
                 />
+
                 <View
                   style={{ backgroundColor: rowColor }}
                   className="flex-row items-center justify-start h-12 rounded-lg mb-3 px-3"

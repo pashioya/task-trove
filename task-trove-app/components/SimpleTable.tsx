@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useMemo } from 'react';
 import { ScrollView, useWindowDimensions } from 'react-native';
 
 import {
@@ -10,13 +10,15 @@ import {
   TableRow,
 } from '~/components/ui/table';
 import { Text } from '~/components/ui/text';
+import { useTasks } from '~/hooks';
 
 const MIN_COLUMN_WIDTHS = [120, 120, 100, 120];
 
 export default function SimpleTable() {
   const { width } = useWindowDimensions();
+  const { tableTasks } = useTasks();
 
-  const columnWidths = React.useMemo(() => {
+  const columnWidths = useMemo(() => {
     return MIN_COLUMN_WIDTHS.map(minWidth => {
       const evenWidth = width / MIN_COLUMN_WIDTHS.length;
       return evenWidth > minWidth ? evenWidth : minWidth;
@@ -28,26 +30,25 @@ export default function SimpleTable() {
       <Table aria-labelledby="invoice-table">
         <TableHeader>
           <TableRow>
-            <TableHead className="px-0.5" style={{ width: columnWidths[0] }}>
-              <Text>Invoice</Text>
+            <TableHead style={{ width: columnWidths[0] * 2 }}>
+              <Text>Task Name</Text>
             </TableHead>
             <TableHead style={{ width: columnWidths[1] }}>
-              <Text>Status</Text>
-            </TableHead>
-            <TableHead style={{ width: columnWidths[2] }}>
-              <Text>Method</Text>
-            </TableHead>
-            <TableHead style={{ width: columnWidths[3] }}>
-              <Text className="text-center md:text-right md:pr-5">Amount</Text>
+              <Text>Task Location</Text>
             </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow>
-            <TableCell style={{ width: columnWidths[0] }}>
-              <Text>INV-001</Text>
-            </TableCell>
-          </TableRow>
+          {tableTasks.map(task => (
+            <TableRow key={task.id}>
+              <TableCell style={{ width: columnWidths[0] * 2 }}>
+                <Text>{task.name}</Text>
+              </TableCell>
+              <TableCell style={{ width: columnWidths[1] }}>
+                <Text>{task.address}</Text>
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     </ScrollView>

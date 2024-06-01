@@ -34,6 +34,7 @@ export default function TabLayout() {
         headerTitleStyle: {
           backgroundColor: colors.blue[50],
           padding: 7,
+          marginRight: 14,
           borderRadius: 10,
           elevation: 5,
           shadowColor: 'black',
