@@ -1,6 +1,6 @@
-import { Stack, useRouter } from 'expo-router';
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
-import { Alert, SafeAreaView, StyleSheet, View } from 'react-native';
+import { Alert, Linking, SafeAreaView, StyleSheet, View } from 'react-native';
 import { useToggleShareLocation, useLocationPermissions, useTasks } from '~/hooks';
 import { useMondayMutation } from '~/lib/monday/api';
 import { changeMultipleColumnValuesMutation } from '~/lib/monday/queries';
@@ -9,14 +9,15 @@ import { INITIAL_REGION } from '~/config/map-config';
 import lightStyle from '~/assets/map/lightStyle.json';
 import darkStyle from '~/assets/map/darkStyle.json';
 import { useColorScheme } from '~/lib/useColorScheme';
-import { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import { Callout, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import MapView from 'react-native-map-clustering';
 
 import { Play, Navigation, Pause } from 'lucide-react-native';
 import * as ExpoLocation from 'expo-location';
 
 import { Text } from '~/components/ui/text';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Button } from '~/components/ui/button';
 const showAlert = (error: string, onPress: () => void, buttonText: string) => {
   Alert.alert('Error', error, [
     {
@@ -33,6 +34,7 @@ export default function Home() {
   const { isDarkColorScheme } = useColorScheme();
   const router = useRouter();
   const { tableTasks } = useTasks();
+  const local = useLocalSearchParams();
 
   const mapRef = useRef<MapView>(null);
   const { board, column, item } = useSettingsStore();
@@ -118,6 +120,18 @@ export default function Home() {
     }
   };
 
+  if (local.taskId) {
+    const task = tableTasks.find(t => t.id === local.taskId);
+    // @ts-expect-error - ignore
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    mapRef.current?.animateToRegion({
+      latitude: Number(task?.lat),
+      longitude: Number(task?.long),
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    });
+  }
+
   return (
     <>
       <Stack.Screen options={{ title: 'Home', headerShown: false }} />
@@ -162,13 +176,25 @@ export default function Home() {
             <Marker
               tracksViewChanges={false}
               coordinate={{
-                latitude: task.lat,
-                longitude: task.long,
+                latitude: Number(task.lat),
+                longitude: Number(task.long),
               }}
               key={task.id}
-              onPress={() => console.log('pressed, ', task)}
+              onPress={() => {
+                Linking.openURL(
+                  `https://www.google.com/maps/dir/?api=1&destination=${task.lat},${task.long}&travelmode=driving`,
+                );
+              }}
             >
-              <MaterialCommunityIcons name="marker-check" size={40} color="white" />
+              <MaterialCommunityIcons name="map-marker-check" size={40} color="black" />
+              <Callout>
+                <View className=" w-60">
+                  <Button className="flex-row">
+                    <AntDesign name="google" size={24} color="white" />
+                    <Text className="text-white">Get Directions</Text>
+                  </Button>
+                </View>
+              </Callout>
             </Marker>
           ))}
         </MapView>
