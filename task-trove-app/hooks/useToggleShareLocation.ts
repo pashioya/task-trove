@@ -32,17 +32,18 @@ TaskManager.defineTask<TaskData>(TASK_FETCH_LOCATION, ({ data, error }) => {
 
 const useToggleShareLocation = () => {
   const [region, setRegion] = useRegionStore(state => [state.region, state.setRegion]);
-  const { isTracking, setIsTracking, item, startTime, endTime } = useSettingsStore();
+  const { isTracking, setIsTracking, item, startTime, endTime, activeDays } = useSettingsStore();
 
   useEffect(() => {
     const checkTime = async () => {
       const now = new Date();
       const hour = now.getHours();
       const minute = now.getMinutes();
+      const dayOfWeek = now.getDay() - 1;
 
       const totalMinutes = hour * 60 + minute;
 
-      if (totalMinutes >= startTime && totalMinutes <= endTime) {
+      if (totalMinutes >= startTime && totalMinutes <= endTime && activeDays.includes(dayOfWeek)) {
         if (!isTracking) {
           await startLocationUpdates();
           setIsTracking(true);
@@ -58,7 +59,7 @@ const useToggleShareLocation = () => {
     const intervalId = setInterval(checkTime, 60000);
 
     return () => clearInterval(intervalId);
-  }, [endTime, isTracking, setIsTracking, startTime]);
+  }, [activeDays, endTime, isTracking, setIsTracking, startTime]);
 
   const startLocationUpdates = async () => {
     await Location.startLocationUpdatesAsync(TASK_FETCH_LOCATION, {
