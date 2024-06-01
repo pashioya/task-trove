@@ -18,6 +18,7 @@ import * as ExpoLocation from 'expo-location';
 
 import { Text } from '~/components/ui/text';
 import type { Task } from '~/model/types';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 const showAlert = (error: string, onPress: () => void, buttonText: string) => {
   Alert.alert('Error', error, [
     {
@@ -151,16 +152,8 @@ export default function Home() {
                 }}
                 onPress={onPress}
               >
-                <View style={styles.marker}>
-                  <Text
-                    style={{
-                      color: '#000',
-                      textAlign: 'center',
-                      fontFamily: 'mon-sb',
-                    }}
-                  >
-                    {points}
-                  </Text>
+                <View className="p-1 items-center justify-center bg-blue-50 shadow-xl rounded-lg">
+                  <Text className="text-lg text-center">{points}</Text>
                 </View>
               </Marker>
             );
@@ -176,29 +169,13 @@ export default function Home() {
               key={task.id}
               onPress={() => console.log('pressed, ', task)}
             >
-              <View style={styles.marker}>
-                <Text style={styles.markerText}>{task.name}</Text>
-              </View>
+              <MaterialCommunityIcons name="marker-check" size={40} color="white" />
             </Marker>
           ))}
         </MapView>
         <View className="absolute bottom-32 right-5 gap-4">
           {isTracking ? (
-            <View
-              className="bg-blue-50 rounded-full  flex items-center justify-center"
-              style={{
-                elevation: 5,
-                width: 70,
-                height: 70,
-                shadowColor: 'black',
-                shadowOffset: {
-                  width: 0,
-                  height: 10,
-                },
-                shadowOpacity: 0.25,
-                shadowRadius: 3.84,
-              }}
-            >
+            <View className="bg-blue-50 rounded-full h-[70px] w-[70px] shadow-lg flex items-center justify-center">
               <Navigation
                 onPress={() => onLocateMe()}
                 fill="white"
@@ -209,56 +186,22 @@ export default function Home() {
             </View>
           ) : null}
 
-          <View
-            className="bg-blue-50 rounded-full p-1 flex items-center justify-center"
-            style={{
-              elevation: 5,
-              width: 70,
-              height: 70,
-              shadowColor: 'black',
-              shadowOffset: {
-                width: 0,
-                height: 10,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
-            }}
-          >
+          <View className="bg-blue-50 rounded-full h-[70px] w-[70px] shadow-lg flex items-center justify-center">
             {isTracking ? (
               <Pause
                 onPress={() => toggleShareLocation()}
                 fill={colors.blue[500]}
                 color="black"
-                className="bg-white"
+                className="bg-white shadow-lg"
                 size={50}
-                style={{
-                  elevation: 5,
-                  shadowColor: 'black',
-                  shadowOffset: {
-                    width: 0,
-                    height: 10,
-                  },
-                  shadowOpacity: 0.25,
-                  shadowRadius: 3.84,
-                }}
               />
             ) : (
               <Play
                 onPress={() => toggleShareLocation()}
                 fill={colors.blue[500]}
                 color="black"
-                className="bg-white"
+                className="bg-white shadow-lg"
                 size={50}
-                style={{
-                  elevation: 5,
-                  shadowColor: 'black',
-                  shadowOffset: {
-                    width: 0,
-                    height: 10,
-                  },
-                  shadowOpacity: 0.25,
-                  shadowRadius: 3.84,
-                }}
               />
             )}
           </View>
@@ -267,28 +210,6 @@ export default function Home() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  marker: {
-    padding: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff',
-    elevation: 5,
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    shadowOffset: {
-      width: 1,
-      height: 10,
-    },
-  },
-  markerText: {
-    fontSize: 14,
-    fontFamily: 'mon-sb',
-  },
-});
 
 const tasks: Task[] = [
   {
