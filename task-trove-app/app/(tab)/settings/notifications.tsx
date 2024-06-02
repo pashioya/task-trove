@@ -11,7 +11,6 @@ import { Text } from '~/components/ui/text';
 
 export default function NotificationSettings() {
   const { isDarkColorScheme } = useColorScheme();
-  const rowColor = isDarkColorScheme ? colors.gray[900] : colors.gray[100];
 
   return (
     <>
@@ -38,10 +37,7 @@ export default function NotificationSettings() {
               </Text>
               <SimpleDialog
                 trigger={
-                  <View
-                    style={{ backgroundColor: rowColor }}
-                    className="flex-row items-center justify-start h-12 rounded-lg mb-3 px-3"
-                  >
+                  <View className="flex-row bg-secondary items-center justify-start h-12 rounded-lg mb-3 px-3">
                     <Text className="text-lg font-normal">Change Task Column</Text>
                     <View className="flex-1" />
                     <ChevronRight color="#C6C6C6" size={20} />
