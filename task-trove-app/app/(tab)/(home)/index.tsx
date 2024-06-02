@@ -13,6 +13,8 @@ import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
 import { Play, Navigation, Pause } from 'lucide-react-native';
 import * as ExpoLocation from 'expo-location';
+import * as NavigationBar from 'expo-navigation-bar';
+import colors from 'tailwindcss/colors';
 
 const showAlert = (error: string, onPress: () => void, buttonText: string) => {
   Alert.alert('Error', error, [
@@ -25,6 +27,9 @@ const showAlert = (error: string, onPress: () => void, buttonText: string) => {
 };
 
 export default function Home() {
+  NavigationBar.setPositionAsync('absolute');
+  NavigationBar.setBackgroundColorAsync('#ffffff01');
+
   const { isTracking, region, setRegion, toggleShareLocation } = useToggleShareLocation();
   const { requestPermissions } = useLocationPermissions();
   const { isDarkColorScheme } = useColorScheme();
@@ -134,83 +139,48 @@ export default function Home() {
             longitudeDelta: 0.0421,
           }}
         />
-        <View className="absolute bottom-32 right-5 gap-4">
+        <View className="absolute bottom-44 right-5 gap-4">
           {isTracking ? (
             <View
-              className="bg-blue-50 rounded-full  flex items-center justify-center"
+              className="bg-secondary rounded-full flex items-center justify-center shadow-2xl"
               style={{
-                elevation: 5,
                 width: 70,
                 height: 70,
-                shadowColor: 'black',
-                shadowOffset: {
-                  width: 0,
-                  height: 10,
-                },
-                shadowOpacity: 0.25,
-                shadowRadius: 3.84,
               }}
             >
               <Navigation
                 onPress={() => onLocateMe()}
-                fill="white"
-                color="black"
+                color={isDarkColorScheme ? colors.neutral[100] : colors.blue[500]}
+                fill={isDarkColorScheme ? colors.gray[100] : colors.blue[500]}
                 className="bg-white"
-                size={40}
+                size={30}
               />
             </View>
           ) : null}
 
           <View
-            className="bg-blue-50 rounded-full p-1 flex items-center justify-center"
+            className="bg-primary shadow-2xl rounded-full p-1 flex items-center justify-center"
             style={{
               elevation: 5,
               width: 70,
               height: 70,
-              shadowColor: 'black',
-              shadowOffset: {
-                width: 0,
-                height: 10,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
             }}
           >
             {isTracking ? (
               <Pause
                 onPress={() => toggleShareLocation()}
-                fill="white"
-                color="black"
-                className="bg-white"
-                size={50}
-                style={{
-                  elevation: 5,
-                  shadowColor: 'black',
-                  shadowOffset: {
-                    width: 0,
-                    height: 10,
-                  },
-                  shadowOpacity: 0.25,
-                  shadowRadius: 3.84,
-                }}
+                color={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
+                fill={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
+                className="bg-primary shadow-2xl"
+                size={30}
               />
             ) : (
               <Play
                 onPress={() => toggleShareLocation()}
-                fill="white"
-                color="black"
-                className="bg-white"
-                size={50}
-                style={{
-                  elevation: 5,
-                  shadowColor: 'black',
-                  shadowOffset: {
-                    width: 0,
-                    height: 10,
-                  },
-                  shadowOpacity: 0.25,
-                  shadowRadius: 3.84,
-                }}
+                color={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
+                fill={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
+                className="bg-primary shadow-2xl"
+                size={30}
               />
             )}
           </View>

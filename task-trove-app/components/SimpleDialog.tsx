@@ -31,7 +31,7 @@ export function SimpleDialog({ trigger, title, content }: SimpleDialogProps) {
         {content}
         <DialogFooter>
           <DialogClose asChild>
-            <Button className="bg-blue-700">
+            <Button className="bg-primary">
               <Text>OK</Text>
             </Button>
           </DialogClose>

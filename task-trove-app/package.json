@@ -59,7 +59,8 @@
     "tailwind-merge": "^2.2.1",
     "tailwindcss": "^3.4.1",
     "tailwindcss-animate": "^1.0.7",
-    "zustand": "^4.5.2"
+    "zustand": "^4.5.2",
+    "lottie-react-native": "6.5.1"
   },
   "devDependencies": {
     "@0no-co/graphqlsp": "^1.12.3",

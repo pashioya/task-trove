@@ -7,14 +7,16 @@ import { Text } from '~/components/ui/text';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { useSettingsStore } from '~/store';
 import colors from 'tailwindcss/colors';
+import { useColorScheme } from '~/lib/useColorScheme';
 
 export default function TabLayout() {
   const { session, isLoading } = useSession();
   const { isTracking } = useSettingsStore();
+  const { isDarkColorScheme } = useColorScheme();
 
   if (isLoading) {
     return (
-      <View className="my-container justify-center align-center">
+      <View className="flex-1 p-16 justify-center align-center">
         <ActivityIndicator size={45} />
       </View>
     );
@@ -32,7 +34,7 @@ export default function TabLayout() {
         headerTitleAlign: 'center',
         headerTransparent: true,
         headerTitleStyle: {
-          backgroundColor: colors.blue[50],
+          backgroundColor: isDarkColorScheme ? colors.neutral[700] : colors.blue[50],
           padding: 7,
           marginRight: 14,
           borderRadius: 10,
@@ -46,23 +48,17 @@ export default function TabLayout() {
           shadowRadius: 3.84,
         },
         headerLeft: () => (
-          <View
-            className="bg-blue-50 rounded-full p-1"
-            style={{
-              elevation: 5,
-              shadowColor: 'black',
-              shadowOffset: {
-                width: 0,
-                height: 10,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
-            }}
-          >
+          <View className="rounded-full p-1 shadow-2xl">
             <LocateFixedIcon
               size={50}
-              fill={isTracking ? colors.blue[300] : colors.black}
-              color={isTracking ? colors.blue[500] : colors.gray[300]}
+              fill={
+                isTracking
+                  ? colors.blue[300]
+                  : isDarkColorScheme
+                    ? colors.neutral[600]
+                    : colors.gray[100]
+              }
+              color={isTracking ? colors.blue[500] : colors.gray[500]}
             />
           </View>
         ),
@@ -98,13 +94,13 @@ export default function TabLayout() {
         },
         tabBarStyle: {
           position: 'absolute',
-          bottom: 25,
+          bottom: 60,
           left: 20,
           right: 20,
           height: 70,
           elevation: 5,
           borderRadius: 20,
-          backgroundColor: colors.blue[50],
+          backgroundColor: isDarkColorScheme ? colors.neutral[700] : colors.blue[50],
           shadowColor: 'black',
           shadowOffset: {
             width: 0,
@@ -119,13 +115,32 @@ export default function TabLayout() {
         name="(home)"
         options={{
           headerTitle: 'Task Trove',
-          tabBarIcon: ({ focused }) => <Home color={focused ? 'blue' : 'black'} size={30} />,
+          tabBarIcon: ({ focused }) => (
+            <Home
+              color={
+                isDarkColorScheme
+                  ? focused
+                    ? colors.blue[200]
+                    : colors.neutral[100]
+                  : focused
+                    ? colors.blue[500]
+                    : 'black'
+              }
+              size={30}
+            />
+          ),
           title: 'Home',
           tabBarLabel: 'Home',
+          tabBarIconStyle: {
+            position: 'absolute',
+            top: 25,
+          },
+
           tabBarLabelStyle: {
             fontSize: 12,
+            position: 'absolute',
+            top: 40,
             fontWeight: 'bold',
-            marginBottom: 15,
           },
         }}
       />
@@ -134,14 +149,34 @@ export default function TabLayout() {
         options={{
           headerTitle: 'Tasks',
           tabBarIcon: ({ focused }) => (
-            <ClipboardListIcon color={focused ? 'blue' : 'black'} size={30} />
+            <ClipboardListIcon
+              color={
+                isDarkColorScheme
+                  ? focused
+                    ? colors.blue[200]
+                    : colors.neutral[100]
+                  : focused
+                    ? colors.blue[500]
+                    : 'black'
+              }
+              size={30}
+            />
           ),
           title: 'Tasks',
           tabBarBadge: 3,
+          tabBarBadgeStyle: {
+            position: 'absolute',
+            top: -22,
+          },
           tabBarLabel: 'Tasks',
+          tabBarIconStyle: {
+            position: 'absolute',
+            top: 25,
+          },
           tabBarLabelStyle: {
             fontSize: 12,
-            marginBottom: 15,
+            position: 'absolute',
+            top: 40,
             fontWeight: 'bold',
           },
         }}
@@ -154,13 +189,29 @@ export default function TabLayout() {
           title: 'Settings',
           headerShown: false,
           tabBarIcon: ({ focused }) => (
-            <SettingsIcon color={focused ? 'blue' : 'black'} size={35} />
+            <SettingsIcon
+              color={
+                isDarkColorScheme
+                  ? focused
+                    ? colors.blue[200]
+                    : colors.neutral[100]
+                  : focused
+                    ? colors.blue[500]
+                    : 'black'
+              }
+              size={35}
+            />
           ),
           tabBarLabel: 'Settings',
+          tabBarIconStyle: {
+            position: 'absolute',
+            top: 25,
+          },
           tabBarLabelStyle: {
             fontSize: 12,
             fontWeight: 'bold',
-            marginBottom: 15,
+            position: 'absolute',
+            top: 40,
           },
           tabBarStyle: {
             display: 'none',
