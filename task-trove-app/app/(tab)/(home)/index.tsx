@@ -3,7 +3,7 @@
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
 import { Alert, Linking, SafeAreaView, StyleSheet, View } from 'react-native';
-import { useToggleShareLocation, useLocationPermissions, useTasks } from '~/hooks';
+import { useToggleShareLocation, useTasks, useLocationPermissions } from '~/hooks';
 import { useMondayMutation } from '~/lib/monday/api';
 import { changeMultipleColumnValuesMutation } from '~/lib/monday/queries';
 import { useSettingsStore } from '~/store';
@@ -37,7 +37,6 @@ export default function Home() {
   NavigationBar.setBackgroundColorAsync('#ffffff01');
 
   const { isTracking, region, toggleShareLocation } = useToggleShareLocation();
-  const { requestPermissions } = useLocationPermissions();
   const { isDarkColorScheme } = useColorScheme();
   const router = useRouter();
   const { tableTasks } = useTasks();
@@ -49,6 +48,18 @@ export default function Home() {
   const { mutate: updateLocation, error: updateLocationError } = useMondayMutation({
     mutation: changeMultipleColumnValuesMutation,
   });
+  const { validatePermissions } = useLocationPermissions();
+
+  useEffect(() => {
+    const checkPermissionsStatus = async () => {
+      const permissionsGranted = await validatePermissions();
+      if (!permissionsGranted) {
+        router.replace('/(onboarding)/permission-1');
+      }
+    };
+
+    checkPermissionsStatus();
+  }, [router, validatePermissions]);
 
   useEffect(() => {
     if (isTracking && region && board && column && item) {
@@ -81,10 +92,6 @@ export default function Home() {
   }, [toggleShareLocation, updateLocationError]);
 
   useEffect(() => {
-    const checkPermissions = async () => {
-      await requestPermissions();
-    };
-    checkPermissions();
     if (!item) {
       showAlert(
         'Location Column Not Correctly Setup',
@@ -94,7 +101,7 @@ export default function Home() {
         'Go to Settings',
       );
     }
-  }, [item, requestPermissions, router]);
+  }, [item, router]);
 
   const onLocateMe = async () => {
     try {
