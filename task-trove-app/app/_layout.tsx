@@ -14,8 +14,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SessionProvider } from '~/contexts/session-provider';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import * as NavigationBar from 'expo-navigation-bar';
-import colors from 'tailwindcss/colors';
 
 const LIGHT_THEME: Theme = {
   dark: false,
@@ -33,9 +31,6 @@ export {
 
 // Prevent the splash screen from auto-hiding before getting the color scheme.
 SplashScreen.preventAutoHideAsync();
-
-NavigationBar.setBackgroundColorAsync(colors.blue[100]);
-NavigationBar.setButtonStyleAsync('dark');
 
 export default function RootLayout() {
   const { colorScheme, setColorScheme, isDarkColorScheme } = useColorScheme();
