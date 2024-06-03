@@ -2,11 +2,12 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import React from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView, Pressable } from 'react-native';
 import colors from 'tailwindcss/colors';
+import { SimpleTooltip } from '~/components/SimpleTooltip';
 import { Button } from '~/components/ui/button';
 
-export default function LocationPermission() {
+export default function NotificationPermissions() {
   return (
     <>
       <View className="flex-1 ">
@@ -35,9 +36,16 @@ export default function LocationPermission() {
             </View>
           </ScrollView>
           <View className="absolute bottom-10 w-full items-center gap-2">
-            <Button className="w-96" disabled>
-              <Text className="text-white">Ask For Permissions</Text>
-            </Button>
+            <SimpleTooltip
+              trigger={
+                <Pressable>
+                  <Button className="w-96" disabled>
+                    <Text className="text-white">Grant Permissions</Text>
+                  </Button>
+                </Pressable>
+              }
+              content={<Text>Not Yet Setup</Text>}
+            />
             <Button
               className="md w-96"
               onPress={() => {

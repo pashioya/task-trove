@@ -2,8 +2,9 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import React from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView, Pressable } from 'react-native';
 import colors from 'tailwindcss/colors';
+import { SimpleTooltip } from '~/components/SimpleTooltip';
 import { Button } from '~/components/ui/button';
 import { useLocationPermissions } from '~/hooks';
 
@@ -37,13 +38,20 @@ export default function LocationPermission() {
             </View>
           </ScrollView>
           <View className="absolute bottom-10 w-full items-center gap-2">
-            <Button
-              className="w-96"
-              disabled={!!checkPermissions}
-              onPress={async () => await requestPermissions()}
-            >
-              <Text className="text-white">Grant Permissions</Text>
-            </Button>
+            <SimpleTooltip
+              trigger={
+                <Pressable>
+                  <Button
+                    className="w-96"
+                    disabled={!!checkPermissions}
+                    onPress={async () => await requestPermissions()}
+                  >
+                    <Text className="text-white">Grant Permissions</Text>
+                  </Button>
+                </Pressable>
+              }
+              content={<Text>Permissions Already Granted</Text>}
+            />
             <Button
               className="md w-96"
               disabled={!checkPermissions}
