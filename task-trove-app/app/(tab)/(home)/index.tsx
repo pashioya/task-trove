@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
 import { Alert, Linking, SafeAreaView, StyleSheet, View } from 'react-native';
-import { useToggleShareLocation, useLocationPermissions, useTasks } from '~/hooks';
+import { useToggleShareLocation, useTasks, useLocationPermissions } from '~/hooks';
 import { useMondayMutation } from '~/lib/monday/api';
 import { changeMultipleColumnValuesMutation } from '~/lib/monday/queries';
 import { useSettingsStore } from '~/store';
@@ -30,7 +31,6 @@ const showAlert = (error: string, onPress: () => void, buttonText: string) => {
 
 export default function Home() {
   const { isTracking, region, toggleShareLocation } = useToggleShareLocation();
-  const { requestPermissions } = useLocationPermissions();
   const { isDarkColorScheme } = useColorScheme();
   const router = useRouter();
   const { tableTasks } = useTasks();
@@ -42,6 +42,18 @@ export default function Home() {
   const { mutate: updateLocation, error: updateLocationError } = useMondayMutation({
     mutation: changeMultipleColumnValuesMutation,
   });
+  const { validatePermissions } = useLocationPermissions();
+
+  useEffect(() => {
+    const checkPermissionsStatus = async () => {
+      const permissionsGranted = await validatePermissions();
+      if (!permissionsGranted) {
+        router.replace('/(onboarding)/permission-1');
+      }
+    };
+
+    checkPermissionsStatus();
+  }, [router, validatePermissions]);
 
   useEffect(() => {
     if (isTracking && region && board && column && item) {
@@ -74,10 +86,6 @@ export default function Home() {
   }, [toggleShareLocation, updateLocationError]);
 
   useEffect(() => {
-    const checkPermissions = async () => {
-      await requestPermissions();
-    };
-    checkPermissions();
     if (!item) {
       showAlert(
         'Location Column Not Correctly Setup',
@@ -87,7 +95,7 @@ export default function Home() {
         'Go to Settings',
       );
     }
-  }, [item, requestPermissions, router]);
+  }, [item, router]);
 
   const onLocateMe = async () => {
     try {
@@ -132,6 +140,17 @@ export default function Home() {
     });
   }
 
+  type Cluster = {
+    id: string;
+    geometry: {
+      coordinates: [number, number];
+    };
+    onPress: () => void;
+    properties: {
+      point_count: number;
+    };
+  };
+
   return (
     <>
       <Stack.Screen options={{ title: 'Home', headerShown: false }} />
@@ -148,19 +167,15 @@ export default function Home() {
           mapPadding={{ top: 100, right: 0, left: 0, bottom: 0 }}
           initialRegion={INITIAL_REGION}
           ref={mapRef}
-          renderCluster={cluster => {
+          renderCluster={(cluster: Cluster) => {
             const { id, geometry, onPress, properties } = cluster;
-
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             const points = properties.point_count;
             return (
               <Marker
                 key={`cluster-${id}`}
                 tracksViewChanges={false}
                 coordinate={{
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                   longitude: geometry.coordinates[0],
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                   latitude: geometry.coordinates[1],
                 }}
                 onPress={onPress}
