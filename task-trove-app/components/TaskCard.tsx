@@ -10,6 +10,8 @@ import { DialogClose } from './ui/dialog';
 export default function TaskCard({ task }: { task: Task }) {
   const dateChanged = new Date(task.changedAt);
   const simplifiedDate = `${dateChanged.getDate()}-${dateChanged.getMonth() + 1}-${dateChanged.getFullYear()}`;
+  const simplifiedAddress = task.address.split(',')[1];
+
   return (
     <View>
       <View>
@@ -30,7 +32,9 @@ export default function TaskCard({ task }: { task: Task }) {
         <View className="pb-8 flex-row items-center justify-between ">
           <View className="flex-row items-center">
             <FeatherIcon color="#48496c" size={14} />
-            <Text className="font-semibold ml-1">{task.address.split(',')[1]}</Text>
+            <Text className="font-semibold ml-1">
+              {simplifiedAddress ? simplifiedAddress : 'Unspecified'}
+            </Text>
           </View>
           <Separator orientation="vertical" />
           <View className="flex-row items-center">
