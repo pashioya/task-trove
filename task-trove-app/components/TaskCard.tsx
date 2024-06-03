@@ -2,12 +2,14 @@ import React from 'react';
 import { View, Text, Image } from 'react-native';
 import { Separator } from '~/components/ui/separator';
 import { Button } from '~/components/ui/button';
-import { FeatherIcon } from 'lucide-react-native';
+import { Clock, FeatherIcon } from 'lucide-react-native';
 import type { Task } from '~/model/types';
 import { Link } from 'expo-router';
 import { DialogClose } from './ui/dialog';
 
 export default function TaskCard({ task }: { task: Task }) {
+  const dateChanged = new Date(task.changedAt);
+  const simplifiedDate = `${dateChanged.getDate()}-${dateChanged.getMonth()}-${dateChanged.getFullYear()}`;
   return (
     <View>
       <View>
@@ -19,25 +21,25 @@ export default function TaskCard({ task }: { task: Task }) {
         />
       </View>
 
-      <View className=" py-6 px-4">
-        <View className=" flex-row items-center justify-between mb-7">
-          <Text className=" font-semibold text-2xl">{task.name}</Text>
+      <View className="py-6 px-4">
+        <View className="flex-row items-center justify-between mb-7">
+          <Text className="font-semibold text-2xl">{task.name}</Text>
           <Text> distance to task</Text>
         </View>
 
-        <View className=" pb-8 flex-row items-center justify-between ">
+        <View className="pb-8 flex-row items-center justify-between ">
           <View className="flex-row items-center">
             <FeatherIcon color="#48496c" size={14} />
-            <Text className=" font-semibold ml-1">{task.address.split(',')[1]}</Text>
+            <Text className="font-semibold ml-1">{task.address.split(',')[1]}</Text>
           </View>
           <Separator orientation="vertical" />
           <View className="flex-row items-center">
-            <FeatherIcon color="#48496c" size={14} />
-            <Text className=" font-semibold ml-1">{task.id}</Text>
+            <Clock color="#48496c" size={14} />
+            <Text className="font-semibold ml-1">{simplifiedDate}</Text>
           </View>
         </View>
         <Separator />
-        <View className=" pt-4 flex-row items-center justify-between">
+        <View className="pt-4 flex-row items-center justify-between">
           <Button variant="outline" disabled>
             <Text className="font-semibold">View On Monday</Text>
           </Button>

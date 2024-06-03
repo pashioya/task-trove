@@ -23,12 +23,12 @@ export default function Tasks() {
           <View className="border-b-gray-200 border-b">
             <Text className="font-bold text-4xl mb-2">Your Tasks</Text>
             <View className="flex-row items-center justify-between">
-              <View className=" grow shrink basis-0 flex-col items-center justify-center p-6">
-                <Text className=" text-lg font-medium mb-4 text-center">Number of Tasks</Text>
+              <View className="grow shrink basis-0 flex-col items-center justify-center p-6">
+                <Text className="text-lg font-medium mb-4 text-center">Number of Tasks</Text>
                 <Text className="text-xl font-bold ">{tableTasks.length}</Text>
               </View>
-              <View className=" grow shrink basis-0 flex-col items-center justify-center p-6 border-l border-gray-400">
-                <Text className=" text-lg font-medium mb-4 text-center">Closest Task</Text>
+              <View className="grow shrink basis-0 flex-col items-center justify-center p-6 border-l border-gray-400">
+                <Text className="text-lg font-medium mb-4 text-center">Closest Task</Text>
                 <Text className="text-xl font-bold ">&quot;Placeholder&quot;</Text>
               </View>
             </View>
@@ -53,6 +53,7 @@ export default function Tasks() {
                           address: item.address,
                           lat: item.lat,
                           long: item.long,
+                          changedAt: item.changedAt,
                         }}
                       />
                     }
