@@ -2,7 +2,7 @@
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
 import { Alert, Linking, SafeAreaView, StyleSheet, View } from 'react-native';
-import { useToggleShareLocation, useTasks } from '~/hooks';
+import { useToggleShareLocation, useTasks, useLocationPermissions } from '~/hooks';
 import { useMondayMutation } from '~/lib/monday/api';
 import { changeMultipleColumnValuesMutation } from '~/lib/monday/queries';
 import { useSettingsStore } from '~/store';
@@ -42,6 +42,14 @@ export default function Home() {
   const { mutate: updateLocation, error: updateLocationError } = useMondayMutation({
     mutation: changeMultipleColumnValuesMutation,
   });
+  const { validatePermissions, permissionsGranted } = useLocationPermissions();
+
+  useEffect(() => {
+    validatePermissions();
+    if (!permissionsGranted) {
+      router.replace('/(onboarding)/permission-1');
+    }
+  }, [permissionsGranted, router, validatePermissions]);
 
   useEffect(() => {
     if (isTracking && region && board && column && item) {

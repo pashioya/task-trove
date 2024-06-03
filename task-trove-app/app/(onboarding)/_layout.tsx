@@ -37,20 +37,6 @@ export default function OnboardingLayout() {
           headerTitle: '',
         }}
       />
-      <Stack.Screen
-        name="permission-2"
-        options={{
-          title: 'Notification Permission',
-          headerBackground: () => (
-            <LinearGradient colors={[colors.white, colors.blue[50]]} style={{ flex: 1 }} />
-          ),
-          headerTintColor: colors.blue[50],
-          headerBackVisible: true,
-          headerShown: false,
-          headerShadowVisible: false,
-          headerTitle: '',
-        }}
-      />
       <Stack.Screen name="final" options={{ title: 'Final', headerShadowVisible: false }} />
     </Stack>
   );
