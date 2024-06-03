@@ -23,11 +23,11 @@ type SettingsState = {
   setIsTracking: (isTracking: boolean) => void;
   setIsError: (isError: boolean) => void;
   setError: (error: Error) => void;
-  setBoard: (board: Board) => void;
-  setColumn: (column: Column) => void;
-  setItem: (item: Item) => void;
-  setTaskBoard: (taskBoard: Board) => void;
-  setTaskColumn: (taskColumn: Column) => void;
+  setBoard: (board: Board | null) => void;
+  setColumn: (column: Column | null) => void;
+  setItem: (item: Item | null) => void;
+  setTaskBoard: (taskBoard: Board | null) => void;
+  setTaskColumn: (taskColumn: Column | null) => void;
 };
 
 const useSettingsStore = create<SettingsState>()(

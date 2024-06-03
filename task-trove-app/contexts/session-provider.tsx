@@ -5,6 +5,7 @@ import { useStorageState } from '~/hooks/useStorageState';
 import { fetchAccessToken, fetchUserData } from '~/lib/session';
 import type { Session, SessionContextType } from '~/lib/session/types';
 import { env } from '~/lib/env';
+import { useSettingsStore } from '~/store';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -15,6 +16,18 @@ const SessionProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const sessionFetchedRef = useRef(false);
   const [[isStorageLoading, session], setSession] = useStorageState<Session>('session');
+  const {
+    setOnboardingCompleted,
+    setIsTracking,
+    setBoard,
+    setColumn,
+    setItem,
+    setTaskBoard,
+    setTaskColumn,
+    setStartTime,
+    setEndTime,
+    setActiveDays,
+  } = useSettingsStore();
 
   const signIn = useCallback(async () => {
     setIsLoading(true);
@@ -33,9 +46,32 @@ const SessionProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   }, []);
 
   const signOut = useCallback(() => {
+    setIsTracking(false);
+    setBoard(null);
+    setColumn(null);
+    setItem(null);
+    setTaskBoard(null);
+    setTaskColumn(null);
+    setStartTime(540);
+    setEndTime(1020);
+    setActiveDays([]);
+    setOnboardingCompleted(false);
+
     sessionFetchedRef.current = false;
     setSession(null);
-  }, [setSession]);
+  }, [
+    setActiveDays,
+    setBoard,
+    setColumn,
+    setEndTime,
+    setIsTracking,
+    setItem,
+    setOnboardingCompleted,
+    setSession,
+    setStartTime,
+    setTaskBoard,
+    setTaskColumn,
+  ]);
 
   useEffect(() => {
     const fetchSession = async () => {
