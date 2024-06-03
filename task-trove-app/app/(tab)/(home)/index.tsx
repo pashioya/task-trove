@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
 import { Alert, Linking, SafeAreaView, StyleSheet, View } from 'react-native';
@@ -99,8 +101,7 @@ export default function Home() {
       const location = await ExpoLocation.getLastKnownPositionAsync({});
 
       if (location) {
-        // @ts-expect-error - ignore
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        // @ts-expect-error --ignore
         mapRef.current?.animateToRegion({
           latitude: location.coords.latitude,
           longitude: location.coords.longitude,
@@ -108,8 +109,7 @@ export default function Home() {
           longitudeDelta: 0.0421,
         });
       } else {
-        // @ts-expect-error - ignore
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        // @ts-expect-error --ignore
         mapRef.current?.animateToRegion(INITIAL_REGION);
       }
     } catch (e) {
@@ -127,8 +127,7 @@ export default function Home() {
 
   if (local.taskId) {
     const task = tableTasks.find(t => t.id === local.taskId);
-    // @ts-expect-error - ignore
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    // @ts-expect-error --ignore
     mapRef.current?.animateToRegion({
       latitude: Number(task?.lat),
       longitude: Number(task?.long),
@@ -136,6 +135,17 @@ export default function Home() {
       longitudeDelta: 0.0421,
     });
   }
+
+  type Cluster = {
+    id: string;
+    geometry: {
+      coordinates: [number, number];
+    };
+    onPress: () => void;
+    properties: {
+      point_count: number;
+    };
+  };
 
   return (
     <>
@@ -153,19 +163,15 @@ export default function Home() {
           mapPadding={{ top: 100, right: 0, left: 0, bottom: 0 }}
           initialRegion={INITIAL_REGION}
           ref={mapRef}
-          renderCluster={cluster => {
+          renderCluster={(cluster: Cluster) => {
             const { id, geometry, onPress, properties } = cluster;
-
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             const points = properties.point_count;
             return (
               <Marker
                 key={`cluster-${id}`}
                 tracksViewChanges={false}
                 coordinate={{
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                   longitude: geometry.coordinates[0],
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                   latitude: geometry.coordinates[1],
                 }}
                 onPress={onPress}
@@ -204,9 +210,9 @@ export default function Home() {
             </Marker>
           ))}
         </MapView>
-        <View className="absolute bottom-32 right-5 gap-4">
+        <View className="absolute bottom-44 right-5 gap-4">
           {isTracking ? (
-            <View className="bg-blue-50 rounded-full h-[70px] w-[70px] shadow-lg flex items-center justify-center">
+            <View className="bg-secondary rounded-full h-[70px] w-[70px] shadow-lg flex items-center justify-center">
               <Navigation
                 onPress={() => onLocateMe()}
                 color={isDarkColorScheme ? colors.neutral[100] : colors.blue[500]}
@@ -217,22 +223,22 @@ export default function Home() {
             </View>
           ) : null}
 
-          <View className="bg-blue-50 rounded-full h-[70px] w-[70px] shadow-lg flex items-center justify-center">
+          <View className="bg-primary shadow-2xl rounded-full h-[70px] w-[70px] flex items-center justify-center">
             {isTracking ? (
               <Pause
                 onPress={() => toggleShareLocation()}
-                fill="white"
-                color="black"
-                className="bg-white shadow-lg"
-                size={50}
+                color={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
+                fill={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
+                className="bg-primary shadow-2xl"
+                size={30}
               />
             ) : (
               <Play
                 onPress={() => toggleShareLocation()}
-                fill="white"
-                color="black"
-                className="bg-white shadow-lg"
-                size={50}
+                color={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
+                fill={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
+                className="bg-primary shadow-2xl"
+                size={30}
               />
             )}
           </View>

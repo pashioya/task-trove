@@ -47,80 +47,70 @@ export default function Settings() {
               />
             </View>
 
+            <View>
+              <Text className="text-lg font-semibold text-center">{session?.user?.name}</Text>
+              <Text className="mt-1 text-base text-center">{session?.user?.email}</Text>
+            </View>
+          </View>
+          <ScrollView>
+            <View>
               <View>
-                <Text className="text-lg font-semibold text-center">{session?.user?.name}</Text>
-                <Text className="mt-1 text-base text-center">{session?.user?.email}</Text>
+                <Text className="py-3 text-xs font-semibold tracking-wider">PREFERENCES</Text>
+                <View className="flex-row items-center justify-start h-12 bg-secondary rounded-lg mb-3 px-3">
+                  <View className="w-8 h-8 rounded-full mr-3 flex items-center justify-center bg-blue-500">
+                    <Moon color="#fff" size={20} />
+                  </View>
+                  <Text className="text-lg font-normal ">Dark Mode</Text>
+                  <View className="flex-grow" />
+                  <Switch
+                    checked={isDarkColorScheme}
+                    onCheckedChange={() => setColorScheme(newTheme)}
+                  />
+                </View>
+                <TouchableOpacity
+                  onPress={() => {
+                    router.navigate('/settings/location');
+                  }}
+                  className="flex-row items-center justify-start h-12 bg-secondary rounded-lg mb-3 px-3"
+                >
+                  <View className="w-8 h-8 rounded-full mr-3 flex items-center justify-center bg-blue-500">
+                    <LocateFixedIcon color="#fff" size={20} />
+                  </View>
+                  <Text className="text-lg font-normal ">Location</Text>
+                  <View className="flex-grow" />
+                  <ChevronRight color="#C6C6C6" size={20} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    router.navigate('/settings/notifications');
+                  }}
+                  className="flex-row items-center justify-start h-12 bg-secondary rounded-lg mb-3 px-3"
+                >
+                  <View className="w-8 h-8 rounded-full mr-3 flex items-center justify-center bg-blue-500">
+                    <Ionicons name="notifications-outline" size={20} color="#fff" />
+                  </View>
+                  <Text className="text-lg font-normal ">Notifications</Text>
+                  <View className="flex-grow" />
+                  <ChevronRight color="#C6C6C6" size={20} />
+                </TouchableOpacity>
               </View>
             </View>
-            <ScrollView>
-              <View>
-                <View>
-                  <Text className="py-3 text-xs font-semibold tracking-wider">PREFERENCES</Text>
-                  <View
-                    style={{ backgroundColor: rowColor }}
-                    className="flex-row items-center justify-start h-12 bg-gray-100 rounded-lg mb-3 px-3"
-                  >
-                    <View
-                      className="w-8 h-8 rounded-full mr-3 flex items-center justify-center bg-blue-500"
-                      style={[{ backgroundColor: '#007afe' }]}
-                    >
-                      <Moon color="#fff" size={20} />
-                    </View>
-                    <Text className="text-lg font-normal ">Dark Mode</Text>
-                    <View className="flex-grow" />
-                    <Switch
-                      checked={isDarkColorScheme}
-                      disabled
-                      onCheckedChange={() => setColorScheme(newTheme)}
-                    />
-                  </View>
-                  <TouchableOpacity
-                    onPress={() => {
-                      router.navigate('/settings/location');
-                    }}
-                    style={{ backgroundColor: rowColor }}
-                    className="flex-row items-center justify-start h-12  rounded-lg mb-3 px-3"
-                  >
-                    <View className="w-8 h-8 rounded-full mr-3 flex items-center justify-center bg-blue-500">
-                      <LocateFixedIcon color="#fff" size={20} />
-                    </View>
-                    <Text className="text-lg font-normal ">Location</Text>
-                    <View className="flex-grow" />
-                    <ChevronRight color="#C6C6C6" size={20} />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => {
-                      router.navigate('/settings/notifications');
-                    }}
-                    style={{ backgroundColor: rowColor }}
-                    className="flex-row items-center justify-start h-12  rounded-lg mb-3 px-3"
-                  >
-                    <View className="w-8 h-8 rounded-full mr-3 flex items-center justify-center bg-blue-500">
-                      <Ionicons name="notifications-outline" size={20} color="#fff" />
-                    </View>
-                    <Text className="text-lg font-normal ">Notifications</Text>
-                    <View className="flex-grow" />
-                    <ChevronRight color="#C6C6C6" size={20} />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </ScrollView>
-            <SimpleAlertDialog
-              trigger={
-                <Button
-                  variant="destructive"
-                  className="border-red-600 w-full absolute bottom-10 left-0 right-0"
-                >
-                  <Text>Log out</Text>
-                </Button>
-              }
-              actionIfConfirmed={() => signOut()}
-              title="Are you sure you want to logout?"
-              description="Do you want to logout from your account? You can always login back."
-            />
-          </View>
-        </SafeAreaView>
-      </LinearGradient>
+          </ScrollView>
+          <SimpleAlertDialog
+            trigger={
+              <Button
+                variant="destructive"
+                className="border-red-600 w-full absolute bottom-10 left-0 right-0"
+              >
+                <Text>Log out</Text>
+              </Button>
+            }
+            actionIfConfirmed={() => signOut()}
+            title="Are you sure you want to logout?"
+            description="Do you want to logout from your account? You can always login back."
+          />
+        </View>
+      </SafeAreaView>
     </>
   );
 }
