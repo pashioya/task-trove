@@ -189,7 +189,7 @@ export default function Home() {
                   );
                 }}
               >
-                <View className=" w-60">
+                <View className="w-60">
                   <Button className="flex-row">
                     <AntDesign name="google" size={24} color="white" />
                     <Text className="text-white">Get Directions</Text>
