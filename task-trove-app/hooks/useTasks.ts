@@ -54,7 +54,8 @@ const useTasks = () => {
           name: task.name,
           lat: jsonValue.lat,
           long: jsonValue.lng,
-          address: task.column_values[0].text || '',
+          address: jsonValue.address || '',
+          changedAt: jsonValue.changed_at || '',
         } as Task;
         reformattedTasks.push(reformattedTask);
       }

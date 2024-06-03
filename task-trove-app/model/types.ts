@@ -32,17 +32,11 @@ export type Task = {
   lat: number;
   long: number;
   address: string;
+  changedAt: string;
 };
 
 export type User = {
   firstName: string;
   lastName: string;
   email: string;
-};
-
-export type Task = {
-  id: string;
-  name: string;
-  lat: number;
-  long: number;
 };
