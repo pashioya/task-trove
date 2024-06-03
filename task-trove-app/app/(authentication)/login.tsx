@@ -5,27 +5,17 @@ import { Button } from '~/components/ui/button';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text } from '~/components/ui/text';
 import { Separator } from '~/components/primitives/select';
-import * as NavigationBar from 'expo-navigation-bar';
 
-import LottieView from 'lottie-react-native';
+import colors from 'tailwindcss/colors';
 
 export default function Login() {
   const { signIn } = useSession();
-
-  NavigationBar.setPositionAsync('absolute');
-  NavigationBar.setBackgroundColorAsync('#ffffff01');
 
   return (
     <>
       <Stack.Screen options={{ title: 'login' }} />
 
-      <SafeAreaView className="bg-background" style={{ flex: 1 }}>
-        <LottieView
-          source={require('~/assets/lottie/login.json')}
-          style={{ width: '105%', height: '112%', position: 'absolute', top: 0, left: 0 }}
-          autoPlay
-          loop
-        />
+      <SafeAreaView style={{ flex: 1, backgroundColor: colors.blue[300] }}>
         <View className="absolute top-20 left-0 right-0 items-center shadow-2xl">
           <Image
             alt=""
