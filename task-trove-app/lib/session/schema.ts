@@ -5,6 +5,7 @@ export const UserSchema = z.object({
   name: z.string(),
   email: z.string(),
   thumbnail: z.string(),
+  slug: z.string(),
 });
 
 export const accessTokenSchema = z.string();
@@ -25,5 +26,8 @@ export const RawUserSchema = z.object({
     name: z.string(),
     email: z.string(),
     photo_thumb_small: z.string(),
+    account: z.object({
+      slug: z.string(),
+    }),
   }),
 });
