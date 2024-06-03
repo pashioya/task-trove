@@ -43,7 +43,7 @@ export default function Tasks() {
                   <SimpleDialog
                     trigger={<TaskListCard task={item} />}
                     title=""
-                    clasNames="p-0 rounded-2xl border-spacing-0"
+                    classNames="p-0 bg-secondary rounded-2xl border-spacing-0"
                     withHeader={false}
                     withClose={false}
                     content={

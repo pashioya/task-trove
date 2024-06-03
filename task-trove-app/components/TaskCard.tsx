@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, Linking } from 'react-native';
+import { View, Image, Linking } from 'react-native';
 import { Separator } from '~/components/ui/separator';
 import { Button } from '~/components/ui/button';
 import { Clock, FeatherIcon } from 'lucide-react-native';
@@ -8,6 +8,7 @@ import { Link } from 'expo-router';
 import { DialogClose } from './ui/dialog';
 import { useSession } from '~/contexts/session-provider';
 import { useSettingsStore } from '~/store';
+import { Text } from '~/components/ui/text';
 
 export default function TaskCard({ task }: { task: Task }) {
   const dateChanged = new Date(task.changedAt);

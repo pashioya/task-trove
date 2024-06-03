@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
 import { Alert, Linking, SafeAreaView, StyleSheet, View } from 'react-native';
@@ -15,6 +16,8 @@ import MapView from 'react-native-map-clustering';
 
 import { Play, Navigation, Pause } from 'lucide-react-native';
 import * as ExpoLocation from 'expo-location';
+import * as NavigationBar from 'expo-navigation-bar';
+import colors from 'tailwindcss/colors';
 
 import { Text } from '~/components/ui/text';
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -30,6 +33,9 @@ const showAlert = (error: string, onPress: () => void, buttonText: string) => {
 };
 
 export default function Home() {
+  NavigationBar.setPositionAsync('absolute');
+  NavigationBar.setBackgroundColorAsync('#ffffff01');
+
   const { isTracking, region, toggleShareLocation } = useToggleShareLocation();
   const { isDarkColorScheme } = useColorScheme();
   const router = useRouter();
@@ -102,8 +108,7 @@ export default function Home() {
       const location = await ExpoLocation.getLastKnownPositionAsync({});
 
       if (location) {
-        // @ts-expect-error - ignore
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        // @ts-expect-error --ignore
         mapRef.current?.animateToRegion({
           latitude: location.coords.latitude,
           longitude: location.coords.longitude,
@@ -111,8 +116,7 @@ export default function Home() {
           longitudeDelta: 0.0421,
         });
       } else {
-        // @ts-expect-error - ignore
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        // @ts-expect-error --ignore
         mapRef.current?.animateToRegion(INITIAL_REGION);
       }
     } catch (e) {
@@ -130,8 +134,7 @@ export default function Home() {
 
   if (local.taskId) {
     const task = tableTasks.find(t => t.id === local.taskId);
-    // @ts-expect-error - ignore
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    // @ts-expect-error --ignore
     mapRef.current?.animateToRegion({
       latitude: Number(task?.lat),
       longitude: Number(task?.long),
@@ -180,7 +183,7 @@ export default function Home() {
                 }}
                 onPress={onPress}
               >
-                <View className="p-1 items-center justify-center bg-blue-50 shadow-xl rounded-lg">
+                <View className="p-1 items-center justify-center shadow-xl bg-black rounded-lg">
                   <Text className="text-lg text-center">{points}</Text>
                 </View>
               </Marker>
@@ -196,7 +199,11 @@ export default function Home() {
               }}
               key={task.id}
             >
-              <MaterialCommunityIcons name="map-marker-check" size={40} color="black" />
+              <MaterialCommunityIcons
+                name="map-marker-check"
+                size={40}
+                color={isDarkColorScheme ? 'white' : 'black'}
+              />
               <Callout
                 onPress={() => {
                   Linking.openURL(
@@ -214,35 +221,35 @@ export default function Home() {
             </Marker>
           ))}
         </MapView>
-        <View className="absolute bottom-32 right-5 gap-4">
+        <View className="absolute bottom-44 right-5 gap-4">
           {isTracking ? (
-            <View className="bg-blue-50 rounded-full h-[70px] w-[70px] shadow-lg flex items-center justify-center">
+            <View className="bg-secondary rounded-full h-[70px] w-[70px] shadow-lg flex items-center justify-center">
               <Navigation
                 onPress={() => onLocateMe()}
-                fill="white"
-                color="black"
+                color={isDarkColorScheme ? colors.neutral[100] : colors.blue[500]}
+                fill={isDarkColorScheme ? colors.gray[100] : colors.blue[500]}
                 className="bg-white"
-                size={40}
+                size={30}
               />
             </View>
           ) : null}
 
-          <View className="bg-blue-50 rounded-full h-[70px] w-[70px] shadow-lg flex items-center justify-center">
+          <View className="bg-primary shadow-2xl rounded-full h-[70px] w-[70px] flex items-center justify-center">
             {isTracking ? (
               <Pause
                 onPress={() => toggleShareLocation()}
-                fill="white"
-                color="black"
-                className="bg-white shadow-lg"
-                size={50}
+                color={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
+                fill={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
+                className="bg-primary shadow-2xl"
+                size={30}
               />
             ) : (
               <Play
                 onPress={() => toggleShareLocation()}
-                fill="white"
-                color="black"
-                className="bg-white shadow-lg"
-                size={50}
+                color={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
+                fill={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
+                className="bg-primary shadow-2xl"
+                size={30}
               />
             )}
           </View>

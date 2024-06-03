@@ -1,44 +1,32 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import colors from 'tailwindcss/colors';
+import { View, TouchableOpacity } from 'react-native';
+import { Text } from '~/components/ui/text';
 
 type RoundBtnProps = {
   letter: string;
   text: string;
   color?: string;
+  letterStyles?: string;
+  textStyles?: string;
   onPress?: () => void;
 };
 
-const RoundBtn = ({ letter, text, color, onPress }: RoundBtnProps) => {
-  if (!color) {
-    color = colors.gray[300];
-  }
+const RoundBtn = ({ letter, text, color, letterStyles, textStyles, onPress }: RoundBtnProps) => {
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
+    <TouchableOpacity className="rounded-full items-center gap-1" onPress={onPress}>
       <View
         style={{
           width: 60,
           height: 60,
           borderRadius: 30,
-          backgroundColor: color,
           justifyContent: 'center',
           alignItems: 'center',
         }}
+        className={color}
       >
-        <Text style={styles.label}>{letter}</Text>
+        <Text className={letterStyles}>{letter}</Text>
       </View>
-      <Text style={styles.label}>{text}</Text>
+      <Text className={textStyles}>{text}</Text>
     </TouchableOpacity>
   );
 };
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    gap: 10,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: colors.black,
-  },
-});
 export default RoundBtn;

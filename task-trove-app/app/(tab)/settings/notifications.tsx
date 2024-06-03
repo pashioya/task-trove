@@ -1,21 +1,34 @@
-import { Stack } from 'expo-router';
-import { ChevronRight } from 'lucide-react-native';
+import { Stack, router } from 'expo-router';
+import { ChevronRight, LucideMoveLeft } from 'lucide-react-native';
 
-import { ScrollView, Text, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SimpleDialog } from '~/components/SimpleDialog';
 import { useColorScheme } from '~/lib/useColorScheme';
 import colors from 'tailwindcss/colors';
 import TaskColumnSelects from '~/components/TaskColumnSelects';
+import { Text } from '~/components/ui/text';
 
 export default function NotificationSettings() {
   const { isDarkColorScheme } = useColorScheme();
-  const rowColor = isDarkColorScheme ? colors.gray[900] : colors.gray[100];
 
   return (
     <>
-      <Stack.Screen options={{ title: 'Notification', headerShadowVisible: false }} />
-      <SafeAreaView style={{ flex: 1, marginTop: 50 }}>
+      <Stack.Screen
+        options={{
+          title: 'Notification',
+          headerShadowVisible: false,
+          headerLeft: () => (
+            <LucideMoveLeft
+              onPress={() => router.back()}
+              color={isDarkColorScheme ? colors.gray[200] : colors.gray[800]}
+              size={45}
+              style={{ marginRight: 10 }}
+            />
+          ),
+        }}
+      />
+      <SafeAreaView style={{ flex: 1 }}>
         <View className="flex-1">
           <ScrollView>
             <View className="px-6">
@@ -24,10 +37,7 @@ export default function NotificationSettings() {
               </Text>
               <SimpleDialog
                 trigger={
-                  <View
-                    style={{ backgroundColor: rowColor }}
-                    className="flex-row items-center justify-start h-12 rounded-lg mb-3 px-3"
-                  >
+                  <View className="flex-row bg-secondary items-center justify-start h-12 rounded-lg mb-3 px-3">
                     <Text className="text-lg font-normal">Change Task Column</Text>
                     <View className="flex-1" />
                     <ChevronRight color="#C6C6C6" size={20} />

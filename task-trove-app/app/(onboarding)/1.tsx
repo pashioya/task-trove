@@ -43,7 +43,7 @@ export default function One() {
             </View>
           </ScrollView>
           <Button
-            className="absolute bottom-10  rounded-md w-96 self-center bg-blue-700"
+            className="absolute bottom-20  rounded-md w-96 self-center bg-primary"
             onPress={() => {
               router.navigate('/(onboarding)/permission-1');
             }}
