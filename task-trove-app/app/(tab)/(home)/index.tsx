@@ -180,14 +180,15 @@ export default function Home() {
                 longitude: Number(task.long),
               }}
               key={task.id}
-              onPress={() => {
-                Linking.openURL(
-                  `https://www.google.com/maps/dir/?api=1&destination=${task.lat},${task.long}&travelmode=driving`,
-                );
-              }}
             >
               <MaterialCommunityIcons name="map-marker-check" size={40} color="black" />
-              <Callout>
+              <Callout
+                onPress={() => {
+                  Linking.openURL(
+                    `https://www.google.com/maps/dir/?api=1&destination=${task.lat},${task.long}&travelmode=driving`,
+                  );
+                }}
+              >
                 <View className=" w-60">
                   <Button className="flex-row">
                     <AntDesign name="google" size={24} color="white" />
