@@ -16,25 +16,40 @@ type SimpleDialogProps = {
   trigger: React.ReactNode;
   title: string;
   content: React.ReactNode;
+  clasNames?: string;
+  withHeader?: boolean;
+  withClose?: boolean;
 };
 
-export function SimpleDialog({ trigger, title, content }: SimpleDialogProps) {
+export function SimpleDialog({
+  trigger,
+  title,
+  content,
+  withHeader,
+  withClose,
+  clasNames,
+}: SimpleDialogProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
         <TouchableOpacity>{trigger}</TouchableOpacity>
       </DialogTrigger>
-      <DialogContent className="z-40">
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-        </DialogHeader>
+      <DialogContent className={clasNames}>
+        {withHeader && (
+          <DialogHeader>
+            <DialogTitle>{title}</DialogTitle>
+          </DialogHeader>
+        )}
+
         {content}
         <DialogFooter>
-          <DialogClose asChild>
-            <Button className="bg-primary">
-              <Text>OK</Text>
-            </Button>
-          </DialogClose>
+          {withClose && (
+            <DialogClose asChild>
+              <Button className="bg-primary">
+                <Text>OK</Text>
+              </Button>
+            </DialogClose>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>

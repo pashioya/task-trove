@@ -49,6 +49,9 @@ export const fetchUserData = async (accessToken: AccessToken) => {
           name
           email
           photo_thumb_small
+          account {
+            slug
+          }
         }
       }
     `;
@@ -65,14 +68,17 @@ export const fetchUserData = async (accessToken: AccessToken) => {
 
     if (parsedUserResponse.success) {
       const {
-        me: { email, id, name, photo_thumb_small },
+        me: { email, id, name, photo_thumb_small, account },
       } = parsedUserResponse.data;
+
+      const accountSlug = account.slug;
 
       return {
         id,
         name,
         email,
         thumbnail: photo_thumb_small,
+        slug: accountSlug,
       };
     }
 

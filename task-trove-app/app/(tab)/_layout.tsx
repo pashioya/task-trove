@@ -7,11 +7,13 @@ import { Text } from '~/components/ui/text';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { useSettingsStore } from '~/store';
 import colors from 'tailwindcss/colors';
+import { useTasks } from '~/hooks';
 import { useColorScheme } from '~/lib/useColorScheme';
 
 export default function TabLayout() {
   const { session, isLoading } = useSession();
   const { isTracking } = useSettingsStore();
+  const { tableTasks } = useTasks();
   const { isDarkColorScheme } = useColorScheme();
 
   if (isLoading) {
@@ -63,21 +65,8 @@ export default function TabLayout() {
           </View>
         ),
         headerRight: () => (
-          <Pressable onPress={() => router.navigate('/(tab)/settings/main')}>
-            <Avatar
-              alt="profile-pic"
-              className="w-[60] h-[60] mr-5"
-              style={{
-                elevation: 5,
-                shadowColor: 'black',
-                shadowOffset: {
-                  width: 0,
-                  height: 10,
-                },
-                shadowOpacity: 0.25,
-                shadowRadius: 3.84,
-              }}
-            >
+          <Pressable className="shadow-2xl" onPress={() => router.navigate('/(tab)/settings/main')}>
+            <Avatar alt="profile-pic" className="w-[60] h-[60] mr-5 shadow-2xl">
               <AvatarImage source={{ uri: session.user?.thumbnail }} />
               <AvatarFallback>
                 <Text>TR</Text>
@@ -147,7 +136,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="tasks"
         options={{
-          headerTitle: 'Tasks',
+          headerTitle: '',
+          headerTitleContainerStyle: { display: 'none' },
           tabBarIcon: ({ focused }) => (
             <ClipboardListIcon
               color={
@@ -162,12 +152,7 @@ export default function TabLayout() {
               size={30}
             />
           ),
-          title: 'Tasks',
-          tabBarBadge: 3,
-          tabBarBadgeStyle: {
-            position: 'absolute',
-            top: -22,
-          },
+          tabBarBadge: tableTasks.length,
           tabBarLabel: 'Tasks',
           tabBarIconStyle: {
             position: 'absolute',
