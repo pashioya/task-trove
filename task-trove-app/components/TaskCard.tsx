@@ -1,16 +1,20 @@
 import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, Linking } from 'react-native';
 import { Separator } from '~/components/ui/separator';
 import { Button } from '~/components/ui/button';
 import { Clock, FeatherIcon } from 'lucide-react-native';
 import type { Task } from '~/model/types';
 import { Link } from 'expo-router';
 import { DialogClose } from './ui/dialog';
+import { useSession } from '~/contexts/session-provider';
+import { useSettingsStore } from '~/store';
 
 export default function TaskCard({ task }: { task: Task }) {
   const dateChanged = new Date(task.changedAt);
   const simplifiedDate = `${dateChanged.getDate()}-${dateChanged.getMonth() + 1}-${dateChanged.getFullYear()}`;
   const simplifiedAddress = task.address.split(',')[1];
+  const { session } = useSession();
+  const { taskBoard } = useSettingsStore();
 
   return (
     <View>
@@ -44,7 +48,14 @@ export default function TaskCard({ task }: { task: Task }) {
         </View>
         <Separator />
         <View className="pt-4 flex-row items-center justify-between">
-          <Button variant="outline" disabled>
+          <Button
+            variant="outline"
+            onPress={() =>
+              Linking.openURL(
+                `https://${session?.user?.slug}.monday.com/boards/${taskBoard?.id}/views/${task.id}`,
+              )
+            }
+          >
             <Text className="font-semibold">View On Monday</Text>
           </Button>
           <Link

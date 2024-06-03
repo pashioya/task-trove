@@ -21,7 +21,7 @@ export default function Tasks() {
       <SafeAreaView>
         <View className="px-6 mt-24">
           <View className="border-b-gray-200 border-b">
-            <Text className="font-bold text-4xl mb-2">Your Tasks</Text>
+            <Text className="font-bold text-3xl mb-2">Your Tasks</Text>
             <View className="flex-row items-center justify-between">
               <View className="grow shrink basis-0 flex-col items-center justify-center p-6">
                 <Text className="text-lg font-medium mb-4 text-center">Number of Tasks</Text>
@@ -36,8 +36,9 @@ export default function Tasks() {
           <View className="items-center w-full h-full gap-4 justify-center">
             {tableTasks.length > 1 ? (
               <FlatList
-                className="w-full"
+                className="w-[95%]"
                 data={tableTasks}
+                showsVerticalScrollIndicator={false}
                 renderItem={({ item }: { item: Task }) => (
                   <SimpleDialog
                     trigger={<TaskListCard task={item} />}
