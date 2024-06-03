@@ -116,7 +116,7 @@ export default function Settings() {
               trigger={
                 <Button
                   variant="destructive"
-                  className=" border-red-600 w-full absolute bottom-10 left-0 right-0"
+                  className="border-red-600 w-full absolute bottom-10 left-0 right-0"
                 >
                   <Text>Log out</Text>
                 </Button>
