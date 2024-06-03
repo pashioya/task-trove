@@ -1,7 +1,7 @@
 import { Stack, useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
 import { Alert, SafeAreaView, StyleSheet, View } from 'react-native';
-import { useToggleShareLocation, useLocationPermissions } from '~/hooks';
+import { useToggleShareLocation } from '~/hooks';
 import { useMondayMutation } from '~/lib/monday/api';
 import { changeMultipleColumnValuesMutation } from '~/lib/monday/queries';
 import { useSettingsStore } from '~/store';
@@ -26,7 +26,7 @@ const showAlert = (error: string, onPress: () => void, buttonText: string) => {
 
 export default function Home() {
   const { isTracking, region, setRegion, toggleShareLocation } = useToggleShareLocation();
-  const { requestPermissions } = useLocationPermissions();
+
   const { isDarkColorScheme } = useColorScheme();
   const router = useRouter();
 
@@ -68,10 +68,6 @@ export default function Home() {
   }, [toggleShareLocation, updateLocationError]);
 
   useEffect(() => {
-    const checkPermissions = async () => {
-      await requestPermissions();
-    };
-    checkPermissions();
     if (!item) {
       showAlert(
         'Location Column Not Correctly Setup',
@@ -81,7 +77,7 @@ export default function Home() {
         'Go to Settings',
       );
     }
-  }, [item, requestPermissions, router]);
+  }, [item, router]);
 
   const onLocateMe = async () => {
     try {

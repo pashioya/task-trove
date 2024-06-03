@@ -45,7 +45,7 @@ export default function One() {
           <Button
             className="absolute bottom-10  rounded-md w-96 self-center bg-blue-700"
             onPress={() => {
-              router.navigate('/(onboarding)/2');
+              router.navigate('/(onboarding)/permission-1');
             }}
           >
             <Text className="font-semibold text-white">Let&apos;s go</Text>

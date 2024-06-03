@@ -8,7 +8,7 @@ import LocationItemSelects from '~/components/LocationItemSelects';
 import colors from 'tailwindcss/colors';
 import { LinearGradient } from 'expo-linear-gradient';
 
-export default function Two() {
+export default function Final() {
   const { item, setOnboardingCompleted } = useSettingsStore();
 
   return (
@@ -42,7 +42,7 @@ export default function Two() {
             </View>
           </ScrollView>
           <Button
-            className="absolute bottom-10  rounded-md w-96 self-center bg-blue-700"
+            className="absolute bottom-10  rounded-md w-96 self-center"
             onPress={() => {
               setOnboardingCompleted(true);
               router.replace('/');

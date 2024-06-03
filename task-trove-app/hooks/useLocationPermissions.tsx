@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useCallback } from 'react';
 import { Alert, Linking } from 'react-native';
 import * as ExpoLocation from 'expo-location';
 
@@ -25,16 +25,24 @@ const useLocationPermissions = () => {
         showPermissionAlert();
       }
     } else {
-      console.log('Foreground location permission not granted');
       showPermissionAlert();
     }
   }, [showPermissionAlert]);
 
-  useEffect(() => {
-    requestPermissions();
-  }, [requestPermissions]);
+  const checkPermissions = useCallback(async () => {
+    const { status: fgStatus } = await ExpoLocation.getForegroundPermissionsAsync();
+    if (fgStatus !== 'granted') {
+      return false;
+    }
+    const { status: bgStatus } = await ExpoLocation.getBackgroundPermissionsAsync();
+    if (bgStatus !== 'granted') {
+      return false;
+    }
 
-  return { requestPermissions };
+    return true;
+  }, []);
+
+  return { requestPermissions, checkPermissions };
 };
 
 export default useLocationPermissions;
