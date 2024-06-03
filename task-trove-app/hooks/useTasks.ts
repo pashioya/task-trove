@@ -20,6 +20,7 @@ const useTasks = () => {
     queryKey: [taskBoard?.id || '', 'taskItems'],
     query: fetchTasksQuery,
     variables: { boardId: taskBoard?.id || '', columnId: taskColumn?.id || '' },
+    refetchInterval: 5000,
   });
 
   useEffect(() => {
