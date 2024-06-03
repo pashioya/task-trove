@@ -109,7 +109,6 @@ export default function Settings() {
                     <ChevronRight color="#C6C6C6" size={20} />
                   </TouchableOpacity>
                 </View>
-                <Button onPress={() => router.push('/1')}></Button>
               </View>
             </ScrollView>
             <SimpleAlertDialog
