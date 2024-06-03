@@ -1,7 +1,7 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, Pressable } from 'react-native';
 import colors from 'tailwindcss/colors';
 import { SimpleTooltip } from '~/components/SimpleTooltip';
@@ -9,15 +9,16 @@ import { Button } from '~/components/ui/button';
 import { useLocationPermissions } from '~/hooks';
 
 export default function LocationPermission() {
-  const { requestPermissions, validatePermissions, permissionsGranted } = useLocationPermissions();
+  const { requestPermissions, validatePermissions } = useLocationPermissions();
+  const [permissionsGranted, setPermissionsGranted] = useState(false);
 
   useEffect(() => {
     const checkPermissionsStatus = async () => {
-      await validatePermissions();
+      const permissionsGranted = await validatePermissions();
+      setPermissionsGranted(permissionsGranted);
     };
-
     checkPermissionsStatus();
-  }, [validatePermissions, requestPermissions]);
+  }, [validatePermissions]);
 
   return (
     <>
@@ -59,7 +60,13 @@ export default function LocationPermission() {
                 content={<Text>Permissions Already Granted</Text>}
               />
             ) : (
-              <Button className="w-96" onPress={async () => await requestPermissions()}>
+              <Button
+                className="w-96"
+                onPress={async () => {
+                  await requestPermissions();
+                  setPermissionsGranted(await validatePermissions());
+                }}
+              >
                 <Text className="text-white">Grant Permissions</Text>
               </Button>
             )}

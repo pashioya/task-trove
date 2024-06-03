@@ -42,14 +42,18 @@ export default function Home() {
   const { mutate: updateLocation, error: updateLocationError } = useMondayMutation({
     mutation: changeMultipleColumnValuesMutation,
   });
-  const { validatePermissions, permissionsGranted } = useLocationPermissions();
+  const { validatePermissions } = useLocationPermissions();
 
   useEffect(() => {
-    validatePermissions();
-    if (!permissionsGranted) {
-      router.replace('/(onboarding)/permission-1');
-    }
-  }, [permissionsGranted, router, validatePermissions]);
+    const checkPermissionsStatus = async () => {
+      const permissionsGranted = await validatePermissions();
+      if (!permissionsGranted) {
+        router.replace('/(onboarding)/permission-1');
+      }
+    };
+
+    checkPermissionsStatus();
+  }, [router, validatePermissions]);
 
   useEffect(() => {
     if (isTracking && region && board && column && item) {
