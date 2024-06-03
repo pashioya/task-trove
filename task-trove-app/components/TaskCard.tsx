@@ -9,7 +9,7 @@ import { DialogClose } from './ui/dialog';
 
 export default function TaskCard({ task }: { task: Task }) {
   const dateChanged = new Date(task.changedAt);
-  const simplifiedDate = `${dateChanged.getDate()}-${dateChanged.getMonth()}-${dateChanged.getFullYear()}`;
+  const simplifiedDate = `${dateChanged.getDate()}-${dateChanged.getMonth() + 1}-${dateChanged.getFullYear()}`;
   return (
     <View>
       <View>
