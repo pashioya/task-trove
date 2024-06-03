@@ -52,7 +52,7 @@ export default function TaskCard({ task }: { task: Task }) {
             variant="outline"
             onPress={() =>
               Linking.openURL(
-                `https://${session?.user?.slug}.monday.com/boards/${taskBoard?.id}/views/${task.id}`,
+                `https://${session?.user?.slug}.monday.com/boards/${taskBoard?.id}/pulses/${task.id}`,
               )
             }
           >
