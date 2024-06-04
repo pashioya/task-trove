@@ -95,7 +95,7 @@ export default function LocationSettings() {
                     <ChevronRight color="#C6C6C6" size={20} />
                   </View>
                 }
-                title="Change Location Save Location"
+                classNames="p-2"
                 content={<LocationItemSelects />}
               />
 

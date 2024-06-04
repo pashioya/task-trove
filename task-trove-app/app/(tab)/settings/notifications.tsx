@@ -43,7 +43,7 @@ export default function NotificationSettings() {
                     <ChevronRight color="#C6C6C6" size={20} />
                   </View>
                 }
-                title="Change Task Column"
+                classNames="p-2"
                 content={<TaskColumnSelects />}
               />
             </View>

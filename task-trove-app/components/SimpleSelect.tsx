@@ -51,10 +51,7 @@ export function SimpleSelect({
         <SelectValue className="text-foreground text-sm native:text-lg" placeholder={placeholder} />
       </SelectTrigger>
 
-      <SelectContent
-        insets={contentInsets}
-        className="w-[250px] max-h-[250px] overflow-y-auto z-50"
-      >
+      <SelectContent insets={contentInsets} className="w-[250px] max-h-[250px]">
         <SelectLabel>{placeholder}</SelectLabel>
         <ScrollView>
           <SelectGroup>
@@ -63,7 +60,7 @@ export function SimpleSelect({
                 <ActivityIndicator />
               </View>
             ) : options.length === 0 ? (
-              <SelectItem disabled key="empty" label="No Options Availlable" value="" />
+              <SelectItem disabled key="empty" label="No Options Available" value="" />
             ) : (
               options.map(option => (
                 <SelectItem key={option.value} label={option.label} value={option.value}>
