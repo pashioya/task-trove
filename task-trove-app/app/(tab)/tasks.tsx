@@ -28,7 +28,9 @@ export default function Tasks() {
               </View>
               <View className="grow shrink basis-0 flex-col items-center justify-center p-6 border-l border-gray-400">
                 <Text className="text-lg font-medium mb-4 text-center">Closest Task</Text>
-                <Text className="text-xl font-bold ">{tableTasks[0].distanceTo} km</Text>
+                <Text className="text-xl font-bold ">
+                  {tableTasks[0]?.distanceTo ? tableTasks[0].distanceTo + 'km' : 'Unknown'}
+                </Text>
               </View>
             </View>
           </View>
