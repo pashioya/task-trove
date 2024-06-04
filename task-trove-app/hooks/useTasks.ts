@@ -1,4 +1,4 @@
-import { useEffect, useState, type SetStateAction } from 'react';
+import { useEffect, useState } from 'react';
 import { useMondayQuery } from '~/lib/monday/api';
 import { fetchTasksQuery } from '~/lib/monday/queries';
 import type { Task, TaskItem } from '~/model/types';
@@ -17,15 +17,18 @@ function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
   const d = R * c; // Distance in km
   return d;
 }
+
 function deg2rad(deg: number) {
   return deg * (Math.PI / 180);
 }
 
 const useTasks = () => {
-  const [tasks, setTasks] = useState<TaskItem[]>([]);
   const [tableTasks, setTableTasks] = useState<Task[]>([]);
   const { taskBoard, taskColumn } = useSettingsStore();
-  const [currentLocation, setCurrentLocation] = useState({ coords: { latitude: 0, longitude: 0 } });
+  const [currentLocation, setCurrentLocation] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
 
   const {
     data: itemsData,
@@ -40,18 +43,28 @@ const useTasks = () => {
   });
 
   useEffect(() => {
-    if (itemsAreLoading) {
-      return;
-    }
-    if (itemsIsError) {
-      showAlert(itemsError);
+    const fetchLocation = async () => {
+      try {
+        const location = await ExpoLocation.getCurrentPositionAsync({});
+        setCurrentLocation({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchLocation();
+  }, []);
+
+  useEffect(() => {
+    if (itemsAreLoading || itemsIsError || !currentLocation) {
+      if (itemsIsError) showAlert(itemsError);
       return;
     }
 
     if (!itemsData || !itemsData.boards || !itemsData.boards[0]) return;
     const items = itemsData.boards[0]?.items_page.items;
-
-    setTasks(items);
 
     type Position = {
       address: string;
@@ -60,47 +73,37 @@ const useTasks = () => {
       lng: number;
     };
 
-    const reformattedTasks: SetStateAction<Task[]> = [];
-
-    const getLocation = async () => {
-      try {
-        setCurrentLocation(await ExpoLocation.getCurrentPositionAsync({}));
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getLocation();
-
-    tasks.map(task => {
-      const value = task.column_values[0].value;
-      if (value) {
-        const jsonValue = JSON.parse(value) as Position;
-
-        let distance = calculateDistance(
-          currentLocation.coords.latitude,
-          currentLocation.coords.longitude,
-          jsonValue.lat,
-          jsonValue.lng,
-        );
-        distance = Math.round(distance * 1000) / 1000;
-        const reformattedTask = {
-          id: task.id,
-          name: task.name,
-          lat: jsonValue.lat,
-          long: jsonValue.lng,
-          address: jsonValue.address || '',
-          changedAt: jsonValue.changed_at || '',
-          distanceTo: distance,
-        } as Task;
-        reformattedTasks.push(reformattedTask);
-      }
-    });
+    const reformattedTasks: Task[] = items
+      .map((task: TaskItem) => {
+        const value = task.column_values[0].value;
+        if (value) {
+          const jsonValue = JSON.parse(value) as Position;
+          let distance = calculateDistance(
+            currentLocation.latitude,
+            currentLocation.longitude,
+            jsonValue.lat,
+            jsonValue.lng,
+          );
+          distance = Math.round(distance * 1000) / 1000;
+          return {
+            id: task.id,
+            name: task.name,
+            lat: jsonValue.lat,
+            long: jsonValue.lng,
+            address: jsonValue.address || '',
+            changedAt: jsonValue.changed_at || '',
+            distanceTo: distance,
+          };
+        }
+        return null;
+      })
+      .filter(task => task !== null) as Task[];
 
     // Sort tasks by distance
     reformattedTasks.sort((a, b) => a.distanceTo - b.distanceTo);
 
     setTableTasks(reformattedTasks);
-  }, [itemsAreLoading, itemsData, itemsError, currentLocation, itemsIsError, tasks]);
+  }, [itemsData, currentLocation, itemsAreLoading, itemsIsError, itemsError]);
 
   return { tableTasks, itemsAreLoading };
 };
