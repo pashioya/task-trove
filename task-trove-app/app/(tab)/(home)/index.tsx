@@ -183,8 +183,8 @@ export default function Home() {
                 }}
                 onPress={onPress}
               >
-                <View className="p-1 items-center justify-center shadow-xl bg-black rounded-lg">
-                  <Text className="text-lg text-center">{points}</Text>
+                <View className="p-1 items-center justify-center shadow-xl bg-primary rounded-lg">
+                  <Text className="text-lg text-center text-white">{points}</Text>
                 </View>
               </Marker>
             );
@@ -199,11 +199,7 @@ export default function Home() {
               }}
               key={task.id}
             >
-              <MaterialCommunityIcons
-                name="map-marker-check"
-                size={40}
-                color={isDarkColorScheme ? 'white' : 'black'}
-              />
+              <MaterialCommunityIcons name="map-marker-check" size={40} color={colors.blue[500]} />
               <Callout
                 onPress={() => {
                   Linking.openURL(
