@@ -1,59 +1,54 @@
-import jwt from 'jsonwebtoken';
-import { Request, Response } from 'express';
-import { ResponseStatus } from '@/enums/api';
-import { env } from '@/env';
-import { Storage } from '@mondaycom/apps-sdk';
+import { Request, Response } from 'express'
+import { z } from 'zod'
+import axios from 'axios'
+import { env } from '@/env'
+import { ResponseStatus } from '@/enums/api'
+import { logger } from '@/lib/logger'
+
+const AccessTokenRequestBodySchema = z.object({
+  code: z.string().min(1),
+  state: z.string().optional()
+})
+
+const MONDAY_TOKEN_ENDPOINT = 'https://auth.monday.com/oauth2/token'
 
 const AccessTokenController = async (req: Request, res: Response) => {
-  // Get the authorization header
-  const temporaryCode = req.body.temporary_code;
-  const storageKey = req.body.storage_key;
+  const parsedBody = AccessTokenRequestBodySchema.safeParse(req.body)
 
-  if (!temporaryCode || !storageKey) {
-    return res.status(ResponseStatus.UNAUTHORIZED).json({
-      message: 'Missing temporary code',
-    });
+  if (!parsedBody.success) {
+    logger.error('Invalid query parameters', {
+      issues: parsedBody.error.issues.map((issue) => issue.message).join(', ')
+    })
+
+    return res.status(400).json({
+      message: 'Invalid query parameters',
+      errors: parsedBody.error.issues.map((issue) => issue.message).join(', ')
+    })
   }
 
-  const jwtSecret = env.JWT_SECRET;
+  const { code } = parsedBody.data
 
   try {
-    jwt.verify(temporaryCode, jwtSecret);
-  } catch (error) {
-    console.error('Error verifying temporary code:', error);
-    return res.status(ResponseStatus.UNAUTHORIZED).json({
-      message: 'Invalid temporary code',
-    });
-  }
-
-  // get the main access token from env variables
-  const accessToken = env.ACCESS_TOKEN;
-
-  const storage = new Storage(accessToken);
-
-  const { success, error, value } = await storage.get(storageKey);
-
-  if (!success) {
-    console.error('Error retrieving temporary code:', error);
-    return res.status(ResponseStatus.UNAUTHORIZED).json({
-      message: 'Invalid temporary code',
-    });
-  } else {
-    console.log('Retrieved access token:', value);
-
-    const { success, error } = await storage.delete(storageKey);
-
-    if (!success) {
-      console.error('Error deleting temporary code:', error);
-      return res.status(ResponseStatus.INTERNAL_SERVER_ERROR).json({
-        message: 'Failed to delete temporary code',
-      });
-    } else {
-      return res.status(ResponseStatus.OK).json({
-        access_token: value,
-      });
+    const url = MONDAY_TOKEN_ENDPOINT
+    const data = {
+      client_id: env.MONDAY_CLIENT_ID,
+      client_secret: env.MONDAY_CLIENT_SECRET,
+      code,
+      redirect_uri: env.MONDAY_REDIRECT_URI
     }
-  }
-};
 
-export default AccessTokenController;
+    const response = await axios.post(url, data)
+
+    return res.status(ResponseStatus.OK).json(response.data)
+  } catch (error) {
+    // TODO: improve error handling
+    logger.error('Failed to obtain access token', {
+      error
+    })
+    return res.status(ResponseStatus.INTERNAL_SERVER_ERROR).json({
+      message: 'Failed to obtain access token'
+    })
+  }
+}
+
+export default AccessTokenController

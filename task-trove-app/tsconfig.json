@@ -2,11 +2,19 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
-
     "baseUrl": ".",
     "paths": {
       "~/*": ["*"]
-    }
+    },
+
+    /* Plugins */
+    "plugins": [
+      {
+        "name": "@0no-co/graphqlsp",
+        "schema": "./schema.graphql",
+        "tadaOutputLocation": "./lib/graphql/introspection.ts"
+      }
+    ]
   },
   "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
 }

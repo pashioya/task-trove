@@ -3,38 +3,72 @@
     "name": "task-trove-app",
     "slug": "task-trove-app",
     "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/tryve/tryve-white-logo-square.png",
     "scheme": "task-trove-app",
+    "userInterfaceStyle": "automatic",
+    "androidStatusBar": {
+      "backgroundColor": "#93c5fd",
+      "translucent": true
+    },
+    "splash": {
+      "image": "./assets/images/tryve/tryve-darkblue-social.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#F0F3FF"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.tryve.tasktroveapp",
+      "config": {
+        "googleMapsApiKey": "AIzaSyARgWMJ1glQBaLcrMZLh8eORbRKSen-tT8"
+      }
+    },
+    "android": {
+      "package": "com.tryve.tasktroveapp",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyARgWMJ1glQBaLcrMZLh8eORbRKSen-tT8"
+        }
+      },
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/tryve/tryve-white-logo-square.png",
+        "backgroundColor": "#F0F3FF"
+      },
+      "permissions": [
+        "ACCESS_BACKGROUND_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ]
+    },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/images/tryve/tryve-white-logo-square.png"
     },
     "plugins": [
       "expo-router",
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-location",
+        {
+          "isAndroidBackgroundLocationEnabled": true,
+          "isAndroidForegroundLocationEnabled": true
+        }
+      ],
+
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true,
       "tsconfigPaths": true
     },
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "c4d92170-bd83-437b-96b6-bfa9a984cb5e"
       }
     }
   }
