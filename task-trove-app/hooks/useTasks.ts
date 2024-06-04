@@ -4,7 +4,7 @@ import { fetchTasksQuery } from '~/lib/monday/queries';
 import type { Task, TaskItem } from '~/model/types';
 import { useSettingsStore } from '~/store';
 import showAlert from '~/utils/ShowAlert';
-import useToggleShareLocation from './useToggleShareLocation';
+import * as ExpoLocation from 'expo-location';
 
 function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
   const R = 6371; // Radius of the Earth in km
@@ -25,7 +25,7 @@ const useTasks = () => {
   const [tasks, setTasks] = useState<TaskItem[]>([]);
   const [tableTasks, setTableTasks] = useState<Task[]>([]);
   const { taskBoard, taskColumn } = useSettingsStore();
-  const { region } = useToggleShareLocation();
+  const [currentLocation, setCurrentLocation] = useState({ coords: { latitude: 0, longitude: 0 } });
 
   const {
     data: itemsData,
@@ -62,23 +62,27 @@ const useTasks = () => {
 
     const reformattedTasks: SetStateAction<Task[]> = [];
 
+    const getLocation = async () => {
+      try {
+        setCurrentLocation(await ExpoLocation.getCurrentPositionAsync({}));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getLocation();
+
     tasks.map(task => {
       const value = task.column_values[0].value;
       if (value) {
         const jsonValue = JSON.parse(value) as Position;
 
-        let distance = 0;
-
-        if (region) {
-          distance = calculateDistance(
-            region.latitude,
-            region.longitude,
-            jsonValue.lat,
-            jsonValue.lng,
-          );
-          distance = Math.round(distance * 1000) / 1000;
-        }
-
+        let distance = calculateDistance(
+          currentLocation.coords.latitude,
+          currentLocation.coords.longitude,
+          jsonValue.lat,
+          jsonValue.lng,
+        );
+        distance = Math.round(distance * 1000) / 1000;
         const reformattedTask = {
           id: task.id,
           name: task.name,
@@ -96,7 +100,7 @@ const useTasks = () => {
     reformattedTasks.sort((a, b) => a.distanceTo - b.distanceTo);
 
     setTableTasks(reformattedTasks);
-  }, [itemsAreLoading, itemsData, itemsError, itemsIsError, region, tasks]);
+  }, [itemsAreLoading, itemsData, itemsError, currentLocation, itemsIsError, tasks]);
 
   return { tableTasks, itemsAreLoading };
 };
