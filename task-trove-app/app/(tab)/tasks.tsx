@@ -14,7 +14,6 @@ import type { Task } from '~/model/types';
 
 export default function Tasks() {
   const { tableTasks, itemsAreLoading } = useTasks();
-
   return (
     <>
       <Stack.Screen options={{ title: 'Tasks' }} />
@@ -29,7 +28,7 @@ export default function Tasks() {
               </View>
               <View className="grow shrink basis-0 flex-col items-center justify-center p-6 border-l border-gray-400">
                 <Text className="text-lg font-medium mb-4 text-center">Closest Task</Text>
-                <Text className="text-xl font-bold ">&quot;Placeholder&quot;</Text>
+                <Text className="text-xl font-bold ">{tableTasks[0].distanceTo} km</Text>
               </View>
             </View>
           </View>
@@ -55,6 +54,7 @@ export default function Tasks() {
                           lat: item.lat,
                           long: item.long,
                           changedAt: item.changedAt,
+                          distanceTo: item.distanceTo,
                         }}
                       />
                     }

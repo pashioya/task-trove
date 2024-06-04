@@ -31,7 +31,7 @@ export default function TaskCard({ task }: { task: Task }) {
       <View className="py-6 px-4">
         <View className="flex-row items-center justify-between mb-7">
           <Text className="font-semibold text-2xl">{task.name}</Text>
-          <Text> distance to task</Text>
+          <Text>{task.distanceTo} km</Text>
         </View>
 
         <View className="pb-8 flex-row items-center justify-between ">
