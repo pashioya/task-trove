@@ -8,4 +8,5 @@ export async function setAndroidNavigationBar(theme: 'light' | 'dark') {
   await NavigationBar.setBackgroundColorAsync(
     theme === 'dark' ? NAV_THEME.dark.background : NAV_THEME.light.background,
   );
+  await NavigationBar.setBehaviorAsync('inset-swipe');
 }

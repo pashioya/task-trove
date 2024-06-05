@@ -16,7 +16,6 @@ import MapView from 'react-native-map-clustering';
 
 import { Play, Navigation, Pause } from 'lucide-react-native';
 import * as ExpoLocation from 'expo-location';
-import * as NavigationBar from 'expo-navigation-bar';
 import colors from 'tailwindcss/colors';
 
 import { Text } from '~/components/ui/text';
@@ -33,9 +32,6 @@ const showAlert = (error: string, onPress: () => void, buttonText: string) => {
 };
 
 export default function Home() {
-  NavigationBar.setPositionAsync('absolute');
-  NavigationBar.setBackgroundColorAsync('#ffffff01');
-
   const { isTracking, region, toggleShareLocation } = useToggleShareLocation();
   const { isDarkColorScheme } = useColorScheme();
   const router = useRouter();
@@ -218,7 +214,7 @@ export default function Home() {
             </Marker>
           ))}
         </MapView>
-        <View className="absolute bottom-44 right-5 gap-4">
+        <View className="absolute bottom-36 right-5 gap-4">
           {isTracking ? (
             <View className="bg-secondary rounded-full h-[70px] w-[70px] shadow-lg flex items-center justify-center">
               <Navigation
