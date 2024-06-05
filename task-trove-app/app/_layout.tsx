@@ -48,7 +48,7 @@ export default function RootLayout() {
         setIsColorSchemeLoaded(true);
         return;
       }
-      const colorTheme = theme === 'dark' ? 'dark' : 'light';
+      const colorTheme = theme === 'dark' ? 'light' : 'dark';
       if (colorTheme !== colorScheme) {
         setColorScheme(colorTheme);
 
