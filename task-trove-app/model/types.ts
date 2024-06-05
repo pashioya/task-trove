@@ -33,6 +33,7 @@ export type Task = {
   long: number;
   address: string;
   changedAt: string;
+  distanceTo: number;
 };
 
 export type User = {

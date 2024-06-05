@@ -138,8 +138,8 @@ export default function Home() {
     mapRef.current?.animateToRegion({
       latitude: Number(task?.lat),
       longitude: Number(task?.long),
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
+      latitudeDelta: 0.01,
+      longitudeDelta: 0.01,
     });
   }
 
@@ -170,6 +170,7 @@ export default function Home() {
           mapPadding={{ top: 100, right: 0, left: 0, bottom: 0 }}
           initialRegion={INITIAL_REGION}
           ref={mapRef}
+          toolbarEnabled={false}
           renderCluster={(cluster: Cluster) => {
             const { id, geometry, onPress, properties } = cluster;
             const points = properties.point_count;
@@ -183,8 +184,8 @@ export default function Home() {
                 }}
                 onPress={onPress}
               >
-                <View className="p-1 items-center justify-center shadow-xl bg-black rounded-lg">
-                  <Text className="text-lg text-center">{points}</Text>
+                <View className="p-1 items-center justify-center shadow-xl bg-primary rounded-lg">
+                  <Text className="text-lg text-center text-white">{points}</Text>
                 </View>
               </Marker>
             );
@@ -199,11 +200,7 @@ export default function Home() {
               }}
               key={task.id}
             >
-              <MaterialCommunityIcons
-                name="map-marker-check"
-                size={40}
-                color={isDarkColorScheme ? 'white' : 'black'}
-              />
+              <MaterialCommunityIcons name="map-marker-check" size={40} color={colors.blue[500]} />
               <Callout
                 onPress={() => {
                   Linking.openURL(
