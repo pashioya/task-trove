@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
-import { Alert, Linking, SafeAreaView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Alert, Linking, SafeAreaView, StyleSheet, View } from 'react-native';
 import { useToggleShareLocation, useTasks, useLocationPermissions } from '~/hooks';
 import { useMondayMutation } from '~/lib/monday/api';
 import { changeMultipleColumnValuesMutation } from '~/lib/monday/queries';
@@ -15,13 +15,13 @@ import { Callout, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import MapView from 'react-native-map-clustering';
 
 import { Play, Navigation, Pause } from 'lucide-react-native';
-import * as ExpoLocation from 'expo-location';
 import * as NavigationBar from 'expo-navigation-bar';
 import colors from 'tailwindcss/colors';
 
 import { Text } from '~/components/ui/text';
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Button } from '~/components/ui/button';
+import useUserLocation from '~/hooks/useUserLocation';
 const showAlert = (error: string, onPress: () => void, buttonText: string) => {
   Alert.alert('Error', error, [
     {
@@ -37,6 +37,7 @@ export default function Home() {
   NavigationBar.setBackgroundColorAsync('#ffffff01');
 
   const { isTracking, region, toggleShareLocation } = useToggleShareLocation();
+  const { lastKnownLocation, lastKnownLocationLoading } = useUserLocation();
   const { isDarkColorScheme } = useColorScheme();
   const router = useRouter();
   const { tableTasks } = useTasks();
@@ -103,9 +104,9 @@ export default function Home() {
     }
   }, [item, router]);
 
-  const onLocateMe = async () => {
+  const onLocateMe = () => {
     try {
-      const location = await ExpoLocation.getLastKnownPositionAsync({});
+      const location = lastKnownLocation;
 
       if (location) {
         // @ts-expect-error --ignore
@@ -221,13 +222,17 @@ export default function Home() {
         <View className="absolute bottom-44 right-5 gap-4">
           {isTracking ? (
             <View className="bg-secondary rounded-full h-[70px] w-[70px] shadow-lg flex items-center justify-center">
-              <Navigation
-                onPress={() => onLocateMe()}
-                color={isDarkColorScheme ? colors.neutral[100] : colors.blue[500]}
-                fill={isDarkColorScheme ? colors.gray[100] : colors.blue[500]}
-                className="bg-white"
-                size={30}
-              />
+              {lastKnownLocationLoading ? (
+                <ActivityIndicator size="large" color={colors.blue[500]} />
+              ) : (
+                <Navigation
+                  onPress={() => onLocateMe()}
+                  color={isDarkColorScheme ? colors.neutral[100] : colors.blue[500]}
+                  fill={isDarkColorScheme ? colors.gray[100] : colors.blue[500]}
+                  className="bg-white"
+                  size={30}
+                />
+              )}
             </View>
           ) : null}
 
