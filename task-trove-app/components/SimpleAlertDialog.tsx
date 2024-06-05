@@ -40,7 +40,7 @@ const SimpleAlertDialog: React.FC<AlertDialogScreenProps> = ({
           <AlertDialogCancel>
             <Text>Cancel</Text>
           </AlertDialogCancel>
-          <AlertDialogAction className="bg-blue-500" onPress={actionIfConfirmed}>
+          <AlertDialogAction className="bg-primary" onPress={actionIfConfirmed}>
             <Text>Continue</Text>
           </AlertDialogAction>
         </AlertDialogFooter>

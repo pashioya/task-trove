@@ -1,5 +1,5 @@
 import { Stack, router } from 'expo-router';
-import { View, TouchableOpacity, Alert } from 'react-native';
+import { View, TouchableOpacity, Alert, Pressable } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text } from '~/components/ui/text';
@@ -15,8 +15,6 @@ import { useState } from 'react';
 import { useColorScheme } from '~/lib/useColorScheme';
 import colors from 'tailwindcss/colors';
 import RNDateTimePicker, { type DateTimePickerEvent } from '@react-native-community/datetimepicker';
-import { SimpleDialog } from '~/components/SimpleDialog';
-import LocationItemSelects from '~/components/LocationItemSelects';
 import { useToggleShareLocation } from '~/hooks';
 import { Switch } from '~/components/ui/switch';
 import { useSettingsStore } from '~/store';
@@ -86,18 +84,13 @@ export default function LocationSettings() {
               <Text className="py-3 text-xs font-semibold uppercase tracking-wider mb-8">
                 Tracking
               </Text>
-
-              <SimpleDialog
-                trigger={
-                  <View className="bg-secondary flex-row items-center justify-start h-12 rounded-lg mb-3 px-3">
-                    <Text className="text-lg font-normal">Change Location Save Location</Text>
-                    <View className="flex-1" />
-                    <ChevronRight color="#C6C6C6" size={20} />
-                  </View>
-                }
-                classNames="p-2"
-                content={<LocationItemSelects />}
-              />
+              <Pressable onPress={() => router.push('/(tab)/settings/(modals)/select-location')}>
+                <View className="bg-secondary flex-row items-center justify-start h-12 rounded-lg mb-3 px-3">
+                  <Text className="text-lg font-normal">Change Location Save Location</Text>
+                  <View className="flex-1" />
+                  <ChevronRight color="#C6C6C6" size={20} />
+                </View>
+              </Pressable>
 
               <View className="flex-row bg-secondary items-center justify-start h-12 rounded-lg mb-3 px-3">
                 <Text className="text-lg font-normal">Location Tracking</Text>

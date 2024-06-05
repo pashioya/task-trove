@@ -15,6 +15,7 @@ export default function SettingsLayout() {
       <Stack.Screen name="main" />
       <Stack.Screen name="location" />
       <Stack.Screen name="notifications" />
+      <Stack.Screen name="(modals)" options={{ headerShown: false }} />
     </Stack>
   );
 }

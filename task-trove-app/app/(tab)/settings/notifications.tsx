@@ -1,12 +1,10 @@
 import { Stack, router } from 'expo-router';
 import { ChevronRight, LucideMoveLeft } from 'lucide-react-native';
 
-import { ScrollView, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { SimpleDialog } from '~/components/SimpleDialog';
 import { useColorScheme } from '~/lib/useColorScheme';
 import colors from 'tailwindcss/colors';
-import TaskColumnSelects from '~/components/TaskColumnSelects';
 import { Text } from '~/components/ui/text';
 
 export default function NotificationSettings() {
@@ -35,17 +33,14 @@ export default function NotificationSettings() {
               <Text className="py-3 text-xs font-semibold uppercase tracking-wider mb-8">
                 Notifications
               </Text>
-              <SimpleDialog
-                trigger={
-                  <View className="flex-row bg-secondary items-center justify-start h-12 rounded-lg mb-3 px-3">
-                    <Text className="text-lg font-normal">Change Task Column</Text>
-                    <View className="flex-1" />
-                    <ChevronRight color="#C6C6C6" size={20} />
-                  </View>
-                }
-                classNames="p-2"
-                content={<TaskColumnSelects />}
-              />
+
+              <Pressable onPress={() => router.push('/(tab)/settings/(modals)/select-location')}>
+                <View className="flex-row bg-secondary items-center justify-start h-12 rounded-lg mb-3 px-3">
+                  <Text className="text-lg font-normal">Change Task Column</Text>
+                  <View className="flex-1" />
+                  <ChevronRight color="#C6C6C6" size={20} />
+                </View>
+              </Pressable>
             </View>
           </ScrollView>
         </View>
