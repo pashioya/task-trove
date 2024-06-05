@@ -1,10 +1,11 @@
 import { useCallback } from 'react';
-import { Alert, Linking } from 'react-native';
+import { Linking } from 'react-native';
 import * as ExpoLocation from 'expo-location';
+import { showGeneralAlert } from '~/utils/alert';
 
 const useLocationPermissions = () => {
   const showPermissionAlert = useCallback(() => {
-    Alert.alert(
+    showGeneralAlert(
       'Location Permission Needed',
       'This app requires location access to function correctly. Please consider granting permission.',
       [
@@ -12,7 +13,6 @@ const useLocationPermissions = () => {
           text: 'Settings',
           onPress: async () => await Linking.openSettings(),
         },
-        { text: 'Cancel' },
       ],
     );
   }, []);
