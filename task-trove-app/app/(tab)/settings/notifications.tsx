@@ -8,12 +8,9 @@ import { useColorScheme } from '~/lib/useColorScheme';
 import colors from 'tailwindcss/colors';
 import TaskColumnSelects from '~/components/TaskColumnSelects';
 import { Text } from '~/components/ui/text';
-import { MapRangePicker } from '~/components/MapRangePicker';
-import { useState } from 'react';
 
 export default function NotificationSettings() {
   const { isDarkColorScheme } = useColorScheme();
-  const [currentRange, setCurrentRange] = useState(2.5);
 
   return (
     <>
@@ -48,26 +45,6 @@ export default function NotificationSettings() {
                 }
                 title="Change Task Column"
                 content={<TaskColumnSelects />}
-              />
-              <SimpleDialog
-                trigger={
-                  <View className="flex-row bg-secondary items-center justify-start h-12 rounded-lg mb-3 px-3">
-                    <Text className="text-lg font-normal">Notification Range</Text>
-                    <View className="flex-1" />
-                    <ChevronRight color="#C6C6C6" size={20} />
-                  </View>
-                }
-                title="Notification Range"
-                withHeader
-                content={
-                  <MapRangePicker
-                    currentRange={currentRange}
-                    setCurrentRange={range => {
-                      setCurrentRange(range);
-                      console.log(range);
-                    }}
-                  />
-                }
               />
             </View>
           </ScrollView>
