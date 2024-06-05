@@ -1,10 +1,13 @@
 import Slider from '@react-native-community/slider';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import MapView, { Circle, Marker } from 'react-native-maps';
 import { INITIAL_REGION } from '~/config/map-config';
+import lightStyle from '~/assets/map/lightStyle.json';
+import darkStyle from '~/assets/map/darkStyle.json';
 
 import { Text } from './ui/text';
 import colors from 'tailwindcss/colors';
+import { useColorScheme } from '~/lib/useColorScheme';
 
 type MapRangePickerProps = {
   currentRange: number;
@@ -15,39 +18,46 @@ export const MapRangePicker: React.FC<MapRangePickerProps> = ({
   currentRange,
   setCurrentRange,
 }) => {
+  const { isDarkColorScheme } = useColorScheme();
+
   return (
     <>
-      <MapView
-        initialRegion={{
-          latitude: INITIAL_REGION.latitude,
-          longitude: INITIAL_REGION.longitude,
-          latitudeDelta: 0.03,
-          longitudeDelta: 0.03,
-        }}
-        style={{ height: 300, width: 300 }}
-      >
-        <Marker
-          coordinate={{ latitude: INITIAL_REGION.latitude, longitude: INITIAL_REGION.longitude }}
-        />
-        <Circle
-          center={{
+      <Pressable>
+        <MapView
+          initialRegion={{
             latitude: INITIAL_REGION.latitude,
             longitude: INITIAL_REGION.longitude,
+            latitudeDelta: 0.3,
+            longitudeDelta: 0.3,
           }}
-          radius={currentRange * 100}
-          fillColor="#5A66CD1A"
-          strokeWidth={0}
-        />
-      </MapView>
+          customMapStyle={isDarkColorScheme ? darkStyle : lightStyle}
+          style={{ height: 300, width: 300 }}
+        >
+          <Marker
+            pinColor={colors.blue[500]}
+            coordinate={{ latitude: INITIAL_REGION.latitude, longitude: INITIAL_REGION.longitude }}
+          />
+          <Circle
+            center={{
+              latitude: INITIAL_REGION.latitude,
+              longitude: INITIAL_REGION.longitude,
+            }}
+            radius={currentRange * 1000}
+            fillColor="rgba(20,87, 255, 0.2)"
+            strokeWidth={0}
+          />
+        </MapView>
+      </Pressable>
       <View className="items-center">
         <Slider
           style={{ width: '100%', height: 40 }}
           value={currentRange}
           onValueChange={value => setCurrentRange(value)}
           minimumValue={0}
-          maximumValue={10}
+          maximumValue={5}
           minimumTrackTintColor="#FFFFFF"
           maximumTrackTintColor={colors.neutral[300]}
+          thumbTintColor={colors.blue[500]}
         />
         <Text>{currentRange.toPrecision(2)} km</Text>
       </View>
