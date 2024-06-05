@@ -51,9 +51,9 @@ export function SimpleSelect({
         <SelectValue className="text-foreground text-sm native:text-lg" placeholder={placeholder} />
       </SelectTrigger>
 
-      <SelectContent insets={contentInsets} className="w-[250px] max-h-[300px] overflow-hidden">
+      <SelectContent insets={contentInsets} className="w-[250px] max-h-[250px] overflow-hidden">
         <SelectLabel>{placeholder}</SelectLabel>
-        <SelectGroup className="overflow-y-hidden overflow-hidden">
+        <SelectGroup>
           {isLoading ? (
             <View className="flex items-center justify-center h-full">
               <ActivityIndicator />
