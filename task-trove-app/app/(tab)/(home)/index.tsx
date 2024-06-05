@@ -138,8 +138,8 @@ export default function Home() {
     mapRef.current?.animateToRegion({
       latitude: Number(task?.lat),
       longitude: Number(task?.long),
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
+      latitudeDelta: 0.01,
+      longitudeDelta: 0.01,
     });
   }
 
@@ -170,6 +170,7 @@ export default function Home() {
           mapPadding={{ top: 100, right: 0, left: 0, bottom: 0 }}
           initialRegion={INITIAL_REGION}
           ref={mapRef}
+          toolbarEnabled={false}
           renderCluster={(cluster: Cluster) => {
             const { id, geometry, onPress, properties } = cluster;
             const points = properties.point_count;
