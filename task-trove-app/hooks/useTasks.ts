@@ -1,10 +1,11 @@
+import { isErrorMessage } from './../lib/monday/api';
 import { useEffect, useState } from 'react';
 import { useMondayQuery } from '~/lib/monday/api';
 import { fetchTasksQuery } from '~/lib/monday/queries';
 import type { Task, TaskItem } from '~/model/types';
 import { useSettingsStore } from '~/store';
-import showAlert from '~/utils/ShowAlert';
 import * as ExpoLocation from 'expo-location';
+import { showMondayAlert } from '~/utils/mondayErrorHandling';
 
 function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
   const R = 6371; // Radius of the Earth in km
@@ -58,7 +59,9 @@ const useTasks = () => {
           longitude: location.coords.longitude,
         });
       } catch (error) {
-        console.log(error);
+        if (isErrorMessage(error)) {
+          showMondayAlert(error);
+        }
       }
     };
     fetchLocation();
@@ -66,7 +69,7 @@ const useTasks = () => {
 
   useEffect(() => {
     if (itemsAreLoading || itemsIsError || !currentLocation) {
-      if (itemsIsError) showAlert(itemsError);
+      if (itemsIsError) showMondayAlert(itemsError);
       return;
     }
 

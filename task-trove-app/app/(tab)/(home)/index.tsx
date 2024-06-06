@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
-import { Alert, Linking, SafeAreaView, StyleSheet, View } from 'react-native';
+import { Linking, SafeAreaView, StyleSheet, View } from 'react-native';
 import { useToggleShareLocation, useTasks, useLocationPermissions } from '~/hooks';
 import { useMondayMutation } from '~/lib/monday/api';
 import { changeMultipleColumnValuesMutation } from '~/lib/monday/queries';
@@ -16,26 +16,25 @@ import MapView from 'react-native-map-clustering';
 
 import { Play, Navigation, Pause } from 'lucide-react-native';
 import * as ExpoLocation from 'expo-location';
-import * as NavigationBar from 'expo-navigation-bar';
 import colors from 'tailwindcss/colors';
 
 import { Text } from '~/components/ui/text';
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Button } from '~/components/ui/button';
-const showAlert = (error: string, onPress: () => void, buttonText: string) => {
-  Alert.alert('Error', error, [
-    {
-      text: buttonText,
-      onPress,
-    },
-    { text: 'Dismiss' },
-  ]);
+import { showGeneralAlert } from '~/utils/alert';
+
+type Cluster = {
+  id: string;
+  geometry: {
+    coordinates: [number, number];
+  };
+  onPress: () => void;
+  properties: {
+    point_count: number;
+  };
 };
 
 export default function Home() {
-  NavigationBar.setPositionAsync('absolute');
-  NavigationBar.setBackgroundColorAsync('#ffffff01');
-
   const { isTracking, region, toggleShareLocation } = useToggleShareLocation();
   const { isDarkColorScheme } = useColorScheme();
   const router = useRouter();
@@ -79,26 +78,24 @@ export default function Home() {
 
   useEffect(() => {
     if (updateLocationError) {
-      if (updateLocationError.errors) {
-        console.log(updateLocationError.errors.map(e => e.message));
-      }
-
-      Alert.alert('An unexpected error occurred', updateLocationError.message, [
-        { text: 'Dismiss' },
-      ]);
-
+      showGeneralAlert('An unexpected error occurred', updateLocationError.message);
       toggleShareLocation();
     }
   }, [toggleShareLocation, updateLocationError]);
 
   useEffect(() => {
     if (!item) {
-      showAlert(
+      showGeneralAlert(
         'Location Column Not Correctly Setup',
-        () => {
-          router.replace('/settings/location');
-        },
-        'Go to Settings',
+        'Please go to settings and set it up',
+        [
+          {
+            text: 'Settings',
+            onPress: () => {
+              router.replace('/settings/location');
+            },
+          },
+        ],
       );
     }
   }, [item, router]);
@@ -121,13 +118,7 @@ export default function Home() {
       }
     } catch (e) {
       if (e instanceof Error) {
-        showAlert(
-          e.message,
-          () => {
-            onLocateMe();
-          },
-          'Retry',
-        );
+        showGeneralAlert('Error', e.message);
       }
     }
   };
@@ -142,17 +133,6 @@ export default function Home() {
       longitudeDelta: 0.01,
     });
   }
-
-  type Cluster = {
-    id: string;
-    geometry: {
-      coordinates: [number, number];
-    };
-    onPress: () => void;
-    properties: {
-      point_count: number;
-    };
-  };
 
   return (
     <>
@@ -218,7 +198,7 @@ export default function Home() {
             </Marker>
           ))}
         </MapView>
-        <View className="absolute bottom-44 right-5 gap-4">
+        <View className="absolute bottom-36 right-5 gap-4">
           {isTracking ? (
             <View className="bg-secondary rounded-full h-[70px] w-[70px] shadow-lg flex items-center justify-center">
               <Navigation
