@@ -29,6 +29,7 @@ type ColumnValue = {
 export type Task = {
   id: string;
   name: string;
+  description: string;
   lat: number;
   long: number;
   address: string;
