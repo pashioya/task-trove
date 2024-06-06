@@ -64,7 +64,6 @@ export default function NotificationSettings() {
                     currentRange={currentRange}
                     setCurrentRange={range => {
                       setCurrentRange(range);
-                      console.log(range);
                     }}
                   />
                 }
