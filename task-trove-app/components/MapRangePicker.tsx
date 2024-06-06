@@ -8,6 +8,8 @@ import darkStyle from '~/assets/map/darkStyle.json';
 import { Text } from './ui/text';
 import colors from 'tailwindcss/colors';
 import { useColorScheme } from '~/lib/useColorScheme';
+import { Button } from './ui/button';
+import { useState } from 'react';
 
 type MapRangePickerProps = {
   currentRange: number;
@@ -19,6 +21,7 @@ export const MapRangePicker: React.FC<MapRangePickerProps> = ({
   setCurrentRange,
 }) => {
   const { isDarkColorScheme } = useColorScheme();
+  const [value, setValue] = useState<number>(currentRange);
 
   return (
     <>
@@ -42,7 +45,7 @@ export const MapRangePicker: React.FC<MapRangePickerProps> = ({
               latitude: INITIAL_REGION.latitude,
               longitude: INITIAL_REGION.longitude,
             }}
-            radius={currentRange * 1000}
+            radius={value * 1000}
             fillColor="rgba(20,87, 255, 0.2)"
             strokeWidth={0}
           />
@@ -52,14 +55,17 @@ export const MapRangePicker: React.FC<MapRangePickerProps> = ({
         <Slider
           style={{ width: '100%', height: 40 }}
           value={currentRange}
-          onValueChange={value => setCurrentRange(value)}
+          onValueChange={value => setValue(value)}
           minimumValue={0}
           maximumValue={5}
           minimumTrackTintColor="#FFFFFF"
           maximumTrackTintColor={colors.neutral[300]}
           thumbTintColor={colors.blue[500]}
         />
-        <Text>{currentRange.toPrecision(2)} km</Text>
+        <Text>{value.toPrecision(2)} km</Text>
+        <Button onPress={() => setCurrentRange(value)}>
+          <Text>Confirm</Text>
+        </Button>
       </View>
     </>
   );
