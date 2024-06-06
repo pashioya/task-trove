@@ -95,7 +95,15 @@ const useTasks = () => {
     reformattedTasks.sort((a, b) => a.distanceTo - b.distanceTo);
 
     setTableTasks(reformattedTasks);
-  }, [itemsData, currentLocation, itemsAreLoading, itemsIsError, itemsError]);
+  }, [
+    itemsData,
+    currentLocation,
+    itemsAreLoading,
+    itemsIsError,
+    itemsError,
+    descriptionColumnId,
+    taskColumn?.id,
+  ]);
 
   return { tableTasks, itemsAreLoading };
 };
