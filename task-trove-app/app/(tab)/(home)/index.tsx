@@ -21,6 +21,7 @@ import { Text } from '~/components/ui/text';
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Button } from '~/components/ui/button';
 import useUserLocation from '~/hooks/useUserLocation';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { showGeneralAlert } from '~/utils/alert';
 
 type Cluster = {
@@ -135,6 +136,34 @@ export default function Home() {
     });
   }
 
+  const locateMeBounceValue = useSharedValue(1);
+  const playPauseBounceValue = useSharedValue(1);
+
+  const locateMeBounceAnimation = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: withSpring(locateMeBounceValue.value) }],
+    };
+  });
+
+  const playPauseBounceAnimation = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: withSpring(playPauseBounceValue.value) }],
+    };
+  });
+  const handleLocateMeBounce = () => {
+    locateMeBounceValue.value = 0.8;
+    setTimeout(() => {
+      locateMeBounceValue.value = 1;
+    }, 100);
+  };
+
+  const handlePlayPauseBounce = () => {
+    playPauseBounceValue.value = 0.8;
+    setTimeout(() => {
+      playPauseBounceValue.value = 1;
+    }, 100);
+  };
+
   return (
     <>
       <Stack.Screen options={{ title: 'Home', headerShown: false }} />
@@ -201,25 +230,37 @@ export default function Home() {
         </MapView>
         <View className="absolute bottom-36 right-5 gap-4">
           {isTracking ? (
-            <View className="bg-secondary rounded-full h-[70px] w-[70px] shadow-lg flex items-center justify-center">
+            <Animated.View
+              style={locateMeBounceAnimation}
+              className="bg-secondary rounded-full h-[70px] w-[70px] shadow-lg flex items-center justify-center"
+            >
               {lastKnownLocationLoading ? (
                 <ActivityIndicator size="large" color={colors.blue[500]} />
               ) : (
                 <Navigation
-                  onPress={() => onLocateMe()}
+                  onPress={() => {
+                    handleLocateMeBounce();
+                    onLocateMe();
+                  }}
                   color={isDarkColorScheme ? colors.neutral[100] : colors.blue[500]}
                   fill={isDarkColorScheme ? colors.gray[100] : colors.blue[500]}
                   className="bg-white"
                   size={30}
                 />
               )}
-            </View>
+            </Animated.View>
           ) : null}
 
-          <View className="bg-primary shadow-2xl rounded-full h-[70px] w-[70px] flex items-center justify-center">
+          <Animated.View
+            style={playPauseBounceAnimation}
+            className="bg-primary shadow-2xl rounded-full h-[70px] w-[70px] flex items-center justify-center"
+          >
             {isTracking ? (
               <Pause
-                onPress={() => toggleShareLocation()}
+                onPress={() => {
+                  handlePlayPauseBounce();
+                  toggleShareLocation();
+                }}
                 color={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
                 fill={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
                 className="bg-primary shadow-2xl"
@@ -227,14 +268,17 @@ export default function Home() {
               />
             ) : (
               <Play
-                onPress={() => toggleShareLocation()}
+                onPress={() => {
+                  handlePlayPauseBounce();
+                  toggleShareLocation();
+                }}
                 color={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
                 fill={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
                 className="bg-primary shadow-2xl"
                 size={30}
               />
             )}
-          </View>
+          </Animated.View>
         </View>
       </SafeAreaView>
     </>
