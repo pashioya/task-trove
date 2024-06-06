@@ -19,11 +19,11 @@ export default function One() {
             <View className="bg-blue-500 m-3 shrink rounded-2xl p-2 ">
               <Image
                 source={require('~/assets/images/tryve/general.jpg')}
-                className="w-full h-96 rounded-2xl shrink"
+                className="w-full h-72 rounded-2xl shrink"
               />
             </View>
-            <View className="flex-1 space-x-4 py-25 px-9">
-              <View className="py-10 gap-2">
+            <View className="flex-1 space-x-4 px-9">
+              <View className="py-9 gap-2">
                 <Text className="text-2xl font-medium text-purple-900 text-center mb-3 leading-10">
                   Track your location{'\n'}with{' '}
                   <View className="bg-blue-300" style={{ transform: [{ rotate: '-5deg' }] }}>
@@ -43,7 +43,7 @@ export default function One() {
             </View>
           </ScrollView>
           <Button
-            className="absolute bottom-20  rounded-md w-96 self-center bg-primary"
+            className="absolute bottom-10 rounded-md w-96 self-center bg-primary"
             onPress={() => {
               router.navigate('/(onboarding)/permission-1');
             }}

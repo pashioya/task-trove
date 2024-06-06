@@ -14,7 +14,7 @@ import { Text } from '~/components/ui/text';
 
 type SimpleDialogProps = {
   trigger: React.ReactNode;
-  title: string;
+  title?: string;
   content: React.ReactNode;
   classNames?: string;
   withHeader?: boolean;
