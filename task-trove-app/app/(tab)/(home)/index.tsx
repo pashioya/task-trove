@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
-import { ActivityIndicator, Alert, Linking, SafeAreaView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Linking, SafeAreaView, StyleSheet, View } from 'react-native';
 import { useToggleShareLocation, useTasks, useLocationPermissions } from '~/hooks';
 import { useMondayMutation } from '~/lib/monday/api';
 import { changeMultipleColumnValuesMutation } from '~/lib/monday/queries';
@@ -15,21 +15,12 @@ import { Callout, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import MapView from 'react-native-map-clustering';
 
 import { Play, Navigation, Pause } from 'lucide-react-native';
-import * as NavigationBar from 'expo-navigation-bar';
 import colors from 'tailwindcss/colors';
 
 import { Text } from '~/components/ui/text';
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Button } from '~/components/ui/button';
 import useUserLocation from '~/hooks/useUserLocation';
-const showAlert = (error: string, onPress: () => void, buttonText: string) => {
-  Alert.alert('Error', error, [
-    {
-      text: buttonText,
-      onPress,
-    },
-    { text: 'Dismiss' },
-  ]);
 import { showGeneralAlert } from '~/utils/alert';
 
 type Cluster = {

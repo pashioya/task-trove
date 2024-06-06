@@ -1,12 +1,9 @@
-import { isErrorMessage } from './../lib/monday/api';
 import { useEffect, useState } from 'react';
 import { useMondayQuery } from '~/lib/monday/api';
 import { fetchTasksQuery } from '~/lib/monday/queries';
 import type { Task, TaskItem } from '~/model/types';
 import { useSettingsStore } from '~/store';
-import * as ExpoLocation from 'expo-location';
 import { showMondayAlert } from '~/utils/mondayErrorHandling';
-import showAlert from '~/utils/ShowAlert';
 import useUserLocation from './useUserLocation';
 
 function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
@@ -41,23 +38,6 @@ const useTasks = () => {
     variables: { boardId: taskBoard?.id || '', columnId: taskColumn?.id || '' },
     refetchInterval: 5000,
   });
-
-  useEffect(() => {
-    const fetchLocation = async () => {
-      try {
-        const location = await ExpoLocation.getCurrentPositionAsync({});
-        setCurrentLocation({
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-        });
-      } catch (error) {
-        if (isErrorMessage(error)) {
-          showMondayAlert(error);
-        }
-      }
-    };
-    fetchLocation();
-  }, []);
 
   useEffect(() => {
     if (itemsAreLoading || itemsIsError || !currentLocation) {
