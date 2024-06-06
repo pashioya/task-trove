@@ -2,7 +2,14 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
-import { ActivityIndicator, Linking, SafeAreaView, StyleSheet, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Linking,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { useToggleShareLocation, useTasks, useLocationPermissions } from '~/hooks';
 import { useMondayMutation } from '~/lib/monday/api';
 import { changeMultipleColumnValuesMutation } from '~/lib/monday/queries';
@@ -154,14 +161,14 @@ export default function Home() {
     locateMeBounceValue.value = 0.8;
     setTimeout(() => {
       locateMeBounceValue.value = 1;
-    }, 100);
+    }, 25);
   };
 
   const handlePlayPauseBounce = () => {
     playPauseBounceValue.value = 0.8;
     setTimeout(() => {
       playPauseBounceValue.value = 1;
-    }, 100);
+    }, 25);
   };
 
   return (
@@ -234,20 +241,23 @@ export default function Home() {
               style={locateMeBounceAnimation}
               className="bg-secondary rounded-full h-[70px] w-[70px] shadow-lg flex items-center justify-center"
             >
-              {lastKnownLocationLoading ? (
-                <ActivityIndicator size="large" color={colors.blue[500]} />
-              ) : (
-                <Navigation
-                  onPress={() => {
-                    handleLocateMeBounce();
-                    onLocateMe();
-                  }}
-                  color={isDarkColorScheme ? colors.neutral[100] : colors.blue[500]}
-                  fill={isDarkColorScheme ? colors.gray[100] : colors.blue[500]}
-                  className="bg-white"
-                  size={30}
-                />
-              )}
+              <Pressable
+                onPress={() => {
+                  handleLocateMeBounce();
+                  onLocateMe();
+                }}
+              >
+                {lastKnownLocationLoading ? (
+                  <ActivityIndicator size="large" color={colors.blue[500]} />
+                ) : (
+                  <Navigation
+                    color={isDarkColorScheme ? colors.neutral[100] : colors.blue[500]}
+                    fill={isDarkColorScheme ? colors.gray[100] : colors.blue[500]}
+                    className="bg-white"
+                    size={30}
+                  />
+                )}
+              </Pressable>
             </Animated.View>
           ) : null}
 
@@ -255,29 +265,28 @@ export default function Home() {
             style={playPauseBounceAnimation}
             className="bg-primary shadow-2xl rounded-full h-[70px] w-[70px] flex items-center justify-center"
           >
-            {isTracking ? (
-              <Pause
-                onPress={() => {
-                  handlePlayPauseBounce();
-                  toggleShareLocation();
-                }}
-                color={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
-                fill={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
-                className="bg-primary shadow-2xl"
-                size={30}
-              />
-            ) : (
-              <Play
-                onPress={() => {
-                  handlePlayPauseBounce();
-                  toggleShareLocation();
-                }}
-                color={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
-                fill={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
-                className="bg-primary shadow-2xl"
-                size={30}
-              />
-            )}
+            <Pressable
+              onPress={() => {
+                handlePlayPauseBounce();
+                toggleShareLocation();
+              }}
+            >
+              {isTracking ? (
+                <Pause
+                  color={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
+                  fill={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
+                  className="bg-primary shadow-2xl"
+                  size={30}
+                />
+              ) : (
+                <Play
+                  color={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
+                  fill={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
+                  className="bg-primary shadow-2xl"
+                  size={30}
+                />
+              )}
+            </Pressable>
           </Animated.View>
         </View>
       </SafeAreaView>
