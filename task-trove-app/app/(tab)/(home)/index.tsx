@@ -135,16 +135,6 @@ export default function Home() {
     });
   }
 
-  type Cluster = {
-    id: string;
-    geometry: {
-      coordinates: [number, number];
-    };
-    onPress: () => void;
-    properties: {
-      point_count: number;
-    };
-  };
   const locateMeBounceValue = useSharedValue(1);
   const playPauseBounceValue = useSharedValue(1);
 
