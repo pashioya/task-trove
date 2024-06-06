@@ -6,6 +6,7 @@ import { fetchAccessToken, fetchUserData } from '~/lib/session';
 import type { Session, SessionContextType } from '~/lib/session/types';
 import { env } from '~/lib/env';
 import { useSettingsStore } from '~/store';
+import { Linking, Platform } from 'react-native';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -37,10 +38,14 @@ const SessionProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
       scope: env.EXPO_PUBLIC_SCOPES,
     }).toString();
 
-    await WebBrowser.openAuthSessionAsync(
-      `${env.EXPO_PUBLIC_AUTHORIZATION_ENDPOINT}?${params}`,
-      env.EXPO_PUBLIC_REDIRECT_URI,
-    );
+    if (Platform.OS === 'ios') {
+      Linking.openURL(`${env.EXPO_PUBLIC_AUTHORIZATION_ENDPOINT}?${params}`);
+    } else {
+      await WebBrowser.openAuthSessionAsync(
+        `${env.EXPO_PUBLIC_AUTHORIZATION_ENDPOINT}?${params}`,
+        env.EXPO_PUBLIC_REDIRECT_URI,
+      );
+    }
 
     setIsLoading(false);
   }, []);
