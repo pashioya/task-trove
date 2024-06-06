@@ -1,4 +1,4 @@
-import { Stack } from 'expo-router';
+import { Link, Stack } from 'expo-router';
 
 import { View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
@@ -11,9 +11,11 @@ import TaskListCard from '~/components/TaskListCard';
 import { Text } from '~/components/ui/text';
 import { useTasks } from '~/hooks';
 import type { Task } from '~/model/types';
+import { useSettingsStore } from '~/store';
 
 export default function Tasks() {
   const { tableTasks, itemsAreLoading } = useTasks();
+  const { taskColumn } = useSettingsStore();
   return (
     <>
       <Stack.Screen options={{ title: 'Tasks' }} />
@@ -77,12 +79,19 @@ export default function Tasks() {
                 <SimpleSkeleton />
                 <SimpleSkeleton />
               </>
-            ) : (
+            ) : taskColumn ? (
               <>
                 <Text className="text-lg font-medium text-center pb-52 mb-96">
                   You have no tasks assigned to you.
                 </Text>
               </>
+            ) : (
+              <View className="pb-52 mb-96 items-center">
+                <Text>You Haven&apos;t set a task board/column</Text>
+                <Link href="/(tab)/settings/notifications" className="text-primary">
+                  Go to Settings
+                </Link>
+              </View>
             )}
           </View>
         </View>

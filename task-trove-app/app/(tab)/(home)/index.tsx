@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
-import { Alert, Linking, SafeAreaView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Linking, SafeAreaView, StyleSheet, View } from 'react-native';
 import { useToggleShareLocation, useTasks, useLocationPermissions } from '~/hooks';
 import { useMondayMutation } from '~/lib/monday/api';
 import { changeMultipleColumnValuesMutation } from '~/lib/monday/queries';
@@ -15,28 +15,29 @@ import { Callout, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import MapView from 'react-native-map-clustering';
 
 import { Play, Navigation, Pause } from 'lucide-react-native';
-import * as ExpoLocation from 'expo-location';
-import * as NavigationBar from 'expo-navigation-bar';
 import colors from 'tailwindcss/colors';
 
 import { Text } from '~/components/ui/text';
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Button } from '~/components/ui/button';
-const showAlert = (error: string, onPress: () => void, buttonText: string) => {
-  Alert.alert('Error', error, [
-    {
-      text: buttonText,
-      onPress,
-    },
-    { text: 'Dismiss' },
-  ]);
+import useUserLocation from '~/hooks/useUserLocation';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import { showGeneralAlert } from '~/utils/alert';
+
+type Cluster = {
+  id: string;
+  geometry: {
+    coordinates: [number, number];
+  };
+  onPress: () => void;
+  properties: {
+    point_count: number;
+  };
 };
 
 export default function Home() {
-  NavigationBar.setPositionAsync('absolute');
-  NavigationBar.setBackgroundColorAsync('#ffffff01');
-
   const { isTracking, region, toggleShareLocation } = useToggleShareLocation();
+  const { lastKnownLocation, lastKnownLocationLoading } = useUserLocation();
   const { isDarkColorScheme } = useColorScheme();
   const router = useRouter();
   const { tableTasks } = useTasks();
@@ -79,33 +80,31 @@ export default function Home() {
 
   useEffect(() => {
     if (updateLocationError) {
-      if (updateLocationError.errors) {
-        console.log(updateLocationError.errors.map(e => e.message));
-      }
-
-      Alert.alert('An unexpected error occurred', updateLocationError.message, [
-        { text: 'Dismiss' },
-      ]);
-
+      showGeneralAlert('An unexpected error occurred', updateLocationError.message);
       toggleShareLocation();
     }
   }, [toggleShareLocation, updateLocationError]);
 
   useEffect(() => {
     if (!item) {
-      showAlert(
+      showGeneralAlert(
         'Location Column Not Correctly Setup',
-        () => {
-          router.replace('/settings/location');
-        },
-        'Go to Settings',
+        'Please go to settings and set it up',
+        [
+          {
+            text: 'Settings',
+            onPress: () => {
+              router.replace('/settings/location');
+            },
+          },
+        ],
       );
     }
   }, [item, router]);
 
-  const onLocateMe = async () => {
+  const onLocateMe = () => {
     try {
-      const location = await ExpoLocation.getLastKnownPositionAsync({});
+      const location = lastKnownLocation;
 
       if (location) {
         // @ts-expect-error --ignore
@@ -121,13 +120,7 @@ export default function Home() {
       }
     } catch (e) {
       if (e instanceof Error) {
-        showAlert(
-          e.message,
-          () => {
-            onLocateMe();
-          },
-          'Retry',
-        );
+        showGeneralAlert('Error', e.message);
       }
     }
   };
@@ -143,15 +136,32 @@ export default function Home() {
     });
   }
 
-  type Cluster = {
-    id: string;
-    geometry: {
-      coordinates: [number, number];
+  const locateMeBounceValue = useSharedValue(1);
+  const playPauseBounceValue = useSharedValue(1);
+
+  const locateMeBounceAnimation = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: withSpring(locateMeBounceValue.value) }],
     };
-    onPress: () => void;
-    properties: {
-      point_count: number;
+  });
+
+  const playPauseBounceAnimation = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: withSpring(playPauseBounceValue.value) }],
     };
+  });
+  const handleLocateMeBounce = () => {
+    locateMeBounceValue.value = 0.8;
+    setTimeout(() => {
+      locateMeBounceValue.value = 1;
+    }, 100);
+  };
+
+  const handlePlayPauseBounce = () => {
+    playPauseBounceValue.value = 0.8;
+    setTimeout(() => {
+      playPauseBounceValue.value = 1;
+    }, 100);
   };
 
   return (
@@ -218,23 +228,39 @@ export default function Home() {
             </Marker>
           ))}
         </MapView>
-        <View className="absolute bottom-44 right-5 gap-4">
+        <View className="absolute bottom-36 right-5 gap-4">
           {isTracking ? (
-            <View className="bg-secondary rounded-full h-[70px] w-[70px] shadow-lg flex items-center justify-center">
-              <Navigation
-                onPress={() => onLocateMe()}
-                color={isDarkColorScheme ? colors.neutral[100] : colors.blue[500]}
-                fill={isDarkColorScheme ? colors.gray[100] : colors.blue[500]}
-                className="bg-white"
-                size={30}
-              />
-            </View>
+            <Animated.View
+              style={locateMeBounceAnimation}
+              className="bg-secondary rounded-full h-[70px] w-[70px] shadow-lg flex items-center justify-center"
+            >
+              {lastKnownLocationLoading ? (
+                <ActivityIndicator size="large" color={colors.blue[500]} />
+              ) : (
+                <Navigation
+                  onPress={() => {
+                    handleLocateMeBounce();
+                    onLocateMe();
+                  }}
+                  color={isDarkColorScheme ? colors.neutral[100] : colors.blue[500]}
+                  fill={isDarkColorScheme ? colors.gray[100] : colors.blue[500]}
+                  className="bg-white"
+                  size={30}
+                />
+              )}
+            </Animated.View>
           ) : null}
 
-          <View className="bg-primary shadow-2xl rounded-full h-[70px] w-[70px] flex items-center justify-center">
+          <Animated.View
+            style={playPauseBounceAnimation}
+            className="bg-primary shadow-2xl rounded-full h-[70px] w-[70px] flex items-center justify-center"
+          >
             {isTracking ? (
               <Pause
-                onPress={() => toggleShareLocation()}
+                onPress={() => {
+                  handlePlayPauseBounce();
+                  toggleShareLocation();
+                }}
                 color={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
                 fill={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
                 className="bg-primary shadow-2xl"
@@ -242,14 +268,17 @@ export default function Home() {
               />
             ) : (
               <Play
-                onPress={() => toggleShareLocation()}
+                onPress={() => {
+                  handlePlayPauseBounce();
+                  toggleShareLocation();
+                }}
                 color={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
                 fill={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
                 className="bg-primary shadow-2xl"
                 size={30}
               />
             )}
-          </View>
+          </Animated.View>
         </View>
       </SafeAreaView>
     </>

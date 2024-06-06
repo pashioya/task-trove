@@ -1,5 +1,7 @@
 import { Stack, router } from 'expo-router';
+
 import { View, TouchableOpacity, Alert, Pressable } from 'react-native';
+
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text } from '~/components/ui/text';
@@ -18,6 +20,7 @@ import RNDateTimePicker, { type DateTimePickerEvent } from '@react-native-commun
 import { useToggleShareLocation } from '~/hooks';
 import { Switch } from '~/components/ui/switch';
 import { useSettingsStore } from '~/store';
+import { showGeneralAlert } from '~/utils/alert';
 
 export default function LocationSettings() {
   const { isTracking, toggleShareLocation } = useToggleShareLocation();
@@ -40,7 +43,7 @@ export default function LocationSettings() {
     const selectedDate = event.nativeEvent.timestamp ? new Date(event.nativeEvent.timestamp) : null;
 
     if (!selectedDate) {
-      Alert.alert('Error', 'Troubles setting time');
+      showGeneralAlert('Error', 'Trouble setting time');
       return;
     }
     const totalMinutes = selectedDate.getHours() * 60 + selectedDate.getMinutes();
