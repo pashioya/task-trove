@@ -49,7 +49,7 @@ export default function RootLayout() {
         setIsColorSchemeLoaded(true);
         return;
       }
-      const colorTheme = theme === 'dark' ? 'light' : 'dark';
+      const colorTheme = theme === 'dark' ? 'dark' : 'light';
       if (colorTheme !== colorScheme) {
         setColorScheme(colorTheme);
 
