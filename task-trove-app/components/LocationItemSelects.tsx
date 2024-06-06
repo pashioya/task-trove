@@ -41,15 +41,23 @@ export default function LocationItemSelects() {
 
   const saveChanges = () => {
     if (!selectedBoard || !selectedColumn || !selectedItem) {
-      ToastAndroid.show('Please select a board, column, and item!', ToastAndroid.SHORT);
+      ToastAndroid.showWithGravity(
+        'Please select a board, column, and item!',
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP,
+      );
       return;
     }
     setBoard(selectedBoard);
     setColumn(selectedColumn);
     setItem(selectedItem);
 
-    ToastAndroid.show('Location saved!', ToastAndroid.SHORT);
+    ToastAndroid.showWithGravity('Location saved!', ToastAndroid.SHORT, ToastAndroid.TOP);
   };
+
+  if (boardsIsLoading) {
+    ToastAndroid.showWithGravity('Loading boards...', ToastAndroid.SHORT, ToastAndroid.TOP);
+  }
 
   return (
     <View className="items-center justify-center m-10 gap-7">

@@ -30,12 +30,20 @@ const showAlert = (error: string, onPress: () => void, buttonText: string) => {
     },
     { text: 'Dismiss' },
   ]);
+import { showGeneralAlert } from '~/utils/alert';
+
+type Cluster = {
+  id: string;
+  geometry: {
+    coordinates: [number, number];
+  };
+  onPress: () => void;
+  properties: {
+    point_count: number;
+  };
 };
 
 export default function Home() {
-  NavigationBar.setPositionAsync('absolute');
-  NavigationBar.setBackgroundColorAsync('#ffffff01');
-
   const { isTracking, region, toggleShareLocation } = useToggleShareLocation();
   const { lastKnownLocation, lastKnownLocationLoading } = useUserLocation();
   const { isDarkColorScheme } = useColorScheme();
@@ -80,26 +88,24 @@ export default function Home() {
 
   useEffect(() => {
     if (updateLocationError) {
-      if (updateLocationError.errors) {
-        console.log(updateLocationError.errors.map(e => e.message));
-      }
-
-      Alert.alert('An unexpected error occurred', updateLocationError.message, [
-        { text: 'Dismiss' },
-      ]);
-
+      showGeneralAlert('An unexpected error occurred', updateLocationError.message);
       toggleShareLocation();
     }
   }, [toggleShareLocation, updateLocationError]);
 
   useEffect(() => {
     if (!item) {
-      showAlert(
+      showGeneralAlert(
         'Location Column Not Correctly Setup',
-        () => {
-          router.replace('/settings/location');
-        },
-        'Go to Settings',
+        'Please go to settings and set it up',
+        [
+          {
+            text: 'Settings',
+            onPress: () => {
+              router.replace('/settings/location');
+            },
+          },
+        ],
       );
     }
   }, [item, router]);
@@ -122,13 +128,7 @@ export default function Home() {
       }
     } catch (e) {
       if (e instanceof Error) {
-        showAlert(
-          e.message,
-          () => {
-            onLocateMe();
-          },
-          'Retry',
-        );
+        showGeneralAlert('Error', e.message);
       }
     }
   };
@@ -143,17 +143,6 @@ export default function Home() {
       longitudeDelta: 0.01,
     });
   }
-
-  type Cluster = {
-    id: string;
-    geometry: {
-      coordinates: [number, number];
-    };
-    onPress: () => void;
-    properties: {
-      point_count: number;
-    };
-  };
 
   return (
     <>
@@ -219,7 +208,7 @@ export default function Home() {
             </Marker>
           ))}
         </MapView>
-        <View className="absolute bottom-44 right-5 gap-4">
+        <View className="absolute bottom-36 right-5 gap-4">
           {isTracking ? (
             <View className="bg-secondary rounded-full h-[70px] w-[70px] shadow-lg flex items-center justify-center">
               {lastKnownLocationLoading ? (

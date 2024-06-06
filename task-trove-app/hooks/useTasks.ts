@@ -1,8 +1,11 @@
+import { isErrorMessage } from './../lib/monday/api';
 import { useEffect, useState } from 'react';
 import { useMondayQuery } from '~/lib/monday/api';
 import { fetchTasksQuery } from '~/lib/monday/queries';
 import type { Task, TaskItem } from '~/model/types';
 import { useSettingsStore } from '~/store';
+import * as ExpoLocation from 'expo-location';
+import { showMondayAlert } from '~/utils/mondayErrorHandling';
 import showAlert from '~/utils/ShowAlert';
 import useUserLocation from './useUserLocation';
 
@@ -40,8 +43,25 @@ const useTasks = () => {
   });
 
   useEffect(() => {
+    const fetchLocation = async () => {
+      try {
+        const location = await ExpoLocation.getCurrentPositionAsync({});
+        setCurrentLocation({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        });
+      } catch (error) {
+        if (isErrorMessage(error)) {
+          showMondayAlert(error);
+        }
+      }
+    };
+    fetchLocation();
+  }, []);
+
+  useEffect(() => {
     if (itemsAreLoading || itemsIsError || !currentLocation) {
-      if (itemsIsError) showAlert(itemsError);
+      if (itemsIsError) showMondayAlert(itemsError);
       return;
     }
 

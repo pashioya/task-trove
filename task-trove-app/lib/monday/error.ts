@@ -1,5 +1,6 @@
 import { MondayErrorSchema } from './schema';
 import type { Errors } from './types';
+import { showGeneralAlert } from '~/utils/alert';
 
 export class MondayAPIError extends Error {
   accountId?: number;
@@ -17,7 +18,7 @@ export class MondayAPIError extends Error {
     const parsed = MondayErrorSchema.safeParse(response);
 
     if (!parsed.success) {
-      console.log('validation errors', parsed.error);
+      showGeneralAlert('Unkmown Error Occurred', parsed.error.message);
       this.message = 'Unknown error occurred';
       return;
     }

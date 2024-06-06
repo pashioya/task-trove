@@ -14,6 +14,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SessionProvider } from '~/contexts/session-provider';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { setAndroidNavigationBar } from '~/lib/android-navigation-bar';
 
 const LIGHT_THEME: Theme = {
   dark: false,
@@ -48,13 +49,14 @@ export default function RootLayout() {
         setIsColorSchemeLoaded(true);
         return;
       }
-      const colorTheme = theme === 'dark' ? 'dark' : 'light';
+      const colorTheme = theme === 'dark' ? 'light' : 'dark';
       if (colorTheme !== colorScheme) {
         setColorScheme(colorTheme);
 
         setIsColorSchemeLoaded(true);
         return;
       }
+      setAndroidNavigationBar(colorTheme);
       setIsColorSchemeLoaded(true);
     })()
       .finally(() => {

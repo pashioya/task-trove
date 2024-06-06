@@ -3,7 +3,8 @@ import type { Board, Column, Item } from '~/model/types';
 import { useSettingsStore } from '~/store';
 import { useMondayQuery } from '~/lib/monday/api';
 import { fetchBoardsQuery, fetchColumnsQuery, fetchItemsQuery } from '~/lib/monday/queries';
-import showAlert from '~/utils/ShowAlert';
+
+import { showMondayAlert } from '~/utils/mondayErrorHandling';
 
 const useLocationItemSelects = () => {
   const [boards, setBoards] = useState<Board[]>([]);
@@ -84,7 +85,7 @@ const useLocationItemSelects = () => {
       return;
     }
     if (boardsIsError) {
-      showAlert(boardsError);
+      showMondayAlert(boardsError);
       return;
     }
     if (!boardsData.boards) return;
@@ -109,7 +110,7 @@ const useLocationItemSelects = () => {
       return;
     }
     if (columnsIsError) {
-      showAlert(columnsError);
+      showMondayAlert(columnsError);
       return;
     }
 
@@ -145,7 +146,7 @@ const useLocationItemSelects = () => {
       return;
     }
     if (taskColumnsIsError) {
-      showAlert(taskColumnsError);
+      showMondayAlert(taskColumnsError);
       return;
     }
 
@@ -181,7 +182,7 @@ const useLocationItemSelects = () => {
       return;
     }
     if (itemsIsError) {
-      showAlert(itemsError);
+      showMondayAlert(itemsError);
       return;
     }
 
