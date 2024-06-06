@@ -1,5 +1,5 @@
 import { Stack, router } from 'expo-router';
-import { View, TouchableOpacity, Alert } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text } from '~/components/ui/text';
@@ -20,6 +20,7 @@ import LocationItemSelects from '~/components/LocationItemSelects';
 import { useToggleShareLocation } from '~/hooks';
 import { Switch } from '~/components/ui/switch';
 import { useSettingsStore } from '~/store';
+import { showGeneralAlert } from '~/utils/alert';
 
 export default function LocationSettings() {
   const { isTracking, toggleShareLocation } = useToggleShareLocation();
@@ -42,7 +43,7 @@ export default function LocationSettings() {
     const selectedDate = event.nativeEvent.timestamp ? new Date(event.nativeEvent.timestamp) : null;
 
     if (!selectedDate) {
-      Alert.alert('Error', 'Troubles setting time');
+      showGeneralAlert('Error', 'Trouble setting time');
       return;
     }
     const totalMinutes = selectedDate.getHours() * 60 + selectedDate.getMinutes();
@@ -95,7 +96,7 @@ export default function LocationSettings() {
                     <ChevronRight color="#C6C6C6" size={20} />
                   </View>
                 }
-                title="Change Location Save Location"
+                classNames="p-2"
                 content={<LocationItemSelects />}
               />
 
