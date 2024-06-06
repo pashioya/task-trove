@@ -75,7 +75,7 @@ const useTasks = () => {
             jsonValue.lat,
             jsonValue.lng,
           );
-          distance = Math.round(distance * 1000) / 1000;
+          distance = Math.round(distance * 100) / 100;
           return {
             id: task.id,
             name: task.name,
