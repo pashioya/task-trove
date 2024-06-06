@@ -1,5 +1,5 @@
 import Slider from '@react-native-community/slider';
-import { Pressable, View } from 'react-native';
+import { ActivityIndicator, Pressable, View } from 'react-native';
 import MapView, { Circle, Marker } from 'react-native-maps';
 import { INITIAL_REGION } from '~/config/map-config';
 import lightStyle from '~/assets/map/lightStyle.json';
@@ -10,6 +10,7 @@ import colors from 'tailwindcss/colors';
 import { useColorScheme } from '~/lib/useColorScheme';
 import { Button } from './ui/button';
 import { useState } from 'react';
+import useUserLocation from '~/hooks/useUserLocation';
 
 type MapRangePickerProps = {
   currentRange: number;
@@ -22,28 +23,47 @@ export const MapRangePicker: React.FC<MapRangePickerProps> = ({
 }) => {
   const { isDarkColorScheme } = useColorScheme();
   const [value, setValue] = useState<number>(currentRange);
+  const { lastKnownLocation, lastKnownLocationLoading } = useUserLocation();
+
+  if (lastKnownLocationLoading) {
+    return (
+      <View className="justify center">
+        <ActivityIndicator />
+      </View>
+    );
+  }
+
+  const location = lastKnownLocation?.coords ?? INITIAL_REGION;
 
   return (
     <>
       <Pressable>
         <MapView
           initialRegion={{
-            latitude: INITIAL_REGION.latitude,
-            longitude: INITIAL_REGION.longitude,
+            latitude: location.latitude,
+            longitude: location.longitude,
             latitudeDelta: 0.3,
             longitudeDelta: 0.3,
           }}
+          showsMyLocationButton={false}
+          showsUserLocation
           customMapStyle={isDarkColorScheme ? darkStyle : lightStyle}
           style={{ height: 300, width: 300 }}
         >
-          <Marker
-            pinColor={colors.blue[500]}
-            coordinate={{ latitude: INITIAL_REGION.latitude, longitude: INITIAL_REGION.longitude }}
-          />
+          {!lastKnownLocation && (
+            <Marker
+              pinColor={colors.blue[500]}
+              coordinate={{
+                latitude: INITIAL_REGION.latitude,
+                longitude: INITIAL_REGION.longitude,
+              }}
+            />
+          )}
+
           <Circle
             center={{
-              latitude: INITIAL_REGION.latitude,
-              longitude: INITIAL_REGION.longitude,
+              latitude: location.latitude,
+              longitude: location.longitude,
             }}
             radius={value * 1000}
             fillColor="rgba(20,87, 255, 0.2)"
@@ -58,7 +78,7 @@ export const MapRangePicker: React.FC<MapRangePickerProps> = ({
           onValueChange={value => setValue(value)}
           minimumValue={0}
           maximumValue={5}
-          minimumTrackTintColor="#FFFFFF"
+          minimumTrackTintColor={colors.neutral[500]}
           maximumTrackTintColor={colors.neutral[300]}
           thumbTintColor={colors.blue[500]}
         />
