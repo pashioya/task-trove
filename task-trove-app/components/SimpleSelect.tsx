@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from '~/components/ui/select';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ScrollView } from 'react-native-gesture-handler';
+import { FlatList } from 'react-native-gesture-handler';
 import { ActivityIndicator, View } from 'react-native';
 
 type Option = { label: string; value: string };
@@ -51,28 +51,27 @@ export function SimpleSelect({
         <SelectValue className="text-foreground text-sm native:text-lg" placeholder={placeholder} />
       </SelectTrigger>
 
-      <SelectContent
-        insets={contentInsets}
-        className="w-[250px] max-h-[250px] overflow-y-auto z-50"
-      >
+      <SelectContent insets={contentInsets} className="w-[250px] max-h-[250px] overflow-hidden">
         <SelectLabel>{placeholder}</SelectLabel>
-        <ScrollView>
-          <SelectGroup>
-            {isLoading ? (
-              <View className="flex items-center justify-center h-full">
-                <ActivityIndicator />
-              </View>
-            ) : options.length === 0 ? (
-              <SelectItem disabled key="empty" label="No Options Availlable" value="" />
-            ) : (
-              options.map(option => (
-                <SelectItem key={option.value} label={option.label} value={option.value}>
-                  {option.label}
+        <SelectGroup>
+          {isLoading ? (
+            <View className="flex items-center justify-center h-full">
+              <ActivityIndicator />
+            </View>
+          ) : options.length === 0 ? (
+            <SelectItem disabled key="empty" label="No Options Available" value="" />
+          ) : (
+            <FlatList
+              data={options}
+              keyExtractor={item => item.value}
+              renderItem={({ item }) => (
+                <SelectItem key={item.value} label={item.label} value={item.value}>
+                  {item.label}
                 </SelectItem>
-              ))
-            )}
-          </SelectGroup>
-        </ScrollView>
+              )}
+            />
+          )}
+        </SelectGroup>
       </SelectContent>
     </Select>
   );
