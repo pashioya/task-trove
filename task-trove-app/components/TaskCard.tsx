@@ -35,6 +35,7 @@ export default function TaskCard({ task }: { task: Task }) {
       <View className="py-6 px-4">
         <View className="flex-row items-center justify-between mb-7">
           <Text className="font-semibold text-xl">{truncateText(task.name, 15)}</Text>
+          <Separator orientation="vertical" />
           <Text>{task.distanceTo ? task.distanceTo : 'Unknown'} km</Text>
         </View>
 
