@@ -22,6 +22,13 @@ function deg2rad(deg: number) {
   return deg * (Math.PI / 180);
 }
 
+type Position = {
+  address: string;
+  changed_at: string;
+  lat: number;
+  lng: number;
+};
+
 const useTasks = () => {
   const [tableTasks, setTableTasks] = useState<Task[]>([]);
   const { taskBoard, taskColumn } = useSettingsStore();
@@ -47,13 +54,6 @@ const useTasks = () => {
 
     if (!itemsData || !itemsData.boards || !itemsData.boards[0]) return;
     const items = itemsData.boards[0]?.items_page.items;
-
-    type Position = {
-      address: string;
-      changed_at: string;
-      lat: number;
-      lng: number;
-    };
 
     const reformattedTasks: Task[] = items
       .map((task: TaskItem) => {
