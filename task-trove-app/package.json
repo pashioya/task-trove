@@ -6,6 +6,7 @@
     "start": "expo start -c",
     "android": "expo run:android",
     "ios": "expo run:ios",
+    "build": "npx expo run:android --variant release --device",
     "dev": "expo start -c --ios",
     "dev:web": "expo start -c --web",
     "dev:android": "expo start -c --android",
