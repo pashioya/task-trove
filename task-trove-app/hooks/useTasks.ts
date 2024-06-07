@@ -31,7 +31,7 @@ type Position = {
 
 const useTasks = () => {
   const [tableTasks, setTableTasks] = useState<Task[]>([]);
-  const { taskBoard, taskColumn } = useSettingsStore();
+  const { taskBoard, taskColumn, descriptionColumnId } = useSettingsStore();
   const { currentLocation } = useUserLocation();
 
   const {
@@ -42,7 +42,11 @@ const useTasks = () => {
   } = useMondayQuery({
     queryKey: [taskBoard?.id || '', 'taskItems'],
     query: fetchTasksQuery,
-    variables: { boardId: taskBoard?.id || '', columnId: taskColumn?.id || '' },
+    variables: {
+      boardId: taskBoard?.id || '',
+      columnId: taskColumn?.id || '',
+      descriptionColumnId,
+    },
     refetchInterval: 5000,
   });
 
@@ -57,7 +61,12 @@ const useTasks = () => {
 
     const reformattedTasks: Task[] = items
       .map((task: TaskItem) => {
-        const value = task.column_values[0].value;
+        const descriptionColumn = task.column_values.filter(
+          column => column.id === descriptionColumnId,
+        );
+        const locationColumn = task.column_values.filter(column => column.id === taskColumn?.id);
+        const description = descriptionColumn[0]?.text || '';
+        const value = locationColumn[0].value;
         if (value) {
           const jsonValue = JSON.parse(value) as Position;
           let distance = calculateDistance(
@@ -70,6 +79,7 @@ const useTasks = () => {
           return {
             id: task.id,
             name: task.name,
+            description,
             lat: jsonValue.lat,
             long: jsonValue.lng,
             address: jsonValue.address || '',
@@ -85,7 +95,15 @@ const useTasks = () => {
     reformattedTasks.sort((a, b) => a.distanceTo - b.distanceTo);
 
     setTableTasks(reformattedTasks);
-  }, [itemsData, currentLocation, itemsAreLoading, itemsIsError, itemsError]);
+  }, [
+    itemsData,
+    currentLocation,
+    itemsAreLoading,
+    itemsIsError,
+    itemsError,
+    descriptionColumnId,
+    taskColumn?.id,
+  ]);
 
   return { tableTasks, itemsAreLoading };
 };
