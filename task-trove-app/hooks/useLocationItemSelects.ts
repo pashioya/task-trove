@@ -85,7 +85,6 @@ const useLocationItemSelects = () => {
       return;
     }
     if (boardsIsError) {
-      console.log('boardsError: ', boardsError);
       showMondayAlert(boardsError);
       return;
     }
@@ -111,7 +110,6 @@ const useLocationItemSelects = () => {
       return;
     }
     if (columnsIsError) {
-      console.log('columnsError: ', columnsError);
       showMondayAlert(columnsError);
       return;
     }
@@ -148,7 +146,6 @@ const useLocationItemSelects = () => {
       return;
     }
     if (taskColumnsIsError) {
-      console.log('taskColumnsError: ', taskColumnsError);
       showMondayAlert(taskColumnsError);
       return;
     }
@@ -185,7 +182,6 @@ const useLocationItemSelects = () => {
       return;
     }
     if (itemsIsError) {
-      console.log('itemsError: ', itemsError);
       showMondayAlert(itemsError);
       return;
     }
