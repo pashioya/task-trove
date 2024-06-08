@@ -9,11 +9,11 @@ import colors from 'tailwindcss/colors';
 import TaskColumnSelects from '~/components/TaskColumnSelects';
 import { Text } from '~/components/ui/text';
 import { MapRangePicker } from '~/components/MapRangePicker';
-import { useState } from 'react';
+import { useSettingsStore } from '~/store';
 
 export default function NotificationSettings() {
   const { isDarkColorScheme } = useColorScheme();
-  const [currentRange, setCurrentRange] = useState(2.5);
+  const { notificationRadius, setNotificationRadius } = useSettingsStore();
 
   return (
     <>
@@ -61,9 +61,9 @@ export default function NotificationSettings() {
                 withHeader
                 content={
                   <MapRangePicker
-                    currentRange={currentRange}
+                    currentRange={notificationRadius}
                     setCurrentRange={range => {
-                      setCurrentRange(range);
+                      setNotificationRadius(range);
                     }}
                   />
                 }

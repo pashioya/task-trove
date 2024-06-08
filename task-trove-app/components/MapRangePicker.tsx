@@ -11,6 +11,7 @@ import { useColorScheme } from '~/lib/useColorScheme';
 import { Button } from './ui/button';
 import { useState } from 'react';
 import useUserLocation from '~/hooks/useUserLocation';
+import { DialogClose } from './ui/dialog';
 
 type MapRangePickerProps = {
   currentRange: number;
@@ -83,9 +84,11 @@ export const MapRangePicker: React.FC<MapRangePickerProps> = ({
           thumbTintColor={colors.blue[500]}
         />
         <Text>{value.toPrecision(2)} km</Text>
-        <Button onPress={() => setCurrentRange(value)}>
-          <Text>Confirm</Text>
-        </Button>
+        <DialogClose asChild>
+          <Button onPress={() => setCurrentRange(value)}>
+            <Text>Confirm</Text>
+          </Button>
+        </DialogClose>
       </View>
     </>
   );
