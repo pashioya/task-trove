@@ -43,7 +43,7 @@ const useSettingsStore = create<SettingsState>()(
       item: null,
       startTime: 540, // 9 AM (minutes since midnight: 9 * 60 + 0)
       endTime: 1020, // 5 PM
-      activeDays: [],
+      activeDays: [0, 1, 2, 3, 4],
       taskBoard: null,
       taskColumn: null,
       descriptionColumnId: 'text__1',
