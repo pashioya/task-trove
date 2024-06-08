@@ -5,6 +5,7 @@ import { useRegionStore, useSettingsStore } from '~/store';
 import { showGeneralAlert } from '~/utils/alert';
 import { router } from 'expo-router';
 import { ToastAndroid } from 'react-native';
+import useInternetAccess from './useInternetAccess';
 
 type TaskData = {
   locations?: Location.LocationObject[];
@@ -30,6 +31,7 @@ TaskManager.defineTask<TaskData>(TASK_FETCH_LOCATION, ({ data, error }) => {
 const useToggleShareLocation = () => {
   const [region, setRegion] = useRegionStore(state => [state.region, state.setRegion]);
   const { isTracking, setIsTracking, item, startTime, endTime, activeDays } = useSettingsStore();
+  const { internetStatus } = useInternetAccess();
 
   useEffect(() => {
     const checkTime = async () => {
@@ -41,7 +43,7 @@ const useToggleShareLocation = () => {
       const totalMinutes = hour * 60 + minute;
 
       if (totalMinutes >= startTime && totalMinutes <= endTime && activeDays.includes(dayOfWeek)) {
-        if (!isTracking) {
+        if (!isTracking && internetStatus) {
           await startLocationUpdates();
           setIsTracking(true);
         }
@@ -56,7 +58,7 @@ const useToggleShareLocation = () => {
     const intervalId = setInterval(checkTime, 60000);
 
     return () => clearInterval(intervalId);
-  }, [activeDays, endTime, isTracking, setIsTracking, startTime]);
+  }, [activeDays, endTime, internetStatus, isTracking, setIsTracking, startTime]);
 
   const startLocationUpdates = async () => {
     await Location.startLocationUpdatesAsync(TASK_FETCH_LOCATION, {

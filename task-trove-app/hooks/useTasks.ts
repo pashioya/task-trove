@@ -5,6 +5,7 @@ import type { Task, TaskItem } from '~/model/types';
 import { useSettingsStore, useTasksStore } from '~/store';
 import { showMondayAlert } from '~/utils/mondayErrorHandling';
 import useUserLocation from './useUserLocation';
+import useInternetAccess from './useInternetAccess';
 
 function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
   const R = 6371; // Radius of the Earth in km
@@ -33,6 +34,7 @@ const useTasks = () => {
   const { taskBoard, taskColumn, descriptionColumnId } = useSettingsStore();
   const { tasks, setTasks } = useTasksStore();
   const { currentLocation } = useUserLocation();
+  const { internetStatus } = useInternetAccess();
 
   const {
     data: tasksData,
@@ -51,7 +53,7 @@ const useTasks = () => {
   });
 
   useEffect(() => {
-    if (tasksAreLoading || tasksAreError || !currentLocation) {
+    if (tasksAreLoading || tasksAreError || !currentLocation || !internetStatus) {
       if (tasksAreError) showMondayAlert(tasksError);
       return;
     }
