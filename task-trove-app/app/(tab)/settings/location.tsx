@@ -21,11 +21,20 @@ import { useToggleShareLocation } from '~/hooks';
 import { Switch } from '~/components/ui/switch';
 import { useSettingsStore } from '~/store';
 import { showGeneralAlert } from '~/utils/alert';
+import { Input } from '~/components/ui/input';
 
 export default function LocationSettings() {
   const { isTracking, toggleShareLocation } = useToggleShareLocation();
-  const { startTime, endTime, activeDays, setStartTime, setEndTime, setActiveDays } =
-    useSettingsStore();
+  const {
+    startTime,
+    endTime,
+    activeDays,
+    setStartTime,
+    setEndTime,
+    setActiveDays,
+    locationUpdateDistance,
+    locationUpdateInterval,
+  } = useSettingsStore();
 
   const [showStartTimePicker, setShowStartTimePicker] = useState(false);
   const [showEndTimePicker, setShowEndTimePicker] = useState(false);
@@ -189,6 +198,33 @@ export default function LocationSettings() {
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
+            </View>
+            <View className="px-6">
+              <Text className="py-3 text-xs font-semibold uppercase tracking-wider mb-8">
+                Advanced
+              </Text>
+              <View className="flex-row bg-secondary items-center justify-start h-12 rounded-lg mb-3 px-3">
+                <Text className="text-lg font-normal">Location Update Time Interval</Text>
+                <View className="flex-1" />
+                <Input
+                  inputMode="numeric"
+                  placeholder="Write some stuff..."
+                  value={locationUpdateInterval.toString()}
+                  aria-labelledbyledBy="inputLabel"
+                  aria-errormessage="inputError"
+                />
+              </View>
+              <View className="flex-row bg-secondary items-center justify-start h-12 rounded-lg mb-3 px-3">
+                <Text className="text-lg font-normal">Location Update Distance Interval</Text>
+                <View className="flex-1" />
+                <Input
+                  inputMode="numeric"
+                  placeholder=""
+                  value={locationUpdateDistance.toString()}
+                  aria-labelledbyledBy="inputLabel"
+                  aria-errormessage="inputError"
+                />
+              </View>
             </View>
           </ScrollView>
         </View>

@@ -17,6 +17,10 @@ type SettingsState = {
   taskBoard: Board | null;
   taskColumn: Column | null;
   descriptionColumnId: string;
+  locationUpdateInterval: number;
+  locationUpdateDistance: number;
+  setLocationUpdateDistance: (locationUpdateDistance: number) => void;
+  setLocationUpdateInterval: (locationUpdateInterval: number) => void;
   setActiveDays: (activeDays: number[]) => void;
   setEndTime: (endTime: number) => void;
   setStartTime: (startTime: number) => void;
@@ -47,6 +51,10 @@ const useSettingsStore = create<SettingsState>()(
       taskBoard: null,
       taskColumn: null,
       descriptionColumnId: 'text__1',
+      locationUpdateInterval: 60000,
+      locationUpdateDistance: 10,
+      setLocationUpdateDistance: locationUpdateDistance => set({ locationUpdateDistance }),
+      setLocationUpdateInterval: locationUpdateInterval => set({ locationUpdateInterval }),
       setActiveDays: activeDays => set({ activeDays }),
       setEndTime: endTime => set({ endTime }),
       setStartTime: startTime => set({ startTime }),
