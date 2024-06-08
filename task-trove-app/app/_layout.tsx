@@ -67,6 +67,12 @@ export default function RootLayout() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  React.useEffect(() => {
+    if (isColorSchemeLoaded) {
+      setAndroidNavigationBar(isDarkColorScheme ? 'dark' : 'light');
+    }
+  }, [isDarkColorScheme, isColorSchemeLoaded]);
+
   if (!isColorSchemeLoaded) {
     return null;
   }

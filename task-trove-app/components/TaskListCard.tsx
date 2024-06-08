@@ -5,7 +5,7 @@ export default function TaskListCard({ task }: { task: Task }) {
   return (
     <Card className="w-[90%] my-2 ml-5 bg-secondary">
       <CardHeader>
-        <CardTitle>{task.name}</CardTitle>
+        <CardTitle className="text-lg">{task.name}</CardTitle>
         <CardDescription>{task.address.split(',')[0]}</CardDescription>
       </CardHeader>
     </Card>
