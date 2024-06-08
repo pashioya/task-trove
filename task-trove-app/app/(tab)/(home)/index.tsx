@@ -30,6 +30,7 @@ import { Button } from '~/components/ui/button';
 import useUserLocation from '~/hooks/useUserLocation';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { showGeneralAlert } from '~/utils/alert';
+import useInternetAccess from '~/hooks/useInternetAccess';
 
 type Cluster = {
   id: string;
@@ -47,8 +48,9 @@ export default function Home() {
   const { lastKnownLocation, lastKnownLocationLoading } = useUserLocation();
   const { isDarkColorScheme } = useColorScheme();
   const router = useRouter();
-  const { tableTasks } = useTasks();
+  const { tasks } = useTasks();
   const local = useLocalSearchParams();
+  const { internetStatus } = useInternetAccess();
 
   const mapRef = useRef<MapView>(null);
   const { board, column, item } = useSettingsStore();
@@ -70,7 +72,7 @@ export default function Home() {
   }, [router, validatePermissions]);
 
   useEffect(() => {
-    if (isTracking && region && board && column && item) {
+    if (isTracking && region && board && column && item && internetStatus?.isConnected) {
       updateLocation({
         boardId: board.id,
         itemId: item.id,
@@ -83,7 +85,7 @@ export default function Home() {
         }),
       });
     }
-  }, [region, isTracking, board, column, item, updateLocation]);
+  }, [region, isTracking, board, column, item, updateLocation, internetStatus]);
 
   useEffect(() => {
     if (updateLocationError) {
@@ -133,7 +135,7 @@ export default function Home() {
   };
 
   if (local.taskId) {
-    const task = tableTasks.find(t => t.id === local.taskId);
+    const task = tasks?.find(t => t.id === local.taskId);
     // @ts-expect-error --ignore
     mapRef.current?.animateToRegion({
       latitude: Number(task?.lat),
@@ -208,7 +210,7 @@ export default function Home() {
             );
           }}
         >
-          {tableTasks.map(task => (
+          {tasks?.map(task => (
             <Marker
               tracksViewChanges={false}
               coordinate={{

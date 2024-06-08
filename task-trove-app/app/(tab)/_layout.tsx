@@ -13,7 +13,7 @@ import { useColorScheme } from '~/lib/useColorScheme';
 export default function TabLayout() {
   const { session, isLoading } = useSession();
   const { isTracking } = useSettingsStore();
-  const { tableTasks } = useTasks();
+  const { tasks } = useTasks();
   const { isDarkColorScheme } = useColorScheme();
 
   if (isLoading) {
@@ -152,7 +152,7 @@ export default function TabLayout() {
               size={30}
             />
           ),
-          tabBarBadge: tableTasks.length,
+          tabBarBadge: tasks?.length,
           tabBarLabel: 'Tasks',
           tabBarIconStyle: {
             position: 'absolute',
