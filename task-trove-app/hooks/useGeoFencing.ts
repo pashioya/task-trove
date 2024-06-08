@@ -1,27 +1,15 @@
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
 
-type TaskData = {
-  eventType: Location.GeofencingEventType;
-  region: Location.LocationRegion;
-};
-
 const TASK_GEOFENCE_LOCATION = 'background-location-task';
 
-TaskManager.defineTask<TaskData>(
-  TASK_GEOFENCE_LOCATION,
-  ({ data: { eventType, region }, error }) => {
-    if (error) {
-      // check `error.message` for more details.
-      return;
-    }
-    if (eventType === Location.GeofencingEventType.Enter) {
-      console.log("You've entered region:", region);
-    } else {
-      console.log("You've left region:", region);
-    }
-  },
-);
+TaskManager.defineTask(TASK_GEOFENCE_LOCATION, ({ data, error }) => {
+  if (error) {
+    console.error('An error occurred -', error);
+    return;
+  }
+  console.log('Geofencing event:', data.locations);
+});
 
 const useGeoFencing = () => {
   const setGeofencing = async (regions: Location.LocationRegion[]) => {
