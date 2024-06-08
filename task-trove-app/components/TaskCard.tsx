@@ -60,7 +60,7 @@ export default function TaskCard({ task }: { task: Task }) {
         <View className="pt-4 flex-row items-center justify-between">
           <Button
             variant="outline"
-            className="w-30 "
+            className="h-11 rounded-md px-8 native:h-14"
             onPress={() =>
               Linking.openURL(
                 `https://${session?.user?.slug}.monday.com/boards/${taskBoard?.id}/pulses/${task.id}`,
@@ -70,13 +70,13 @@ export default function TaskCard({ task }: { task: Task }) {
             {!isDarkColorScheme ? (
               <Image
                 source={require('~/assets/images/monday/monday-black.png')}
-                className=" w-28 h-28"
+                className=" w-40 h-40"
                 resizeMode="contain"
               />
             ) : (
               <Image
                 source={require('~/assets/images/monday/monday-white.png')}
-                className=" w-28 h-28"
+                className="  w-40 h-40"
                 resizeMode="contain"
               />
             )}
@@ -89,7 +89,7 @@ export default function TaskCard({ task }: { task: Task }) {
             asChild
           >
             <DialogClose asChild>
-              <Button variant="outline">
+              <Button variant="outline" className="w-40 " size="lg">
                 <Text className="font-semibold">Map View</Text>
               </Button>
             </DialogClose>
