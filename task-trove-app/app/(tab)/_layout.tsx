@@ -9,12 +9,14 @@ import { useSettingsStore } from '~/store';
 import colors from 'tailwindcss/colors';
 import { useTasks } from '~/hooks';
 import { useColorScheme } from '~/lib/useColorScheme';
+import useInternetAccess from '~/hooks/useInternetAccess';
 
 export default function TabLayout() {
   const { session, isLoading } = useSession();
   const { isTracking } = useSettingsStore();
   const { tasks } = useTasks();
   const { isDarkColorScheme } = useColorScheme();
+  const { internetStatus } = useInternetAccess();
 
   if (isLoading) {
     return (
@@ -54,13 +56,21 @@ export default function TabLayout() {
             <LocateFixedIcon
               size={50}
               fill={
-                isTracking
-                  ? colors.blue[300]
-                  : isDarkColorScheme
-                    ? colors.neutral[600]
-                    : colors.gray[100]
+                internetStatus
+                  ? isTracking
+                    ? colors.blue[300]
+                    : isDarkColorScheme
+                      ? colors.neutral[600]
+                      : colors.gray[100]
+                  : colors.red[500]
               }
-              color={isTracking ? colors.blue[500] : colors.gray[500]}
+              color={
+                internetStatus
+                  ? isTracking
+                    ? colors.blue[500]
+                    : colors.gray[500]
+                  : colors.red[900]
+              }
             />
           </View>
         ),

@@ -98,13 +98,18 @@ const useToggleShareLocation = () => {
       return;
     }
 
+    if (!internetStatus) {
+      showGeneralAlert('No Internet Connection', 'Please check your internet connection');
+      return;
+    }
+
     if (isTracking) {
       await stopLocationUpdates();
     } else {
       await startLocationUpdates();
     }
     setIsTracking(!isTracking);
-  }, [isTracking, item, setIsTracking]);
+  }, [internetStatus, isTracking, item, setIsTracking]);
 
   return {
     isTracking,

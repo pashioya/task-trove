@@ -89,10 +89,9 @@ export default function Home() {
 
   useEffect(() => {
     if (updateLocationError) {
-      showGeneralAlert('An unexpected error occurred', updateLocationError.message);
-      toggleShareLocation();
+      showGeneralAlert('An unexpected Location Update error occurred', updateLocationError.message);
     }
-  }, [toggleShareLocation, updateLocationError]);
+  }, [updateLocationError]);
 
   useEffect(() => {
     if (!item) {
@@ -268,6 +267,8 @@ export default function Home() {
             className="bg-primary shadow-2xl rounded-full h-[70px] w-[70px] flex items-center justify-center"
           >
             <Pressable
+              disabled={!internetStatus?.isConnected}
+              style={{ opacity: internetStatus?.isConnected ? 1 : 0.5 }}
               onPress={() => {
                 handlePlayPauseBounce();
                 toggleShareLocation();
