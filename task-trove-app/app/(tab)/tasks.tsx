@@ -55,6 +55,7 @@ export default function Tasks() {
                           id: item.id,
                           name: item.name,
                           address: item.address,
+                          description: item.description,
                           lat: item.lat,
                           long: item.long,
                           changedAt: item.changedAt,

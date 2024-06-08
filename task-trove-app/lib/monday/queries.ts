@@ -46,13 +46,13 @@ export const fetchItemsQuery = graphql(`
 `);
 
 export const fetchTasksQuery = graphql(`
-  query fetchTasks($boardId: ID!, $columnId: String!) {
+  query fetchTasks($boardId: ID!, $columnId: String!, $descriptionColumnId: String!) {
     boards(ids: [$boardId]) {
       items_page(limit: 100) {
         items {
           id
           name
-          column_values(types: location, ids: [$columnId]) {
+          column_values(ids: [$columnId, $descriptionColumnId]) {
             id
             value
             text
