@@ -53,7 +53,7 @@ const useTasks = () => {
   });
 
   useEffect(() => {
-    if (tasksAreLoading || tasksAreError || !currentLocation || !internetStatus) {
+    if (tasksAreLoading || tasksAreError || !currentLocation || !internetStatus?.isConnected) {
       if (tasksAreError) showMondayAlert(tasksError);
       return;
     }

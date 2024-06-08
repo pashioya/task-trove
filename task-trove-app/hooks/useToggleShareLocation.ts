@@ -43,7 +43,7 @@ const useToggleShareLocation = () => {
       const totalMinutes = hour * 60 + minute;
 
       if (totalMinutes >= startTime && totalMinutes <= endTime && activeDays.includes(dayOfWeek)) {
-        if (!isTracking && internetStatus) {
+        if (!isTracking && internetStatus?.isConnected) {
           await startLocationUpdates();
           setIsTracking(true);
         }
@@ -98,7 +98,7 @@ const useToggleShareLocation = () => {
       return;
     }
 
-    if (!internetStatus) {
+    if (!internetStatus?.isConnected) {
       showGeneralAlert('No Internet Connection', 'Please check your internet connection');
       return;
     }

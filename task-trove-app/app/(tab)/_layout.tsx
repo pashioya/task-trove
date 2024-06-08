@@ -56,7 +56,7 @@ export default function TabLayout() {
             <LocateFixedIcon
               size={50}
               fill={
-                internetStatus
+                internetStatus?.isConnected
                   ? isTracking
                     ? colors.blue[300]
                     : isDarkColorScheme
@@ -65,7 +65,7 @@ export default function TabLayout() {
                   : colors.red[500]
               }
               color={
-                internetStatus
+                internetStatus?.isConnected
                   ? isTracking
                     ? colors.blue[500]
                     : colors.gray[500]
