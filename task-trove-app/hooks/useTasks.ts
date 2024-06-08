@@ -54,7 +54,9 @@ const useTasks = () => {
 
   useEffect(() => {
     if (tasksAreLoading || tasksAreError || !currentLocation || !internetStatus?.isConnected) {
-      if (tasksAreError) showMondayAlert(tasksError);
+      if (internetStatus?.isConnected) {
+        if (tasksAreError) showMondayAlert(tasksError);
+      }
       return;
     }
 
@@ -104,6 +106,7 @@ const useTasks = () => {
     descriptionColumnId,
     taskColumn?.id,
     setTasks,
+    internetStatus,
   ]);
 
   return { tasks, tasksAreLoading };

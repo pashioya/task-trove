@@ -89,17 +89,17 @@ const useToggleShareLocation = () => {
   };
 
   const toggleShareLocation = useCallback(async () => {
+    if (!internetStatus?.isConnected) {
+      showGeneralAlert('No Internet Connection', 'Please check your internet connection');
+      return;
+    }
+
     if (!item) {
       showGeneralAlert(
         'Location Column Not Correctly Setup',
         'Please go to settings and set it up',
         [{ text: 'Go to Settings', onPress: () => router.replace('/settings/location') }],
       );
-      return;
-    }
-
-    if (!internetStatus?.isConnected) {
-      showGeneralAlert('No Internet Connection', 'Please check your internet connection');
       return;
     }
 

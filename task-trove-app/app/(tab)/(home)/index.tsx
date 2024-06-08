@@ -2,14 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
-import {
-  ActivityIndicator,
-  Linking,
-  Pressable,
-  SafeAreaView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Linking, SafeAreaView, StyleSheet, View } from 'react-native';
 import { useToggleShareLocation, useTasks, useLocationPermissions } from '~/hooks';
 import { useMondayMutation } from '~/lib/monday/api';
 import { changeMultipleColumnValuesMutation } from '~/lib/monday/queries';
@@ -21,16 +14,16 @@ import { useColorScheme } from '~/lib/useColorScheme';
 import { Callout, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import MapView from 'react-native-map-clustering';
 
-import { Play, Navigation, Pause } from 'lucide-react-native';
 import colors from 'tailwindcss/colors';
 
 import { Text } from '~/components/ui/text';
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Button } from '~/components/ui/button';
 import useUserLocation from '~/hooks/useUserLocation';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { showGeneralAlert } from '~/utils/alert';
 import useInternetAccess from '~/hooks/useInternetAccess';
+import NavigateButton from '~/components/NavigateButton';
+import PausePlayButton from '~/components/PausePlayButton';
 
 type Cluster = {
   id: string;
@@ -144,34 +137,6 @@ export default function Home() {
     });
   }
 
-  const locateMeBounceValue = useSharedValue(1);
-  const playPauseBounceValue = useSharedValue(1);
-
-  const locateMeBounceAnimation = useAnimatedStyle(() => {
-    return {
-      transform: [{ scale: withSpring(locateMeBounceValue.value) }],
-    };
-  });
-
-  const playPauseBounceAnimation = useAnimatedStyle(() => {
-    return {
-      transform: [{ scale: withSpring(playPauseBounceValue.value) }],
-    };
-  });
-  const handleLocateMeBounce = () => {
-    locateMeBounceValue.value = 0.8;
-    setTimeout(() => {
-      locateMeBounceValue.value = 1;
-    }, 25);
-  };
-
-  const handlePlayPauseBounce = () => {
-    playPauseBounceValue.value = 0.8;
-    setTimeout(() => {
-      playPauseBounceValue.value = 1;
-    }, 25);
-  };
-
   return (
     <>
       <Stack.Screen options={{ title: 'Home', headerShown: false }} />
@@ -238,59 +203,18 @@ export default function Home() {
         </MapView>
         <View className="absolute bottom-36 right-5 gap-4">
           {isTracking ? (
-            <Animated.View
-              style={locateMeBounceAnimation}
-              className="bg-secondary rounded-full h-[70px] w-[70px] shadow-lg flex items-center justify-center"
-            >
-              <Pressable
-                onPress={() => {
-                  handleLocateMeBounce();
-                  onLocateMe();
-                }}
-              >
-                {lastKnownLocationLoading ? (
-                  <ActivityIndicator size="large" color={colors.blue[500]} />
-                ) : (
-                  <Navigation
-                    color={isDarkColorScheme ? colors.neutral[100] : colors.blue[500]}
-                    fill={isDarkColorScheme ? colors.gray[100] : colors.blue[500]}
-                    className="bg-white"
-                    size={30}
-                  />
-                )}
-              </Pressable>
-            </Animated.View>
+            <NavigateButton
+              lastKnownLocationLoading={lastKnownLocationLoading}
+              isDarkColorScheme={isDarkColorScheme}
+              onLocateMe={onLocateMe}
+            />
           ) : null}
-
-          <Animated.View
-            style={playPauseBounceAnimation}
-            className="bg-primary shadow-2xl rounded-full h-[70px] w-[70px] flex items-center justify-center"
-          >
-            <Pressable
-              disabled={!internetStatus?.isConnected}
-              style={{ opacity: internetStatus?.isConnected ? 1 : 0.5 }}
-              onPress={() => {
-                handlePlayPauseBounce();
-                toggleShareLocation();
-              }}
-            >
-              {isTracking ? (
-                <Pause
-                  color={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
-                  fill={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
-                  className="bg-primary shadow-2xl"
-                  size={30}
-                />
-              ) : (
-                <Play
-                  color={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
-                  fill={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
-                  className="bg-primary shadow-2xl"
-                  size={30}
-                />
-              )}
-            </Pressable>
-          </Animated.View>
+          <PausePlayButton
+            isDarkColorScheme={isDarkColorScheme}
+            internetConnected={internetStatus?.isConnected || false}
+            isTracking={isTracking}
+            toggleShareLocation={toggleShareLocation}
+          />
         </View>
       </SafeAreaView>
     </>

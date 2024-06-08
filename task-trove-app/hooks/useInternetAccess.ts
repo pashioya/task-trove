@@ -5,8 +5,8 @@ const useInternetStatus = () => {
   return useQuery({
     queryKey: ['internetStatus'],
     queryFn: () => NetInfo.fetch(),
-    refetchOnWindowFocus: true,
     staleTime: 0,
+    refetchInterval: 5000,
   });
 };
 
