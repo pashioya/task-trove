@@ -165,9 +165,9 @@ export default function LocationSettings() {
                           <RoundBtn
                             key={index}
                             letter={letter}
-                            textStyles="font-smal muted"
+                            textStyles="font-small muted"
                             letterStyles={
-                              activeDays.includes(index) ? 'color-base' : 'color-primary'
+                              activeDays.includes(index) ? 'color-white' : 'color-primary'
                             }
                             text={
                               [
