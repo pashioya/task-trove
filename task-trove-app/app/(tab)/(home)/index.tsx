@@ -134,13 +134,16 @@ export default function Home() {
 
   if (local.taskId) {
     const task = tableTasks.find(t => t.id === local.taskId);
-    // @ts-expect-error --ignore
-    mapRef.current?.animateToRegion({
-      latitude: Number(task?.lat),
-      longitude: Number(task?.long),
-      latitudeDelta: 0.01,
-      longitudeDelta: 0.01,
-    });
+    if (task) {
+      // @ts-expect-error --ignore
+      mapRef.current?.animateToRegion({
+        latitude: Number(task.lat),
+        longitude: Number(task.long),
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      });
+      local.taskId = '';
+    }
   }
 
   const locateMeBounceValue = useSharedValue(1);

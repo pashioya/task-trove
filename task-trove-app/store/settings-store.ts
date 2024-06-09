@@ -19,6 +19,10 @@ type SettingsState = {
   notificationRadius: number;
   setNotificationRadius: (notificationRadius: number) => void;
   descriptionColumnId: string;
+  locationUpdateInterval: number;
+  locationUpdateDistance: number;
+  setLocationUpdateDistance: (locationUpdateDistance: number) => void;
+  setLocationUpdateInterval: (locationUpdateInterval: number) => void;
   setActiveDays: (activeDays: number[]) => void;
   setEndTime: (endTime: number) => void;
   setStartTime: (startTime: number) => void;
@@ -45,12 +49,16 @@ const useSettingsStore = create<SettingsState>()(
       item: null,
       startTime: 540, // 9 AM (minutes since midnight: 9 * 60 + 0)
       endTime: 1020, // 5 PM
-      activeDays: [],
+      activeDays: [0, 1, 2, 3, 4],
       taskBoard: null,
       taskColumn: null,
       notificationRadius: 2.5,
       setNotificationRadius: notificationRadius => set({ notificationRadius }),
       descriptionColumnId: 'text__1',
+      locationUpdateInterval: 60000,
+      locationUpdateDistance: 10,
+      setLocationUpdateDistance: locationUpdateDistance => set({ locationUpdateDistance }),
+      setLocationUpdateInterval: locationUpdateInterval => set({ locationUpdateInterval }),
       setActiveDays: activeDays => set({ activeDays }),
       setEndTime: endTime => set({ endTime }),
       setStartTime: startTime => set({ startTime }),
