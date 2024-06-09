@@ -112,13 +112,9 @@ const useTasks = () => {
   }, [
     tasksData,
     currentLocation,
-    tasksAreLoading,
-    tasksAreError,
-    tasksError,
     descriptionColumnId,
-    taskColumn?.id,
+    taskColumn,
     notificationRadius,
-    setTasks,
     internetStatus,
   ]);
 

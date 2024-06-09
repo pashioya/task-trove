@@ -19,11 +19,11 @@ TaskManager.defineTask<TaskData>(
       return;
     }
     if (region.state === Location.LocationGeofencingRegionState.Inside) {
-      console.log('You are inside region:', region);
+      // do whatever if user is outside the region
     }
 
     if (region.state === Location.LocationGeofencingRegionState.Outside) {
-      console.log('You are outside region:', region);
+      // do whatever if user is outside the region
     }
 
     if (

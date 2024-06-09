@@ -16,7 +16,7 @@ const SessionProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const authParams = useAuthParams();
   const [isLoading, setIsLoading] = useState(false);
   const sessionFetchedRef = useRef(false);
-  const [[isStorageLoading, session], setSession] = useStorageState<Session>('session');
+  const [[isStorageLoading, session], setSession] = useStorageState<Session>('auth_session');
   const {
     setOnboardingCompleted,
     setIsTracking,
