@@ -49,6 +49,6 @@ export const showMondayAlert = (error: MondayAPIError) => {
     const errorMessage = handleMondayErrorStatusCode(error.statusCode);
     showGeneralAlert('Error', errorMessage);
   } else {
-    showGeneralAlert('Error', 'An unknown error occurred.');
+    showGeneralAlert('Error', 'An unknown error Monday occurred.');
   }
 };

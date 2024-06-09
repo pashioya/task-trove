@@ -59,7 +59,8 @@
     "tailwindcss": "^3.4.1",
     "tailwindcss-animate": "^1.0.7",
     "zustand": "^4.5.2",
-    "expo-notifications": "~0.27.7"
+    "expo-notifications": "~0.27.7",
+    "@react-native-community/netinfo": "11.1.0"
   },
   "devDependencies": {
     "@0no-co/graphqlsp": "^1.12.3",
