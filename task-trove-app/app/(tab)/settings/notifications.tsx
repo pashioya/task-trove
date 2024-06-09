@@ -8,9 +8,12 @@ import { useColorScheme } from '~/lib/useColorScheme';
 import colors from 'tailwindcss/colors';
 import TaskColumnSelects from '~/components/TaskColumnSelects';
 import { Text } from '~/components/ui/text';
+import { MapRangePicker } from '~/components/MapRangePicker';
+import { useSettingsStore } from '~/store';
 
 export default function NotificationSettings() {
   const { isDarkColorScheme } = useColorScheme();
+  const { notificationRadius, setNotificationRadius } = useSettingsStore();
 
   return (
     <>
@@ -45,6 +48,25 @@ export default function NotificationSettings() {
                 }
                 classNames="p-2"
                 content={<TaskColumnSelects />}
+              />
+              <SimpleDialog
+                trigger={
+                  <View className="flex-row bg-secondary items-center justify-start h-12 rounded-lg mb-3 px-3">
+                    <Text className="text-lg font-normal">Notification Range</Text>
+                    <View className="flex-1" />
+                    <ChevronRight color="#C6C6C6" size={20} />
+                  </View>
+                }
+                title="Notification Range"
+                withHeader
+                content={
+                  <MapRangePicker
+                    currentRange={notificationRadius}
+                    setCurrentRange={range => {
+                      setNotificationRadius(range);
+                    }}
+                  />
+                }
               />
             </View>
           </ScrollView>

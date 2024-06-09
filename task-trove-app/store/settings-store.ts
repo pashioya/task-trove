@@ -16,6 +16,8 @@ type SettingsState = {
   activeDays: number[];
   taskBoard: Board | null;
   taskColumn: Column | null;
+  notificationRadius: number;
+  setNotificationRadius: (notificationRadius: number) => void;
   descriptionColumnId: string;
   setActiveDays: (activeDays: number[]) => void;
   setEndTime: (endTime: number) => void;
@@ -46,6 +48,8 @@ const useSettingsStore = create<SettingsState>()(
       activeDays: [0, 1, 2, 3, 4],
       taskBoard: null,
       taskColumn: null,
+      notificationRadius: 2.5,
+      setNotificationRadius: notificationRadius => set({ notificationRadius }),
       descriptionColumnId: 'text__1',
       setActiveDays: activeDays => set({ activeDays }),
       setEndTime: endTime => set({ endTime }),
