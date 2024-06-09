@@ -99,7 +99,6 @@ const useTasks = () => {
     // Sort tasks by distance
     reformattedTasks.sort((a, b) => a.distanceTo - b.distanceTo);
     setTasks(reformattedTasks);
-    setTableTasks(reformattedTasks);
     const geofencingTasks = reformattedTasks.map(task => {
       return {
         identifier: task.id,
