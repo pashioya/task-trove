@@ -1,11 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useMondayQuery } from '~/lib/monday/api';
 import { fetchTasksQuery } from '~/lib/monday/queries';
 import type { Task, TaskItem } from '~/model/types';
-import { useSettingsStore } from '~/store';
+import { useSettingsStore, useTasksStore } from '~/store';
 import { showMondayAlert } from '~/utils/mondayErrorHandling';
 import useUserLocation from './useUserLocation';
 import useGeoFencing from './useGeoFencing';
+import useInternetAccess from './useInternetAccess';
 
 function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
   const R = 6371; // Radius of the Earth in km
@@ -31,16 +32,17 @@ type Position = {
 };
 
 const useTasks = () => {
-  const [tableTasks, setTableTasks] = useState<Task[]>([]);
   const { taskBoard, taskColumn, descriptionColumnId, notificationRadius } = useSettingsStore();
+  const { tasks, setTasks } = useTasksStore();
   const { currentLocation } = useUserLocation();
   const { setGeofencing } = useGeoFencing();
+  const { internetStatus } = useInternetAccess();
 
   const {
-    data: itemsData,
-    isLoading: itemsAreLoading,
-    isError: itemsIsError,
-    error: itemsError,
+    data: tasksData,
+    isLoading: tasksAreLoading,
+    isError: tasksAreError,
+    error: tasksError,
   } = useMondayQuery({
     queryKey: [taskBoard?.id || '', 'taskItems'],
     query: fetchTasksQuery,
@@ -53,15 +55,16 @@ const useTasks = () => {
   });
 
   useEffect(() => {
-    if (itemsAreLoading || itemsIsError || !currentLocation) {
-      if (itemsIsError) showMondayAlert(itemsError);
+    if (tasksAreLoading || tasksAreError || !currentLocation || !internetStatus?.isConnected) {
+      if (internetStatus?.isConnected) {
+        if (tasksAreError) showMondayAlert(tasksError);
+      }
       return;
     }
 
-    if (!itemsData || !itemsData.boards || !itemsData.boards[0]) return;
-    const items = itemsData.boards[0]?.items_page.items;
+    if (!tasksData || !tasksData.boards || !tasksData.boards[0]) return;
 
-    const reformattedTasks: Task[] = items
+    const reformattedTasks: Task[] = tasksData.boards[0]?.items_page.items
       .map((task: TaskItem) => {
         const descriptionColumn = task.column_values.filter(
           column => column.id === descriptionColumnId,
@@ -95,6 +98,7 @@ const useTasks = () => {
 
     // Sort tasks by distance
     reformattedTasks.sort((a, b) => a.distanceTo - b.distanceTo);
+    setTasks(reformattedTasks);
     setTableTasks(reformattedTasks);
     const geofencingTasks = reformattedTasks.map(task => {
       return {
@@ -107,17 +111,19 @@ const useTasks = () => {
     setGeofencing(geofencingTasks);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    itemsData,
+    tasksData,
     currentLocation,
-    itemsAreLoading,
-    itemsIsError,
-    itemsError,
+    tasksAreLoading,
+    tasksAreError,
+    tasksError,
     descriptionColumnId,
     taskColumn?.id,
     notificationRadius,
+    setTasks,
+    internetStatus,
   ]);
 
-  return { tableTasks, itemsAreLoading };
+  return { tasks, tasksAreLoading };
 };
 
 export default useTasks;

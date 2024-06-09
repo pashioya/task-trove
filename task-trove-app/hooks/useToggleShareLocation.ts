@@ -5,6 +5,7 @@ import { useRegionStore, useSettingsStore } from '~/store';
 import { showGeneralAlert } from '~/utils/alert';
 import { router } from 'expo-router';
 import { ToastAndroid } from 'react-native';
+import useInternetAccess from './useInternetAccess';
 
 type TaskData = {
   locations?: Location.LocationObject[];
@@ -39,6 +40,7 @@ const useToggleShareLocation = () => {
     locationUpdateDistance,
     locationUpdateInterval,
   } = useSettingsStore();
+  const { internetStatus } = useInternetAccess();
 
   useEffect(() => {
     const checkTime = async () => {
@@ -50,7 +52,7 @@ const useToggleShareLocation = () => {
       const totalMinutes = hour * 60 + minute;
 
       if (totalMinutes >= startTime && totalMinutes <= endTime && activeDays.includes(dayOfWeek)) {
-        if (!isTracking) {
+        if (!isTracking && internetStatus?.isConnected) {
           await startLocationUpdates(locationUpdateInterval, locationUpdateDistance);
           setIsTracking(true);
         }
@@ -68,6 +70,7 @@ const useToggleShareLocation = () => {
   }, [
     activeDays,
     endTime,
+    internetStatus,
     isTracking,
     locationUpdateDistance,
     locationUpdateInterval,
@@ -104,6 +107,11 @@ const useToggleShareLocation = () => {
   };
 
   const toggleShareLocation = useCallback(async () => {
+    if (!internetStatus?.isConnected) {
+      showGeneralAlert('No Internet Connection', 'Please check your internet connection');
+      return;
+    }
+
     if (!item) {
       showGeneralAlert(
         'Location Column Not Correctly Setup',
@@ -119,7 +127,7 @@ const useToggleShareLocation = () => {
       await startLocationUpdates(locationUpdateDistance, locationUpdateDistance);
     }
     setIsTracking(!isTracking);
-  }, [isTracking, item, locationUpdateDistance, setIsTracking]);
+  }, [internetStatus, isTracking, item, locationUpdateDistance, setIsTracking]);
 
   return {
     isTracking,
