@@ -59,7 +59,7 @@ const SessionProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     setTaskColumn(null);
     setStartTime(540);
     setEndTime(1020);
-    setActiveDays([]);
+    setActiveDays([0, 1, 2, 3, 4]);
     setOnboardingCompleted(false);
 
     sessionFetchedRef.current = false;
