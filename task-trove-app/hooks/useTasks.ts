@@ -96,14 +96,14 @@ const useTasks = () => {
     // Sort tasks by distance
     reformattedTasks.sort((a, b) => a.distanceTo - b.distanceTo);
     setTableTasks(reformattedTasks);
-    const geofencingTasks = reformattedTasks.map(task => ({
-      identifier: task.id,
-      latitude: task.lat,
-      longitude: task.long,
-      radius: notificationRadius,
-      notifyOnEnter: true,
-      notifyOnExit: true,
-    }));
+    const geofencingTasks = reformattedTasks.map(task => {
+      return {
+        identifier: task.id,
+        latitude: Math.round(task.lat * 10000) / 10000,
+        longitude: Math.round(task.long * 10000) / 10000,
+        radius: notificationRadius * 1000,
+      };
+    });
     setGeofencing(geofencingTasks);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
