@@ -6,7 +6,6 @@ import { useSettingsStore } from '~/store';
 import { showMondayAlert } from '~/utils/mondayErrorHandling';
 import useUserLocation from './useUserLocation';
 import useGeoFencing from './useGeoFencing';
-import useNotifications from './useNotifications';
 
 function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
   const R = 6371; // Radius of the Earth in km
@@ -36,7 +35,6 @@ const useTasks = () => {
   const { taskBoard, taskColumn, descriptionColumnId, notificationRadius } = useSettingsStore();
   const { currentLocation } = useUserLocation();
   const { setGeofencing } = useGeoFencing();
-  const { scheduleNotification } = useNotifications();
 
   const {
     data: itemsData,
@@ -107,7 +105,6 @@ const useTasks = () => {
       };
     });
     setGeofencing(geofencingTasks);
-    scheduleNotification();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     itemsData,

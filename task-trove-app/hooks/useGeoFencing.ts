@@ -1,5 +1,6 @@
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
+import useNotifications from './useNotifications';
 
 type TaskData = {
   eventType: Location.GeofencingEventType;
@@ -7,6 +8,8 @@ type TaskData = {
 };
 
 const TASK_GEOFENCE_LOCATION = 'geofence-location-task';
+// eslint-disable-next-line react-hooks/rules-of-hooks
+const { scheduleNotification } = useNotifications();
 
 TaskManager.defineTask<TaskData>(
   TASK_GEOFENCE_LOCATION,
@@ -27,15 +30,19 @@ TaskManager.defineTask<TaskData>(
       eventType === Location.GeofencingEventType.Enter &&
       region.state === Location.LocationGeofencingRegionState.Outside
     ) {
-      console.log('You have entered region:', region);
+      triggerNotification('You have entered region of task: ', region.identifier || '');
     } else if (
       eventType === Location.GeofencingEventType.Exit &&
       region.state === Location.LocationGeofencingRegionState.Inside
     ) {
-      console.log('You have left region:', region);
+      triggerNotification('You have exited region of task: ', region.identifier || '');
     }
   },
 );
+
+const triggerNotification = (title: string, body: string) => {
+  scheduleNotification(title, body);
+};
 
 const useGeoFencing = () => {
   const setGeofencing = async (regions: Location.LocationRegion[]) => {
