@@ -21,11 +21,24 @@ import { useToggleShareLocation } from '~/hooks';
 import { Switch } from '~/components/ui/switch';
 import { useSettingsStore } from '~/store';
 import { showGeneralAlert } from '~/utils/alert';
+import { SimpleInput } from '~/components/SimpleInput';
+import { z } from 'zod';
+import { Button } from '~/components/ui/button';
 
 export default function LocationSettings() {
   const { isTracking, toggleShareLocation } = useToggleShareLocation();
-  const { startTime, endTime, activeDays, setStartTime, setEndTime, setActiveDays } =
-    useSettingsStore();
+  const {
+    startTime,
+    endTime,
+    activeDays,
+    setStartTime,
+    setEndTime,
+    setActiveDays,
+    locationUpdateDistance,
+    setLocationUpdateDistance,
+    setLocationUpdateInterval,
+    locationUpdateInterval,
+  } = useSettingsStore();
 
   const [showStartTimePicker, setShowStartTimePicker] = useState(false);
   const [showEndTimePicker, setShowEndTimePicker] = useState(false);
@@ -190,9 +203,73 @@ export default function LocationSettings() {
                 </AccordionItem>
               </Accordion>
             </View>
+            <View className="px-6">
+              <Text className="py-3 text-xs font-semibold uppercase tracking-wider mb-8">
+                Advanced
+              </Text>
+
+              <SimpleDialog
+                trigger={
+                  <View className="flex-row bg-secondary items-center justify-start h-12 rounded-lg mb-3 px-3">
+                    <Text className="text-lg font-normal">Location Update Intervals</Text>
+                    <View className="flex-1" />
+                  </View>
+                }
+                classNames="w-full"
+                content={
+                  <>
+                    <SimpleInput
+                      onSubmit={function (value: string): void {
+                        setLocationUpdateInterval(parseInt(value, 10));
+                      }}
+                      label="Time Interval"
+                      numeric
+                      placeholder={locationUpdateInterval.toString() + ' ms'}
+                      helperText="Time(ms) before location update trigger (60000ms minimum)"
+                      validationSchema={timeIntervalSchema}
+                    />
+                    <SimpleInput
+                      onSubmit={(value: string) => {
+                        setLocationUpdateDistance(parseInt(value, 10));
+                      }}
+                      numeric
+                      label="Distance Interval"
+                      placeholder={locationUpdateDistance.toString() + ' m'}
+                      helperText="Distance(m) before location update trigger(10m minimum)"
+                      validationSchema={distanceIntervalSchema}
+                    />
+                    <Button
+                      variant="outline"
+                      onPress={() => {
+                        setLocationUpdateInterval(60000);
+                        setLocationUpdateDistance(10);
+                      }}
+                    >
+                      <Text>Reset to Default</Text>
+                    </Button>
+                  </>
+                }
+              />
+            </View>
           </ScrollView>
         </View>
       </SafeAreaView>
     </>
   );
 }
+
+const timeIntervalSchema = z.object({
+  value: z
+    .string()
+    .regex(/^\d+$/, 'Value must be numeric')
+    .transform(val => parseInt(val, 10))
+    .refine(val => val >= 60000, { message: 'Time must be at least 60000 ms' }),
+});
+
+const distanceIntervalSchema = z.object({
+  value: z
+    .string()
+    .regex(/^\d+$/, 'Value must be numeric')
+    .transform(val => parseInt(val, 10))
+    .refine(val => val >= 10, { message: 'Distance must be at least 10 meters' }),
+});
