@@ -22,7 +22,7 @@ export const fetchAccessToken = async (authParams: AuthParams) => {
 };
 
 export const getSessionAsync = async () => {
-  const session = await SecureStore.getItemAsync('session');
+  const session = await SecureStore.getItemAsync('auth_session');
 
   if (!session) {
     return null;
