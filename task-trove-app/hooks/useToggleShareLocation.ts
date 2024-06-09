@@ -30,7 +30,16 @@ TaskManager.defineTask<TaskData>(TASK_FETCH_LOCATION, ({ data, error }) => {
 
 const useToggleShareLocation = () => {
   const [region, setRegion] = useRegionStore(state => [state.region, state.setRegion]);
-  const { isTracking, setIsTracking, item, startTime, endTime, activeDays } = useSettingsStore();
+  const {
+    isTracking,
+    setIsTracking,
+    item,
+    startTime,
+    endTime,
+    activeDays,
+    locationUpdateDistance,
+    locationUpdateInterval,
+  } = useSettingsStore();
   const { internetStatus } = useInternetAccess();
 
   useEffect(() => {
@@ -44,7 +53,7 @@ const useToggleShareLocation = () => {
 
       if (totalMinutes >= startTime && totalMinutes <= endTime && activeDays.includes(dayOfWeek)) {
         if (!isTracking && internetStatus?.isConnected) {
-          await startLocationUpdates();
+          await startLocationUpdates(locationUpdateInterval, locationUpdateDistance);
           setIsTracking(true);
         }
       } else {
@@ -58,13 +67,22 @@ const useToggleShareLocation = () => {
     const intervalId = setInterval(checkTime, 60000);
 
     return () => clearInterval(intervalId);
-  }, [activeDays, endTime, internetStatus, isTracking, setIsTracking, startTime]);
+  }, [
+    activeDays,
+    endTime,
+    internetStatus,
+    isTracking,
+    locationUpdateDistance,
+    locationUpdateInterval,
+    setIsTracking,
+    startTime,
+  ]);
 
-  const startLocationUpdates = async () => {
+  const startLocationUpdates = async (timeInterval: number, distanceInterval: number) => {
     await Location.startLocationUpdatesAsync(TASK_FETCH_LOCATION, {
       accuracy: Location.Accuracy.Highest,
-      timeInterval: 10000,
-      distanceInterval: 10,
+      timeInterval,
+      distanceInterval,
       showsBackgroundLocationIndicator: true,
       foregroundService: {
         notificationTitle: 'Using your location',
@@ -106,10 +124,10 @@ const useToggleShareLocation = () => {
     if (isTracking) {
       await stopLocationUpdates();
     } else {
-      await startLocationUpdates();
+      await startLocationUpdates(locationUpdateDistance, locationUpdateDistance);
     }
     setIsTracking(!isTracking);
-  }, [internetStatus, isTracking, item, setIsTracking]);
+  }, [internetStatus, isTracking, item, locationUpdateDistance, setIsTracking]);
 
   return {
     isTracking,

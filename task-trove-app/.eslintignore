@@ -9,3 +9,5 @@ android/
 # rnr folders
 components/ui/**
 components/primitives/**
+
+env.temoplate
