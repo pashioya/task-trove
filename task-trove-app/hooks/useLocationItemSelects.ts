@@ -2,7 +2,12 @@ import { useEffect, useState } from 'react';
 import type { Board, Column, Item } from '~/model/types';
 import { useSettingsStore } from '~/store';
 import { useMondayQuery } from '~/lib/monday/api';
-import { fetchBoardsQuery, fetchColumnsQuery, fetchItemsQuery } from '~/lib/monday/queries';
+import {
+  fetchBoardsQuery,
+  fetchColumnsQuery,
+  fetchItemsQuery,
+  fetchTaskDescriptionQuery,
+} from '~/lib/monday/queries';
 
 import { showMondayAlert } from '~/utils/mondayErrorHandling';
 
@@ -13,12 +18,16 @@ const useLocationItemSelects = () => {
 
   const [taskColumns, setTaskColumns] = useState<Column[]>([]);
 
+  const [descriptionColumns, setDescriptionColumns] = useState<Column[]>([]);
+
   const [selectedBoard, setSelectedBoard] = useState<Board | null>(null);
   const [selectedColumn, setSelectedColumn] = useState<Column | null>(null);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
 
   const [selectedTaskBoard, setSelectedTaskBoard] = useState<Board | null>(null);
   const [selectedTaskColumn, setSelectedTaskColumn] = useState<Column | null>(null);
+
+  const [selectedDescriptionColumn, setSelectedDescriptionColumn] = useState<Column | null>(null);
 
   const [boardSelectItems, setBoardSelectItems] = useState<{ label: string; value: string }[]>([]);
   const [columnSelectItems, setColumnSelectItems] = useState<{ label: string; value: string }[]>(
@@ -27,6 +36,11 @@ const useLocationItemSelects = () => {
   const [taskColumnSelectItems, setTaskColumnSelectItems] = useState<
     { label: string; value: string }[]
   >([]);
+
+  const [descriptionColumnSelectItems, setDescriptionColumnSelectItems] = useState<
+    { label: string; value: string }[]
+  >([]);
+
   const [itemSelectItems, setItemSelectItems] = useState<{ label: string; value: string }[]>([]);
 
   const { taskBoard, taskColumn, board, column, item } = useSettingsStore();
@@ -78,6 +92,18 @@ const useLocationItemSelects = () => {
     query: fetchItemsQuery,
     variables: { boardId: selectedBoard?.id || '' },
     enabled: !!selectedBoard?.id,
+  });
+
+  const {
+    data: descriptionColumnsData,
+    isLoading: descriptionColumnsIsLoading,
+    isError: descriptionColumnsIsError,
+    error: descriptionColumnsError,
+  } = useMondayQuery({
+    queryKey: [taskBoard?.id || '', 'descriptionColumns'],
+    query: fetchTaskDescriptionQuery,
+    variables: { boardId: taskBoard?.id || '' },
+    enabled: !!taskBoard?.id,
   });
 
   useEffect(() => {
@@ -204,6 +230,47 @@ const useLocationItemSelects = () => {
   }, [columns.length, itemIsLoading, itemsData, itemsError, itemsIsError]);
 
   useEffect(() => {
+    if (descriptionColumnsIsLoading) {
+      return;
+    }
+    if (descriptionColumnsIsError) {
+      showMondayAlert(descriptionColumnsError);
+      return;
+    }
+
+    if (
+      !descriptionColumnsData ||
+      !descriptionColumnsData.boards ||
+      !descriptionColumnsData.boards[0] ||
+      !descriptionColumnsData.boards[0].columns
+    )
+      return;
+
+    const columns: Column[] = descriptionColumnsData.boards[0].columns.filter(
+      (column): column is Column => column !== null,
+    );
+
+    setDescriptionColumns(columns);
+    setDescriptionColumnSelectItems(
+      columns.map(column => ({
+        label: column.title,
+        value: column.id,
+      })),
+    );
+
+    if (columns.length === 0) {
+      setSelectedDescriptionColumn(null);
+    } else if (columns.length === 1) {
+      setSelectedDescriptionColumn(columns[0]);
+    }
+  }, [
+    descriptionColumnsData,
+    descriptionColumnsError,
+    descriptionColumnsIsError,
+    descriptionColumnsIsLoading,
+  ]);
+
+  useEffect(() => {
     if (taskBoard) {
       setSelectedTaskBoard(taskBoard);
     }
@@ -226,6 +293,7 @@ const useLocationItemSelects = () => {
     columns,
     items,
     taskColumns,
+    descriptionColumns,
     selectedBoard,
     setSelectedBoard,
     selectedColumn,
@@ -236,13 +304,17 @@ const useLocationItemSelects = () => {
     setSelectedTaskBoard,
     selectedTaskColumn,
     setSelectedTaskColumn,
+    selectedDescriptionColumn,
+    setSelectedDescriptionColumn,
     boardSelectItems,
     columnSelectItems,
     itemSelectItems,
     taskColumnSelectItems,
+    descriptionColumnSelectItems,
     boardsIsLoading,
     columnsIsLoading,
     taskColumnsIsLoading,
+    descriptionColumnsIsLoading,
     itemIsLoading,
     refetchTaskColumns,
     refetchColumns,
