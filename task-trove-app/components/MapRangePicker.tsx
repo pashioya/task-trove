@@ -43,8 +43,8 @@ export const MapRangePicker: React.FC<MapRangePickerProps> = ({
           initialRegion={{
             latitude: location.latitude,
             longitude: location.longitude,
-            latitudeDelta: 0.3,
-            longitudeDelta: 0.3,
+            latitudeDelta: 0.1,
+            longitudeDelta: 0.1,
           }}
           showsMyLocationButton={false}
           showsUserLocation
