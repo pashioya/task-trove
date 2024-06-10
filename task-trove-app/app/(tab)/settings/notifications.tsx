@@ -7,13 +7,16 @@ import { SimpleDialog } from '~/components/SimpleDialog';
 import { useColorScheme } from '~/lib/useColorScheme';
 import colors from 'tailwindcss/colors';
 import TaskColumnSelects from '~/components/TaskColumnSelects';
+import DescriptionColumnSelect from '~/components/DescriptionColumnSelect';
 import { Text } from '~/components/ui/text';
 import { MapRangePicker } from '~/components/MapRangePicker';
 import { useSettingsStore } from '~/store';
+import { Switch } from '~/components/ui/switch';
 
 export default function NotificationSettings() {
   const { isDarkColorScheme } = useColorScheme();
-  const { notificationRadius, setNotificationRadius } = useSettingsStore();
+  const { notificationRadius, setNotificationRadius, allowNotifications, setAllowNotifications } =
+    useSettingsStore();
 
   return (
     <>
@@ -38,6 +41,17 @@ export default function NotificationSettings() {
               <Text className="py-3 text-xs font-semibold uppercase tracking-wider mb-8">
                 Notifications
               </Text>
+              <View className="flex-row bg-secondary items-center justify-start h-12 rounded-lg mb-3 px-3">
+                <Text className="text-lg font-normal">Allow Notifications</Text>
+                <View className="flex-1" />
+                <Switch
+                  style={{
+                    backgroundColor: allowNotifications ? colors.blue[500] : colors.gray[300],
+                  }}
+                  checked={allowNotifications}
+                  onCheckedChange={() => setAllowNotifications(!allowNotifications)}
+                />
+              </View>
               <SimpleDialog
                 trigger={
                   <View className="flex-row bg-secondary items-center justify-start h-12 rounded-lg mb-3 px-3">
@@ -48,6 +62,17 @@ export default function NotificationSettings() {
                 }
                 classNames="p-2"
                 content={<TaskColumnSelects />}
+              />
+              <SimpleDialog
+                trigger={
+                  <View className="flex-row bg-secondary items-center justify-start h-12 rounded-lg mb-3 px-3">
+                    <Text className="text-lg font-normal">Task Description Column</Text>
+                    <View className="flex-1" />
+                    <ChevronRight color="#C6C6C6" size={20} />
+                  </View>
+                }
+                classNames="p-2"
+                content={<DescriptionColumnSelect />}
               />
               <SimpleDialog
                 trigger={
