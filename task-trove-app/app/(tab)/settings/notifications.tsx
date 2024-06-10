@@ -66,9 +66,7 @@ export default function NotificationSettings() {
               <SimpleDialog
                 trigger={
                   <View className="flex-row bg-secondary items-center justify-start h-12 rounded-lg mb-3 px-3">
-                    <Text className="text-lg font-normal">
-                      Add a Description to your Tasks
-                    </Text>
+                    <Text className="text-lg font-normal">Task Description Column</Text>
                     <View className="flex-1" />
                     <ChevronRight color="#C6C6C6" size={20} />
                   </View>

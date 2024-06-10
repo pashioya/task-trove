@@ -100,7 +100,7 @@ const useLocationItemSelects = () => {
     isError: descriptionColumnsIsError,
     error: descriptionColumnsError,
   } = useMondayQuery({
-    queryKey: [taskBoard?.id || '', 'columns'],
+    queryKey: [taskBoard?.id || '', 'descriptionColumns'],
     query: fetchTaskDescriptionQuery,
     variables: { boardId: taskBoard?.id || '' },
     enabled: !!taskBoard?.id,
@@ -245,8 +245,6 @@ const useLocationItemSelects = () => {
       !descriptionColumnsData.boards[0].columns
     )
       return;
-
-    console.log(descriptionColumnsData.boards[0].columns);
 
     const columns: Column[] = descriptionColumnsData.boards[0].columns.filter(
       (column): column is Column => column !== null,

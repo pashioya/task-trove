@@ -16,8 +16,6 @@ export default function DescriptionColumnSelect() {
   } = useLocationItemSelects();
   const { setDescriptionColumnId } = useSettingsStore();
 
-  console.log(descriptionColumnSelectItems);
-
   const saveDescriptionColumn = () => {
     if (!selectedDescriptionColumn) {
       ToastAndroid.show('Please select a board and column!', ToastAndroid.SHORT);
