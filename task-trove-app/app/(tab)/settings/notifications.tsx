@@ -7,6 +7,7 @@ import { SimpleDialog } from '~/components/SimpleDialog';
 import { useColorScheme } from '~/lib/useColorScheme';
 import colors from 'tailwindcss/colors';
 import TaskColumnSelects from '~/components/TaskColumnSelects';
+import DescriptionColumnSelect from '~/components/DescriptionColumnSelect';
 import { Text } from '~/components/ui/text';
 import { MapRangePicker } from '~/components/MapRangePicker';
 import { useSettingsStore } from '~/store';
@@ -61,6 +62,17 @@ export default function NotificationSettings() {
                 }
                 classNames="p-2"
                 content={<TaskColumnSelects />}
+              />
+              <SimpleDialog
+                trigger={
+                  <View className="flex-row bg-secondary items-center justify-start h-12 rounded-lg mb-3 px-3">
+                    <Text className="text-lg font-normal">Task Description Column</Text>
+                    <View className="flex-1" />
+                    <ChevronRight color="#C6C6C6" size={20} />
+                  </View>
+                }
+                classNames="p-2"
+                content={<DescriptionColumnSelect />}
               />
               <SimpleDialog
                 trigger={
