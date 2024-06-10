@@ -8,8 +8,9 @@ type TaskData = {
 };
 
 const TASK_GEOFENCE_LOCATION = 'geofence-location-task';
-// eslint-disable-next-line react-hooks/rules-of-hooks
-const { scheduleNotification } = useNotifications();
+
+// Create a context to hold the triggerNotification function
+let triggerNotification: (title: string, body: string) => void;
 
 TaskManager.defineTask<TaskData>(
   TASK_GEOFENCE_LOCATION,
@@ -18,12 +19,13 @@ TaskManager.defineTask<TaskData>(
       console.error('An error occurred -', error);
       return;
     }
+
     if (region.state === Location.LocationGeofencingRegionState.Inside) {
-      // do whatever if user is outside the region
+      // do what you want to do when user is inside the region
     }
 
     if (region.state === Location.LocationGeofencingRegionState.Outside) {
-      // do whatever if user is outside the region
+      // do what you want to do when user is outside the region
     }
 
     if (
@@ -40,12 +42,15 @@ TaskManager.defineTask<TaskData>(
   },
 );
 
-const triggerNotification = (title: string, body: string) => {
-  scheduleNotification(title, body);
-};
-
 const useGeoFencing = () => {
+  const { scheduleNotification } = useNotifications();
+
+  triggerNotification = (title: string, body: string) => {
+    scheduleNotification(title, body);
+  };
+
   const setGeofencing = async (regions: Location.LocationRegion[]) => {
+    console.log('Setting geofencing');
     await Location.startGeofencingAsync(TASK_GEOFENCE_LOCATION, regions);
   };
 
