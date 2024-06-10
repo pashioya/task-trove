@@ -1,6 +1,7 @@
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
 import useNotifications from './useNotifications';
+import { useTasksStore } from '~/store';
 
 type TaskData = {
   eventType: Location.GeofencingEventType;
@@ -15,6 +16,8 @@ let triggerNotification: (title: string, body: string) => void;
 TaskManager.defineTask<TaskData>(
   TASK_GEOFENCE_LOCATION,
   ({ data: { eventType, region }, error }) => {
+    const { tasks } = useTasksStore();
+
     if (error) {
       console.error('An error occurred -', error);
       return;
@@ -32,12 +35,18 @@ TaskManager.defineTask<TaskData>(
       eventType === Location.GeofencingEventType.Enter &&
       region.state === Location.LocationGeofencingRegionState.Outside
     ) {
-      triggerNotification('You have entered region of task: ', region.identifier || '');
+      if (region.identifier && tasks) {
+        const closeTask = tasks.find((task) => task.id === region.identifier);
+        triggerNotification('You have entered region of task: ', closeTask?.description || '');
+      }
     } else if (
       eventType === Location.GeofencingEventType.Exit &&
       region.state === Location.LocationGeofencingRegionState.Inside
     ) {
-      triggerNotification('You have exited region of task: ', region.identifier || '');
+      if (region.identifier && tasks) {
+        const closeTask = tasks.find((task) => task.id === region.identifier);
+        triggerNotification('You have exited region of task: ', closeTask?.description || '');
+      }
     }
   },
 );
