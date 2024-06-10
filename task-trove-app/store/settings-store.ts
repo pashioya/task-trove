@@ -37,6 +37,7 @@ type SettingsState = {
   setItem: (item: Item | null) => void;
   setTaskBoard: (taskBoard: Board | null) => void;
   setTaskColumn: (taskColumn: Column | null) => void;
+  setDescriptionColumnId: (descriptionColumnId: string) => void;
 };
 
 const useSettingsStore = create<SettingsState>()(
@@ -55,7 +56,7 @@ const useSettingsStore = create<SettingsState>()(
       taskBoard: null,
       taskColumn: null,
       notificationRadius: 2.5,
-      descriptionColumnId: 'text__1',
+      descriptionColumnId: '',
       locationUpdateInterval: 60000,
       locationUpdateDistance: 10,
       allowNotifications: true,
@@ -75,6 +76,7 @@ const useSettingsStore = create<SettingsState>()(
       setItem: item => set({ item }),
       setTaskBoard: taskBoard => set({ taskBoard }),
       setTaskColumn: taskColumn => set({ taskColumn }),
+      setDescriptionColumnId: descriptionColumnId => set({ descriptionColumnId }),
     }),
     {
       name: 'settings-storage',

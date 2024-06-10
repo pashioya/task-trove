@@ -54,7 +54,13 @@ export default function TaskCard({ task }: { task: Task }) {
         </View>
         <Separator />
         <View className="py-4">
-          <Text className="text-sm">{truncateText(task.description, 300)}</Text>
+          <Text className="text-sm">
+            {truncateText(
+              task.description ||
+                `It looks like either this task doesn't have a description, or you haven't set up the description column in the settings yet`,
+              300,
+            )}
+          </Text>
         </View>
         <Separator />
         <View className="pt-4 flex-row items-center justify-between">
