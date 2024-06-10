@@ -88,7 +88,7 @@ export default function Tasks() {
               </>
             ) : (
               <View className="pb-52 mb-96 items-center">
-                <Text>You Haven&apos;t set a task board/column</Text>
+                <Text>You haven&apos;t set a task board/column</Text>
                 <Link href="/(tab)/settings/notifications" className="text-primary">
                   Go to Settings
                 </Link>
