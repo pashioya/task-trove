@@ -36,16 +36,19 @@ TaskManager.defineTask<TaskData>(
       region.state === Location.LocationGeofencingRegionState.Outside
     ) {
       if (region.identifier && tasks) {
-        const closeTask = tasks.find((task) => task.id === region.identifier);
-        triggerNotification('You have entered region of task: ', closeTask?.description || '');
+        const task = tasks.find(task => task.id === region.identifier);
+        triggerNotification(`You are near ${task?.name || ''}`, task?.description || '');
       }
     } else if (
       eventType === Location.GeofencingEventType.Exit &&
       region.state === Location.LocationGeofencingRegionState.Inside
     ) {
       if (region.identifier && tasks) {
-        const closeTask = tasks.find((task) => task.id === region.identifier);
-        triggerNotification('You have exited region of task: ', closeTask?.description || '');
+        const task = tasks.find(task => task.id === region.identifier);
+        triggerNotification(
+          `You are not near ${task?.name || ''} anymore`,
+          task?.description || '',
+        );
       }
     }
   },
