@@ -1,4 +1,4 @@
-import { MaterialIcons } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
@@ -6,10 +6,10 @@ import { View, Text, ScrollView, Pressable } from 'react-native';
 import colors from 'tailwindcss/colors';
 import { SimpleTooltip } from '~/components/SimpleTooltip';
 import { Button } from '~/components/ui/button';
-import { useLocationPermissions } from '~/hooks';
+import useNotificationPermissions from '~/hooks/useNotificationPermissions';
 
-export default function LocationPermission() {
-  const { requestPermissions, validatePermissions } = useLocationPermissions();
+export default function NotificationPermission() {
+  const { requestPermissions, validatePermissions } = useNotificationPermissions();
   const [permissionsGranted, setPermissionsGranted] = useState(false);
 
   useEffect(() => {
@@ -33,16 +33,16 @@ export default function LocationPermission() {
             <View className="flex-1 space-x-4 py-25 px-9">
               <View className="gap-2">
                 <Text className="text-2xl font-medium text-purple-900 text-center mb-3 leading-10">
-                  Allow Location Tracking?
+                  Allow Notifications?
                 </Text>
                 <Text className="text-m text-center text-slate-600">
-                  We need your foreground location to keep track of your location on monday.
+                  We need your permission to send you notifications.
                 </Text>
                 <Text className="text-m text-center text-slate-600">
-                  We Also need your background location to track your distace from your tasks.
+                  We will send you notifications to remind you of your tasks.
                 </Text>
                 <View className="bg-transparent m-1 items-center h-96 justify-center shrink rounded-2xl p-2 ">
-                  <MaterialIcons name="not-listed-location" size={100} />
+                  <FontAwesome5 name="bell" size={100} color="black" />
                 </View>
               </View>
             </View>
@@ -74,7 +74,7 @@ export default function LocationPermission() {
               className="md w-96"
               disabled={!permissionsGranted}
               onPress={() => {
-                router.push('/permission-2');
+                router.push('/(onboarding)/final');
               }}
             >
               <Text className="font-semibold text-white">Next</Text>
