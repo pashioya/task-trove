@@ -1,6 +1,8 @@
 import * as Notifications from 'expo-notifications';
+import { useSettingsStore } from '~/store';
 
 const useNotifications = () => {
+  const { allowNotifications } = useSettingsStore();
   const setupNotificationChannel = async () => {
     await Notifications.setNotificationChannelAsync('default', {
       name: 'default',
@@ -28,7 +30,7 @@ const useNotifications = () => {
   };
 
   // Initial setup
-  setupNotificationChannel();
+  if (allowNotifications) setupNotificationChannel();
 
   Notifications.setNotificationHandler({
     handleNotification,
