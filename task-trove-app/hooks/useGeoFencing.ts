@@ -50,7 +50,6 @@ const useGeoFencing = () => {
   };
 
   const setGeofencing = async (regions: Location.LocationRegion[]) => {
-    console.log('Setting geofencing');
     await Location.startGeofencingAsync(TASK_GEOFENCE_LOCATION, regions);
   };
 

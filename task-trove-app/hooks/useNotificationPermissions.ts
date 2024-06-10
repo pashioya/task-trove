@@ -1,12 +1,19 @@
 import { useCallback } from 'react';
 import * as Notifications from 'expo-notifications';
+import { ToastAndroid } from 'react-native';
 
 const useNotificationPermissions = () => {
   const requestPermissions = useCallback(async () => {
     const { status: existingStatus } = await Notifications.getPermissionsAsync();
     if (existingStatus !== 'granted') {
       const { status } = await Notifications.requestPermissionsAsync();
-      console.log(status);
+      if (status === 'granted') {
+        ToastAndroid.showWithGravity(
+          'Notification permissions granted!',
+          ToastAndroid.SHORT,
+          ToastAndroid.TOP,
+        );
+      }
     }
   }, []);
 
