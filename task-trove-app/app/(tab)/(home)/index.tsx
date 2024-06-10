@@ -2,14 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
-import {
-  ActivityIndicator,
-  Linking,
-  Pressable,
-  SafeAreaView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Linking, SafeAreaView, StyleSheet, View } from 'react-native';
 import { useToggleShareLocation, useTasks, useLocationPermissions } from '~/hooks';
 import { useMondayMutation } from '~/lib/monday/api';
 import { changeMultipleColumnValuesMutation } from '~/lib/monday/queries';
@@ -21,15 +14,16 @@ import { useColorScheme } from '~/lib/useColorScheme';
 import { Callout, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import MapView from 'react-native-map-clustering';
 
-import { Play, Navigation, Pause } from 'lucide-react-native';
 import colors from 'tailwindcss/colors';
 
 import { Text } from '~/components/ui/text';
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Button } from '~/components/ui/button';
 import useUserLocation from '~/hooks/useUserLocation';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { showGeneralAlert } from '~/utils/alert';
+import useInternetAccess from '~/hooks/useInternetAccess';
+import NavigateButton from '~/components/NavigateButton';
+import PausePlayButton from '~/components/PausePlayButton';
 
 type Cluster = {
   id: string;
@@ -47,8 +41,9 @@ export default function Home() {
   const { lastKnownLocation, lastKnownLocationLoading } = useUserLocation();
   const { isDarkColorScheme } = useColorScheme();
   const router = useRouter();
-  const { tableTasks } = useTasks();
+  const { tasks } = useTasks();
   const local = useLocalSearchParams();
+  const { internetStatus } = useInternetAccess();
 
   const mapRef = useRef<MapView>(null);
   const { board, column, item } = useSettingsStore();
@@ -70,7 +65,7 @@ export default function Home() {
   }, [router, validatePermissions]);
 
   useEffect(() => {
-    if (isTracking && region && board && column && item) {
+    if (isTracking && region && board && column && item && internetStatus?.isConnected) {
       updateLocation({
         boardId: board.id,
         itemId: item.id,
@@ -83,14 +78,13 @@ export default function Home() {
         }),
       });
     }
-  }, [region, isTracking, board, column, item, updateLocation]);
+  }, [region, isTracking, board, column, item, updateLocation, internetStatus]);
 
   useEffect(() => {
     if (updateLocationError) {
-      showGeneralAlert('An unexpected error occurred', updateLocationError.message);
-      toggleShareLocation();
+      showGeneralAlert('An unexpected Location Update error occurred', updateLocationError.message);
     }
-  }, [toggleShareLocation, updateLocationError]);
+  }, [updateLocationError]);
 
   useEffect(() => {
     if (!item) {
@@ -133,43 +127,18 @@ export default function Home() {
   };
 
   if (local.taskId) {
-    const task = tableTasks.find(t => t.id === local.taskId);
-    // @ts-expect-error --ignore
-    mapRef.current?.animateToRegion({
-      latitude: Number(task?.lat),
-      longitude: Number(task?.long),
-      latitudeDelta: 0.01,
-      longitudeDelta: 0.01,
-    });
+    const task = tasks?.find(t => t.id === local.taskId);
+    if (task) {
+      // @ts-expect-error --ignore
+      mapRef.current?.animateToRegion({
+        latitude: Number(task.lat),
+        longitude: Number(task.long),
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      });
+      local.taskId = '';
+    }
   }
-
-  const locateMeBounceValue = useSharedValue(1);
-  const playPauseBounceValue = useSharedValue(1);
-
-  const locateMeBounceAnimation = useAnimatedStyle(() => {
-    return {
-      transform: [{ scale: withSpring(locateMeBounceValue.value) }],
-    };
-  });
-
-  const playPauseBounceAnimation = useAnimatedStyle(() => {
-    return {
-      transform: [{ scale: withSpring(playPauseBounceValue.value) }],
-    };
-  });
-  const handleLocateMeBounce = () => {
-    locateMeBounceValue.value = 0.8;
-    setTimeout(() => {
-      locateMeBounceValue.value = 1;
-    }, 25);
-  };
-
-  const handlePlayPauseBounce = () => {
-    playPauseBounceValue.value = 0.8;
-    setTimeout(() => {
-      playPauseBounceValue.value = 1;
-    }, 25);
-  };
 
   return (
     <>
@@ -208,7 +177,7 @@ export default function Home() {
             );
           }}
         >
-          {tableTasks.map(task => (
+          {tasks?.map(task => (
             <Marker
               tracksViewChanges={false}
               coordinate={{
@@ -237,57 +206,18 @@ export default function Home() {
         </MapView>
         <View className="absolute bottom-36 right-5 gap-4">
           {isTracking ? (
-            <Animated.View
-              style={locateMeBounceAnimation}
-              className="bg-secondary rounded-full h-[70px] w-[70px] shadow-lg flex items-center justify-center"
-            >
-              <Pressable
-                onPress={() => {
-                  handleLocateMeBounce();
-                  onLocateMe();
-                }}
-              >
-                {lastKnownLocationLoading ? (
-                  <ActivityIndicator size="large" color={colors.blue[500]} />
-                ) : (
-                  <Navigation
-                    color={isDarkColorScheme ? colors.neutral[100] : colors.blue[500]}
-                    fill={isDarkColorScheme ? colors.gray[100] : colors.blue[500]}
-                    className="bg-white"
-                    size={30}
-                  />
-                )}
-              </Pressable>
-            </Animated.View>
+            <NavigateButton
+              lastKnownLocationLoading={lastKnownLocationLoading}
+              isDarkColorScheme={isDarkColorScheme}
+              onLocateMe={onLocateMe}
+            />
           ) : null}
-
-          <Animated.View
-            style={playPauseBounceAnimation}
-            className="bg-primary shadow-2xl rounded-full h-[70px] w-[70px] flex items-center justify-center"
-          >
-            <Pressable
-              onPress={() => {
-                handlePlayPauseBounce();
-                toggleShareLocation();
-              }}
-            >
-              {isTracking ? (
-                <Pause
-                  color={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
-                  fill={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
-                  className="bg-primary shadow-2xl"
-                  size={30}
-                />
-              ) : (
-                <Play
-                  color={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
-                  fill={isDarkColorScheme ? colors.gray[100] : colors.gray[100]}
-                  className="bg-primary shadow-2xl"
-                  size={30}
-                />
-              )}
-            </Pressable>
-          </Animated.View>
+          <PausePlayButton
+            isDarkColorScheme={isDarkColorScheme}
+            internetConnected={internetStatus?.isConnected || false}
+            isTracking={isTracking}
+            toggleShareLocation={toggleShareLocation}
+          />
         </View>
       </SafeAreaView>
     </>
