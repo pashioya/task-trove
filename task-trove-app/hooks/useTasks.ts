@@ -5,6 +5,7 @@ import type { Task, TaskItem } from '~/model/types';
 import { useSettingsStore, useTasksStore } from '~/store';
 import { showMondayAlert } from '~/utils/mondayErrorHandling';
 import useUserLocation from './useUserLocation';
+import useGeoFencing from './useGeoFencing';
 import useInternetAccess from './useInternetAccess';
 
 function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
@@ -31,9 +32,10 @@ type Position = {
 };
 
 const useTasks = () => {
-  const { taskBoard, taskColumn, descriptionColumnId } = useSettingsStore();
+  const { taskBoard, taskColumn, descriptionColumnId, notificationRadius } = useSettingsStore();
   const { tasks, setTasks } = useTasksStore();
   const { currentLocation } = useUserLocation();
+  const { setGeofencing } = useGeoFencing();
   const { internetStatus } = useInternetAccess();
 
   const {
@@ -97,15 +99,22 @@ const useTasks = () => {
     // Sort tasks by distance
     reformattedTasks.sort((a, b) => a.distanceTo - b.distanceTo);
     setTasks(reformattedTasks);
+    const geofencingTasks = reformattedTasks.map(task => {
+      return {
+        identifier: task.id,
+        latitude: Math.round(task.lat * 10000) / 10000,
+        longitude: Math.round(task.long * 10000) / 10000,
+        radius: notificationRadius * 1000,
+      };
+    });
+    setGeofencing(geofencingTasks);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     tasksData,
     currentLocation,
-    tasksAreLoading,
-    tasksAreError,
-    tasksError,
     descriptionColumnId,
-    taskColumn?.id,
-    setTasks,
+    taskColumn,
+    notificationRadius,
     internetStatus,
   ]);
 
