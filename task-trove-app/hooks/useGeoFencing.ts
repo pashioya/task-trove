@@ -20,7 +20,7 @@ TaskManager.defineTask<TaskData>(
     const { tasks } = useTasksStore();
 
     if (error) {
-      console.error('An error occurred -', error);
+      showGeneralAlert('An error occurred', error.message);
       return;
     }
 
@@ -55,7 +55,6 @@ const useGeoFencing = () => {
   };
 
   const setGeofencing = async (regions: Location.LocationRegion[]) => {
-    console.log('Setting geofencing');
     await Location.startGeofencingAsync(TASK_GEOFENCE_LOCATION, regions);
   };
 
