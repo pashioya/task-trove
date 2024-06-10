@@ -2,6 +2,7 @@ import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
 import useNotifications from './useNotifications';
 import { useTasksStore } from '~/store';
+import { showGeneralAlert } from '~/utils/alert';
 
 type TaskData = {
   eventType: Location.GeofencingEventType;
@@ -23,14 +24,6 @@ TaskManager.defineTask<TaskData>(
       return;
     }
 
-    if (region.state === Location.LocationGeofencingRegionState.Inside) {
-      // do what you want to do when user is inside the region
-    }
-
-    if (region.state === Location.LocationGeofencingRegionState.Outside) {
-      // do what you want to do when user is outside the region
-    }
-
     if (
       eventType === Location.GeofencingEventType.Enter &&
       region.state === Location.LocationGeofencingRegionState.Outside
@@ -46,7 +39,7 @@ TaskManager.defineTask<TaskData>(
       if (region.identifier && tasks) {
         const task = tasks.find(task => task.id === region.identifier);
         triggerNotification(
-          `You are not near ${task?.name || ''} anymore`,
+          `Don't forget to update the status of ${task?.name || ''} in monday if you have completed it`,
           task?.description || '',
         );
       }
