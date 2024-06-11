@@ -90,6 +90,7 @@ const useTasks = () => {
             address: jsonValue.address || '',
             changedAt: jsonValue.changed_at || '',
             distanceTo: distance,
+            notified: false,
           };
         }
         return null;

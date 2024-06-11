@@ -38,9 +38,11 @@ const useGeoFencing = () => {
 
       if (
         eventType === Location.GeofencingEventType.Enter &&
-        region.state === Location.GeofencingRegionState.Inside
+        region.state === Location.GeofencingRegionState.Inside &&
+        !task.notified
       ) {
         triggerNotification(`You are near ${task.name || ''}`, task.description || '');
+        task.notified = true;
       } else if (
         eventType === Location.GeofencingEventType.Exit &&
         region.state === Location.GeofencingRegionState.Inside
@@ -49,6 +51,7 @@ const useGeoFencing = () => {
           'Reminder:',
           `Don't forget to update the status of ${task.name || ''} in Monday if you have completed it`,
         );
+        task.notified = false;
       }
     });
   };
