@@ -40,7 +40,7 @@ const useGeoFencing = () => {
         task.notified = true;
       } else if (
         eventType === Location.GeofencingEventType.Exit &&
-        region.state === Location.GeofencingRegionState.Outside
+        region.state === Location.GeofencingRegionState.Inside
       ) {
         triggerNotification(
           'Reminder:',
