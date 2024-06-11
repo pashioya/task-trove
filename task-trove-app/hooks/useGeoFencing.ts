@@ -17,7 +17,6 @@ let triggerNotification: (title: string, body: string) => void;
 TaskManager.defineTask<TaskData>(
   TASK_GEOFENCE_LOCATION,
   ({ data: { eventType, region }, error }) => {
-    const { tasks } = useTasksStore();
 
     if (error) {
       showGeneralAlert('An error occurred', error.message);
@@ -28,7 +27,7 @@ TaskManager.defineTask<TaskData>(
       eventType === Location.GeofencingEventType.Enter &&
       region.state === Location.LocationGeofencingRegionState.Outside
     ) {
-      if (region.identifier && tasks) {
+      if (region.identifier) {
         const task = useTasksStore.getState().tasks?.find(task => task.id === region.identifier);
         triggerNotification(`You are near ${task?.name || ''}`, task?.description || '');
       }
@@ -36,7 +35,7 @@ TaskManager.defineTask<TaskData>(
       eventType === Location.GeofencingEventType.Exit &&
       region.state === Location.LocationGeofencingRegionState.Inside
     ) {
-      if (region.identifier && tasks) {
+      if (region.identifier) {
         const task = useTasksStore.getState().tasks?.find(task => task.id === region.identifier);
         triggerNotification(
           `Don't forget to update the status of ${task?.name || ''} in monday if you have completed it`,
