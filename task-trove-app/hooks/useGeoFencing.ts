@@ -31,11 +31,6 @@ const useGeoFencing = () => {
 
       if (!task) return;
 
-      if (region.state === Location.GeofencingRegionState.Unknown) {
-        console.log('Unknown region state');
-        return;
-      }
-
       if (
         eventType === Location.GeofencingEventType.Enter &&
         region.state === Location.GeofencingRegionState.Inside &&
@@ -45,7 +40,7 @@ const useGeoFencing = () => {
         task.notified = true;
       } else if (
         eventType === Location.GeofencingEventType.Exit &&
-        region.state === Location.GeofencingRegionState.Inside
+        region.state === Location.GeofencingRegionState.Outside
       ) {
         triggerNotification(
           'Reminder:',
