@@ -29,7 +29,7 @@ TaskManager.defineTask<TaskData>(
       region.state === Location.LocationGeofencingRegionState.Outside
     ) {
       if (region.identifier && tasks) {
-        const task = tasks.find(task => task.id === region.identifier);
+        const task = useTasksStore.getState().tasks?.find(task => task.id === region.identifier);
         triggerNotification(`You are near ${task?.name || ''}`, task?.description || '');
       }
     } else if (
@@ -37,7 +37,7 @@ TaskManager.defineTask<TaskData>(
       region.state === Location.LocationGeofencingRegionState.Inside
     ) {
       if (region.identifier && tasks) {
-        const task = tasks.find(task => task.id === region.identifier);
+        const task = useTasksStore.getState().tasks?.find(task => task.id === region.identifier);
         triggerNotification(
           `Don't forget to update the status of ${task?.name || ''} in monday if you have completed it`,
           task?.description || '',
