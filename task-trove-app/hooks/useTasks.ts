@@ -90,6 +90,7 @@ const useTasks = () => {
             address: jsonValue.address || '',
             changedAt: jsonValue.changed_at || '',
             distanceTo: distance,
+            notified: false,
           };
         }
         return null;
@@ -105,6 +106,8 @@ const useTasks = () => {
         latitude: Math.round(task.lat * 10000) / 10000,
         longitude: Math.round(task.long * 10000) / 10000,
         radius: notificationRadius * 1000,
+        notifyOnEnter: true,
+        notifyOnExit: true,
       };
     });
     setGeofencing(geofencingTasks);
