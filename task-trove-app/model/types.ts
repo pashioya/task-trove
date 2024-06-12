@@ -35,6 +35,7 @@ export type Task = {
   address: string;
   changedAt: string;
   distanceTo: number;
+  notified: boolean;
 };
 
 export type User = {

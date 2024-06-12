@@ -16,7 +16,15 @@ type SettingsState = {
   activeDays: number[];
   taskBoard: Board | null;
   taskColumn: Column | null;
+  notificationRadius: number;
   descriptionColumnId: string;
+  locationUpdateInterval: number;
+  locationUpdateDistance: number;
+  allowNotifications: boolean;
+  setAllowNotifications: (allowNotifications: boolean) => void;
+  setNotificationRadius: (notificationRadius: number) => void;
+  setLocationUpdateDistance: (locationUpdateDistance: number) => void;
+  setLocationUpdateInterval: (locationUpdateInterval: number) => void;
   setActiveDays: (activeDays: number[]) => void;
   setEndTime: (endTime: number) => void;
   setStartTime: (startTime: number) => void;
@@ -29,6 +37,7 @@ type SettingsState = {
   setItem: (item: Item | null) => void;
   setTaskBoard: (taskBoard: Board | null) => void;
   setTaskColumn: (taskColumn: Column | null) => void;
+  setDescriptionColumnId: (descriptionColumnId: string) => void;
 };
 
 const useSettingsStore = create<SettingsState>()(
@@ -43,10 +52,18 @@ const useSettingsStore = create<SettingsState>()(
       item: null,
       startTime: 540, // 9 AM (minutes since midnight: 9 * 60 + 0)
       endTime: 1020, // 5 PM
-      activeDays: [],
+      activeDays: [0, 1, 2, 3, 4],
       taskBoard: null,
       taskColumn: null,
-      descriptionColumnId: 'text__1',
+      notificationRadius: 2.5,
+      descriptionColumnId: '',
+      locationUpdateInterval: 60000,
+      locationUpdateDistance: 10,
+      allowNotifications: true,
+      setAllowNotifications: allowNotifications => set({ allowNotifications }),
+      setNotificationRadius: notificationRadius => set({ notificationRadius }),
+      setLocationUpdateDistance: locationUpdateDistance => set({ locationUpdateDistance }),
+      setLocationUpdateInterval: locationUpdateInterval => set({ locationUpdateInterval }),
       setActiveDays: activeDays => set({ activeDays }),
       setEndTime: endTime => set({ endTime }),
       setStartTime: startTime => set({ startTime }),
@@ -59,6 +76,7 @@ const useSettingsStore = create<SettingsState>()(
       setItem: item => set({ item }),
       setTaskBoard: taskBoard => set({ taskBoard }),
       setTaskColumn: taskColumn => set({ taskColumn }),
+      setDescriptionColumnId: descriptionColumnId => set({ descriptionColumnId }),
     }),
     {
       name: 'settings-storage',

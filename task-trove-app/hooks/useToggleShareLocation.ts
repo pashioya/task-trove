@@ -5,6 +5,7 @@ import { useRegionStore, useSettingsStore } from '~/store';
 import { showGeneralAlert } from '~/utils/alert';
 import { router } from 'expo-router';
 import { ToastAndroid } from 'react-native';
+import useInternetAccess from './useInternetAccess';
 
 type TaskData = {
   locations?: Location.LocationObject[];
@@ -29,7 +30,17 @@ TaskManager.defineTask<TaskData>(TASK_FETCH_LOCATION, ({ data, error }) => {
 
 const useToggleShareLocation = () => {
   const [region, setRegion] = useRegionStore(state => [state.region, state.setRegion]);
-  const { isTracking, setIsTracking, item, startTime, endTime, activeDays } = useSettingsStore();
+  const {
+    isTracking,
+    setIsTracking,
+    item,
+    startTime,
+    endTime,
+    activeDays,
+    locationUpdateDistance,
+    locationUpdateInterval,
+  } = useSettingsStore();
+  const { internetStatus } = useInternetAccess();
 
   useEffect(() => {
     const checkTime = async () => {
@@ -41,8 +52,8 @@ const useToggleShareLocation = () => {
       const totalMinutes = hour * 60 + minute;
 
       if (totalMinutes >= startTime && totalMinutes <= endTime && activeDays.includes(dayOfWeek)) {
-        if (!isTracking) {
-          await startLocationUpdates();
+        if (!isTracking && internetStatus?.isConnected) {
+          await startLocationUpdates(locationUpdateInterval, locationUpdateDistance);
           setIsTracking(true);
         }
       } else {
@@ -56,13 +67,22 @@ const useToggleShareLocation = () => {
     const intervalId = setInterval(checkTime, 60000);
 
     return () => clearInterval(intervalId);
-  }, [activeDays, endTime, isTracking, setIsTracking, startTime]);
+  }, [
+    activeDays,
+    endTime,
+    internetStatus,
+    isTracking,
+    locationUpdateDistance,
+    locationUpdateInterval,
+    setIsTracking,
+    startTime,
+  ]);
 
-  const startLocationUpdates = async () => {
+  const startLocationUpdates = async (timeInterval: number, distanceInterval: number) => {
     await Location.startLocationUpdatesAsync(TASK_FETCH_LOCATION, {
       accuracy: Location.Accuracy.Highest,
-      timeInterval: 10000,
-      distanceInterval: 10,
+      timeInterval,
+      distanceInterval,
       showsBackgroundLocationIndicator: true,
       foregroundService: {
         notificationTitle: 'Using your location',
@@ -87,6 +107,11 @@ const useToggleShareLocation = () => {
   };
 
   const toggleShareLocation = useCallback(async () => {
+    if (!internetStatus?.isConnected) {
+      showGeneralAlert('No Internet Connection', 'Please check your internet connection');
+      return;
+    }
+
     if (!item) {
       showGeneralAlert(
         'Location Column Not Correctly Setup',
@@ -99,10 +124,10 @@ const useToggleShareLocation = () => {
     if (isTracking) {
       await stopLocationUpdates();
     } else {
-      await startLocationUpdates();
+      await startLocationUpdates(locationUpdateDistance, locationUpdateDistance);
     }
     setIsTracking(!isTracking);
-  }, [isTracking, item, setIsTracking]);
+  }, [internetStatus, isTracking, item, locationUpdateDistance, setIsTracking]);
 
   return {
     isTracking,

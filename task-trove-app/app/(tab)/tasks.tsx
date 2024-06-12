@@ -14,7 +14,7 @@ import type { Task } from '~/model/types';
 import { useSettingsStore } from '~/store';
 
 export default function Tasks() {
-  const { tableTasks, itemsAreLoading } = useTasks();
+  const { tasks, tasksAreLoading } = useTasks();
   const { taskColumn } = useSettingsStore();
   return (
     <>
@@ -26,21 +26,21 @@ export default function Tasks() {
             <View className="flex-row items-center justify-between">
               <View className="grow shrink basis-0 flex-col items-center justify-center p-6">
                 <Text className="text-lg font-medium mb-4 text-center">Number of Tasks</Text>
-                <Text className="text-xl font-bold ">{tableTasks.length}</Text>
+                <Text className="text-xl font-bold ">{tasks?.length}</Text>
               </View>
               <View className="grow shrink basis-0 flex-col items-center justify-center p-6 border-l border-gray-400">
                 <Text className="text-lg font-medium mb-4 text-center">Closest Task</Text>
                 <Text className="text-xl font-bold ">
-                  {tableTasks[0]?.distanceTo ? tableTasks[0].distanceTo + 'km' : 'Unknown'}
+                  {tasks && tasks[0]?.distanceTo ? tasks[0].distanceTo + 'km' : 'Unknown'}
                 </Text>
               </View>
             </View>
           </View>
           <View className="items-center w-full h-full gap-4 justify-center">
-            {tableTasks.length > 1 ? (
+            {tasks && tasks.length > 0 ? (
               <FlatList
                 className="w-[95%]"
-                data={tableTasks}
+                data={tasks}
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item }: { item: Task }) => (
                   <SimpleDialog
@@ -55,6 +55,7 @@ export default function Tasks() {
                           id: item.id,
                           name: item.name,
                           address: item.address,
+                          description: item.description,
                           lat: item.lat,
                           long: item.long,
                           changedAt: item.changedAt,
@@ -67,7 +68,7 @@ export default function Tasks() {
                 contentContainerStyle={{ paddingBottom: 600 }}
                 ItemSeparatorComponent={() => <View className="h-2" />}
               />
-            ) : itemsAreLoading ? (
+            ) : tasksAreLoading ? (
               <>
                 <SimpleSkeleton />
                 <SimpleSkeleton />
@@ -87,7 +88,7 @@ export default function Tasks() {
               </>
             ) : (
               <View className="pb-52 mb-96 items-center">
-                <Text>You Haven&apos;t set a task board/column</Text>
+                <Text>You haven&apos;t set a task board/column</Text>
                 <Link href="/(tab)/settings/notifications" className="text-primary">
                   Go to Settings
                 </Link>

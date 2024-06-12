@@ -62,3 +62,14 @@ export const fetchTasksQuery = graphql(`
     }
   }
 `);
+
+export const fetchTaskDescriptionQuery = graphql(`
+  query fetchTaskDescription($boardId: ID!) {
+    boards(ids: [$boardId]) {
+      columns(types: text) {
+        id
+        title
+      }
+    }
+  }
+`);
