@@ -60,6 +60,7 @@ export default function Tasks() {
                           long: item.long,
                           changedAt: item.changedAt,
                           distanceTo: item.distanceTo,
+                          notified: item.notified,
                         }}
                       />
                     }
