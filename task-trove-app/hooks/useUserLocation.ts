@@ -24,6 +24,9 @@ const useLastKnownLocation = () => {
     queryKey: ['lastKnownLocation'],
     queryFn: getLastKnownLocation,
     refetchOnWindowFocus: true,
+    staleTime: 0,
+    gcTime: 0,
+    refetchInterval: 1000,
   });
 };
 
@@ -33,6 +36,8 @@ const useCurrentLocation = () => {
     queryFn: getCurrentLocation,
     refetchOnWindowFocus: true,
     staleTime: 0,
+    gcTime: 0,
+    refetchInterval: 1000,
   });
 };
 
