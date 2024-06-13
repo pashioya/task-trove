@@ -4,6 +4,7 @@ import { useAuthParams } from '~/hooks/useAuthParams';
 import { useStorageState } from '~/hooks/useStorageState';
 import { fetchAccessToken, fetchUserData } from '~/lib/session';
 import type { Session, SessionContextType } from '~/lib/session/types';
+import { env } from '~/lib/env';
 import { useSettingsStore } from '~/store';
 import { Linking, Platform } from 'react-native';
 import useTaskStore from '~/store/tasks-store';
@@ -36,17 +37,17 @@ const SessionProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const signIn = useCallback(async () => {
     setIsLoading(true);
     const params = new URLSearchParams({
-      client_id: '529393aedf8ae08c5ab90e730836814a',
-      redirect_uri: 'https://live1-service-5671083-bb7bd782.us.monday.app/auth-code',
-      scope: 'me:read boards:read boards:write',
+      client_id: env.EXPO_PUBLIC_CLIENT_ID,
+      redirect_uri: env.EXPO_PUBLIC_REDIRECT_URI,
+      scope: env.EXPO_PUBLIC_SCOPES,
     }).toString();
 
     if (Platform.OS === 'ios') {
-      Linking.openURL(`https://auth.monday.com/oauth2/authorize?${params}`);
+      Linking.openURL(`${env.EXPO_PUBLIC_AUTHORIZATION_ENDPOINT}?${params}`);
     } else {
       await WebBrowser.openAuthSessionAsync(
-        `https://auth.monday.com/oauth2/authorize?${params}`,
-        'https://live1-service-5671083-bb7bd782.us.monday.app/auth-code',
+        `${env.EXPO_PUBLIC_AUTHORIZATION_ENDPOINT}?${params}`,
+        env.EXPO_PUBLIC_REDIRECT_URI,
       );
     }
 

@@ -4,10 +4,11 @@ import * as SecureStore from 'expo-secure-store';
 import mondaySdk from 'monday-sdk-js';
 import { RawUserSchema, SessionSchema, TokenResponseSchema } from './schema';
 import type { AccessToken, TokenResponse } from './types';
+import { env } from '~/lib/env';
 
 export const fetchAccessToken = async (authParams: AuthParams) => {
   const tokenResponse = await axios.post<TokenResponse>(
-    `https://live1-service-5671083-bb7bd782.us.monday.app/access-token`,
+    `${env.EXPO_PUBLIC_OAUTH_SERVER_URL}/access-token`,
     {
       code: authParams.code,
       state: authParams.state,
