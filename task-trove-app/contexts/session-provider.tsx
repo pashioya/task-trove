@@ -7,6 +7,7 @@ import type { Session, SessionContextType } from '~/lib/session/types';
 import { env } from '~/lib/env';
 import { useSettingsStore } from '~/store';
 import { Linking, Platform } from 'react-native';
+import useTaskStore from '~/store/tasks-store';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -28,7 +29,10 @@ const SessionProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     setStartTime,
     setEndTime,
     setActiveDays,
+    setDescriptionColumnId,
   } = useSettingsStore();
+  
+  const { setTasks } = useTaskStore();
 
   const signIn = useCallback(async () => {
     setIsLoading(true);
@@ -61,6 +65,9 @@ const SessionProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     setEndTime(1020);
     setActiveDays([0, 1, 2, 3, 4]);
     setOnboardingCompleted(false);
+    setDescriptionColumnId('');
+    
+    setTasks(null);
 
     sessionFetchedRef.current = false;
     setSession(null);
