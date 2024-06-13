@@ -42,7 +42,7 @@ export default function Home() {
   const { isDarkColorScheme } = useColorScheme();
   const router = useRouter();
   const { tasks } = useTasks();
-  const local = useLocalSearchParams();
+  const params = useLocalSearchParams<{ taskID?: string }>();
   const { internetStatus } = useInternetAccess();
 
   const mapRef = useRef<MapView>(null);
@@ -126,8 +126,8 @@ export default function Home() {
     }
   };
 
-  if (local.taskId) {
-    const task = tasks?.find(t => t.id === local.taskId);
+  if (params.taskID) {
+    const task = tasks?.find(t => t.id === params.taskID);
     if (task) {
       // @ts-expect-error --ignore
       mapRef.current?.animateToRegion({
@@ -136,8 +136,8 @@ export default function Home() {
         latitudeDelta: 0.01,
         longitudeDelta: 0.01,
       });
-      local.taskId = '';
     }
+    router.setParams({ taskID: '' });
   }
 
   return (
@@ -145,7 +145,6 @@ export default function Home() {
       <Stack.Screen options={{ title: 'Home', headerShown: false }} />
       <SafeAreaView className="flex-1">
         <MapView
-          followsUserLocation={false}
           provider={PROVIDER_GOOGLE}
           showsUserLocation={isTracking}
           style={StyleSheet.absoluteFillObject}
