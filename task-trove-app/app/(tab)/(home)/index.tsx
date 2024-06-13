@@ -136,8 +136,8 @@ export default function Home() {
         latitudeDelta: 0.01,
         longitudeDelta: 0.01,
       });
-      local.taskId = '';
     }
+    local.taskID = '';
   }
 
   return (
@@ -145,7 +145,6 @@ export default function Home() {
       <Stack.Screen options={{ title: 'Home', headerShown: false }} />
       <SafeAreaView className="flex-1">
         <MapView
-          followsUserLocation={false}
           provider={PROVIDER_GOOGLE}
           showsUserLocation={isTracking}
           style={StyleSheet.absoluteFillObject}
