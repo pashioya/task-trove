@@ -8,7 +8,7 @@ export type TasksState = {
   setTasks: (tasks: Task[] | null) => void;
 };
 
-const useRegionStore = createWithEqualityFn<TasksState>()(
+const useTaskStore = createWithEqualityFn<TasksState>()(
   devtools(set => ({
     tasks: null,
     setTasks: tasks => set({ tasks }),
@@ -16,4 +16,4 @@ const useRegionStore = createWithEqualityFn<TasksState>()(
   shallow,
 );
 
-export default useRegionStore;
+export default useTaskStore;
