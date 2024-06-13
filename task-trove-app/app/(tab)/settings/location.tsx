@@ -224,7 +224,7 @@ export default function LocationSettings() {
                       }}
                       label="Time Interval"
                       numeric
-                      placeholder={(locationUpdateInterval/60000).toString() + ' minute'}
+                      placeholder={(locationUpdateInterval / 60000).toString() + ' minute'}
                       helperText="Time(minutes) before location update trigger (1 minute minimum)"
                       validationSchema={timeIntervalSchema}
                     />
