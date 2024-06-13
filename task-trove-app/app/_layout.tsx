@@ -85,7 +85,7 @@ export default function RootLayout() {
         <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
           <SafeAreaProvider>
             <GestureHandlerRootView style={{ flex: 1 }}>
-              <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
+              <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} translucent animated />
               <Stack>
                 <Stack.Screen name="(authentication)" options={{ headerShown: false }} />
                 <Stack.Screen
