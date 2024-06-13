@@ -53,7 +53,6 @@ const useToggleShareLocation = () => {
 
       if (totalMinutes >= startTime && totalMinutes <= endTime && activeDays.includes(dayOfWeek)) {
         if (!isTracking && internetStatus?.isConnected) {
-          console.log(locationUpdateInterval);
           await startLocationUpdates(locationUpdateInterval, locationUpdateDistance);
           setIsTracking(true);
         }
