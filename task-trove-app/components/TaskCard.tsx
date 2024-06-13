@@ -90,7 +90,7 @@ export default function TaskCard({ task }: { task: Task }) {
           <Link
             href={{
               pathname: '/',
-              params: { taskId: task.id },
+              params: { taskID: task.id },
             }}
             asChild
           >
