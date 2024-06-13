@@ -85,6 +85,7 @@ export default function TabLayout() {
           </Pressable>
         ),
         headerRightContainerStyle: {
+          marginTop: 10,
           marginRight: 20,
         },
 
