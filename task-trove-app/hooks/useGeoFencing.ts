@@ -57,6 +57,10 @@ const useGeoFencing = () => {
   }, []);
 
   const setGeofencing = async (regions: Location.LocationRegion[]) => {
+    if (regions.length === 0) {
+      await removeGeofencing();
+      return;
+    }
     await Location.startGeofencingAsync(TASK_GEOFENCE_LOCATION, regions);
   };
 

@@ -215,12 +215,12 @@ export default function LocationSettings() {
                   <>
                     <SimpleInput
                       onSubmit={function (value: string): void {
-                        setLocationUpdateInterval(parseInt(value, 10));
+                        setLocationUpdateInterval(parseInt(value, 10) * 60000);
                       }}
                       label="Time Interval"
                       numeric
-                      placeholder={locationUpdateInterval.toString() + ' ms'}
-                      helperText="Time(ms) before location update trigger (60000ms minimum)"
+                      placeholder={(locationUpdateInterval / 60000).toString() + ' minute'}
+                      helperText="Time(minutes) before location update trigger (1 minute minimum)"
                       validationSchema={timeIntervalSchema}
                     />
                     <SimpleInput
@@ -258,7 +258,7 @@ const timeIntervalSchema = z.object({
     .string()
     .regex(/^\d+$/, 'Value must be numeric')
     .transform(val => parseInt(val, 10))
-    .refine(val => val >= 60000, { message: 'Time must be at least 60000 ms' }),
+    .refine(val => val >= 1, { message: 'Time must be at least 1 minute' }),
 });
 
 const distanceIntervalSchema = z.object({
