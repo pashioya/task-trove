@@ -1,29 +1,45 @@
 # TaskTrove System Documentation
+
 By Paul Ashioya, Noah Diderich
 
 ## Product Owner
+
 Tryve
 
 ## Developers
+
 - Noah Diderich
 - Paul Ashioya
 
 ## Company Coaches / QA
+
 - Maarten Cautreels
 - Fréderik Noels
 
 ## Introduction
+
 The purpose of this document is to define and describe the project's requirements and spell out the system’s functionality and constraints.
 
+## Screenshots
+
+![alt text](imgs/image12.png)
+![alt text](imgs/image11.png)
+![alt text](imgs/image13.png)
+![alt text](imgs/image3.png)
+![alt text](imgs/image1.png)
+
 ### 1.1 Overview
+
 The product is a mobile application that utilizes Tryve's existing products (Location Toolkit) to allow users to keep track of their current location on a monday.com board while providing additional features such as real-time location tracking and task assignment based on location.
 
 ### 1.2 Business Context
+
 TaskTrove aims to enhance the productivity and efficiency of field technicians by providing real-time location tracking, task management, and location-based reminders. This integration will help technicians manage their tasks more effectively while ensuring location-specific data is accurately tracked and utilized.
 
 ## General Description
 
 ### 2.1 Product Functions
+
 - **Real-Time Location Tracking**: Continuous tracking of user location, updated at regular intervals.
 - **Location-Based Task Assignment**: Displaying tasks and technician locations on a map.
 - **Location-Based Reminders**: Geofencing to trigger reminders based on proximity to specified locations.
@@ -33,22 +49,27 @@ TaskTrove aims to enhance the productivity and efficiency of field technicians b
 - **Offline Support**: Ensuring the app functions smoothly in offline mode with local data storage.
 
 ### 2.2 Similar System Information
+
 - **monday.com**: A project and work management platform with capabilities in task management, human resources, and CRM. It also contains a mobile app whose functionality overlaps in some areas.
 - **Location Toolkit**: An app developed by Tryve for the monday.com Marketplace to enhance location-specific functionalities.
 
 ### 2.3 User Characteristics
+
 - **Field Technicians**: Primary users who require real-time location tracking and task management.
 - **Project Managers**: Secondary users who need to assign and monitor tasks based on technician locations.
 
 ### 2.4 User Problem Statement
+
 Technicians need a reliable way to track their real-time location and manage tasks efficiently while in the field. Project managers require accurate location data to assign tasks effectively and ensure timely completion.
 
 ### 2.5 General Constraints
+
 - **Platform Dependency**: The application must integrate seamlessly with monday.com.
 - **Data Privacy**: User data must be handled securely to protect user privacy.
 - **Real-Time Processing**: The system should process and update location data as close to real-time as possible.
 
 ## Functional Requirements
+
 - The app needs to retrieve the user's current location and send it to monday.com with all the necessary information to update the correct board, column, and item.
 - The app needs to allow technicians to configure the start and end times of their workday so that tracking automatically starts and stops accordingly.
 - Provide options for technicians to pause location tracking.
@@ -61,12 +82,15 @@ Technicians need a reliable way to track their real-time location and manage tas
 - Notifications should be timely and relevant, triggered by proximity to predefined locations or task deadlines.
 
 ## Non-Functional Requirements
+
 ### Security
+
 - **Authentication**: Use Monday OAuth for secure user login.
 - **Data Encryption**: Encrypt sensitive user data on the user's mobile device and follow GDPR best practices to ensure user data is secure and private.
 - **Access Control**: Ensure users can only access information on their monday.com boards they are authorized to access.
 
 ## Operational Scenarios
+
 - **Real-Time Tracking Start**: A technician starts their workday, and their location is continuously tracked and updated on the monday.com board.
 - **Task Assignment**: A project manager assigns tasks to technicians based on their real-time locations, visible on a map.
 - **Location-Based Reminder**: A technician receives a reminder to perform a task when they approach a specified location.
@@ -99,9 +123,11 @@ Technicians need a reliable way to track their real-time location and manage tas
 ## Prerequisites
 
 ### monday.com Account Setup
+
 - Ensure you have at least one board on your monday.com account that includes a location type column and at least one item.
 
 ### Full Functionality Requirements
+
 - To access the app's full functionality, you will need a second board on your monday.com account. This board should also contain:
   - A location column
   - A description column
